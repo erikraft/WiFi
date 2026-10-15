@@ -4,7 +4,7 @@
   <img src="assets/ErikrafT_Wifi_Icon_Logo.svg" alt="ErikrafT Wi-Fi™ logo" width="120">
 </p>
 
-<a href="https://wifi.erikraft.com/">ErikrafT Wi-Fi™</a></h1>
+<h1><a href="https://wifi.erikraft.com/">ErikrafT Wi-Fi™</a></h1>
 
 Projeto open-source para conectividade local usando tecnologias Wi-Fi existentes. O protótipo Android anuncia o próprio nó e procura outros nós ErikrafT Wi-Fi na mesma rede local usando Android Network Service Discovery (DNS-SD/mDNS).
 
