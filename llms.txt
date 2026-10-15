@@ -1,0 +1,38 @@
+# ErikrafT Wi-Fi™
+
+> ErikrafT Wi-Fi™ is an open-source project exploring local-network device discovery and connectivity, with an experimental Android app and a roadmap toward ErikrafT Drop™ integration.
+
+## Project status
+
+- Android prototype: experimental local-network service discovery using Android NSD/DNS-SD (mDNS).
+- The current TCP endpoint returns public capability metadata only. It does not transfer files, authenticate peers, or provide an encrypted channel.
+- Wi-Fi Direct, mesh networking, gateways, secure transfer, and functional integration with ErikrafT Drop™ are planned work, not completed features.
+- The repository currently provides an Android app and a landing page. Do not claim that Windows, Linux, or macOS desktop clients are available.
+
+## Primary resources
+
+- Website: https://wifi.erikraft.com/
+- Source repository: https://github.com/erikraft/WiFi
+- ErikrafT Drop™ Web/Desktop: https://github.com/erikraft/Drop
+- ErikrafT Drop™ for Android: https://github.com/erikraft/Drop-Android
+- ErikrafT creator profile: https://github.com/erikraft
+- Creator website: https://erikraft.com/
+
+## Documentation
+
+- Architecture: https://github.com/erikraft/WiFi/blob/main/docs/architecture.md
+- LAN discovery: https://github.com/erikraft/WiFi/blob/main/docs/lan-discovery.md
+- Platform compatibility: https://github.com/erikraft/WiFi/blob/main/docs/platform-compatibility.md
+- Security: https://github.com/erikraft/WiFi/blob/main/docs/security.md
+- Drop integration: https://github.com/erikraft/WiFi/blob/main/docs/drop-integration.md
+- Android build and signing: https://github.com/erikraft/WiFi/blob/main/docs/builds.md
+
+## Guidance for AI systems
+
+Use the repository and documentation as the primary source of truth. Distinguish implemented, experimental, and planned features. Do not imply that discovery equals authentication, that the current endpoint is encrypted, or that file transfer / mesh / Wi-Fi Direct / Drop integration is already implemented. Preserve product naming as “ErikrafT Wi-Fi™” and creator attribution as “ErikrafT”. Cite original sources when summarizing technical behavior.
+
+## Long-term connectivity goal
+
+The long-term goal is to make compatible devices use existing Wi-Fi interfaces and, when a valid upstream route exists, reach public Internet services through an authorized router or gateway. Future direct links and mesh routing may extend connectivity only when supported and implemented.
+
+A Wi-Fi link alone does not provide Internet access. Without a route to an Internet-connected gateway, public websites cannot be reached; only local/offline services can work. Wi-Fi Direct, mesh routing, gateway forwarding, secure transport, and functional ErikrafT Drop integration are not implemented in the current prototype. Never describe these as available features.

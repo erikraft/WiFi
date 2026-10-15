@@ -1,1 +1,118 @@
-<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#1769ff"><meta name="description" content="ErikrafT Wi-Fi™ — conectividade local e descoberta de dispositivos."><title>ErikrafT Wi-Fi™ — Seus dispositivos. Sua rede.</title><link rel="stylesheet" href="assets/css/styles.css"></head><body><header class="topbar"><a class="brand" href="#inicio"><span class="brand-mark">W</span><span>ErikrafT <b>Wi-Fi™</b></span></a><nav><a href="#recursos">Recursos</a><a href="#integracao">Integração</a><a href="https://github.com/erikraft/WiFi">GitHub ↗</a></nav><a class="nav-cta" href="https://github.com/erikraft/WiFi">Ver projeto</a></header><main id="inicio"><section class="hero"><div class="hero-copy"><p class="eyebrow">CONECTIVIDADE ABERTA · EM DESENVOLVIMENTO</p><h1>Seus dispositivos.<br><span>Sua rede.</span></h1><p class="lead">Uma base aberta para descobrir dispositivos próximos e construir experiências de conectividade local — com um caminho de integração para o ErikrafT Drop™.</p><div class="hero-actions"><a class="button primary" href="https://github.com/erikraft/WiFi">Explorar no GitHub ↗</a><a class="button secondary" href="#recursos">Conhecer o projeto</a></div><p class="fineprint">Usa tecnologias de rede existentes; não é um protocolo de rádio proprietário.</p></div><div class="device-scene" aria-hidden="true"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="node phone"><div class="phone-screen"><span class="mini-dot"></span><b>ErikrafT</b><small>Conectado localmente</small><div class="bars"><i></i><i></i><i></i><i></i></div></div></div><div class="node laptop"><div class="laptop-screen"><span>● ● ●</span><div class="lines"><i></i><i></i><i></i></div></div><div class="laptop-base"></div></div><div class="tag">LAN · P2P</div></div><div class="hero-bottom"><span>PROJETO OPEN SOURCE</span><span>ANDROID · WEB · DESKTOP — ROADMAP</span></div></section><section id="recursos" class="section"><p class="eyebrow">UMA BASE, VÁRIAS POSSIBILIDADES</p><h2>Conectividade pensada<br>para o mundo real.</h2><p class="muted">Começamos pelo que é possível testar hoje e documentamos o que ainda está no roadmap.</p><div class="grid"><article><div class="icon">⌕</div><h3>Descoberta local</h3><p>Base experimental para localizar nós na mesma rede usando tecnologias existentes, como DNS-SD/mDNS.</p><small>Protótipo</small></article><article><div class="icon">⇄</div><h3>Integração com Drop</h3><p>Um ponto de entrada documentado para aproximar a conectividade do ErikrafT Drop™.</p><small>Em desenvolvimento</small></article><article><div class="icon">◈</div><h3>Wi-Fi Direct e Mesh</h3><p>Arquitetura futura sujeita às APIs, permissões e limitações de cada plataforma.</p><small>Roadmap</small></article></div></section><section id="integracao" class="integration"><div><p class="eyebrow">NO ECOSSISTEMA ERIKRAFT</p><h2>Conectividade e transferência, lado a lado.</h2><p class="muted">Os projetos são separados. Esta base descreve como aproximá-los sem afirmar que Wi-Fi Direct, mesh ou transferência segura já estejam prontos.</p><div class="links"><a href="https://github.com/erikraft/Drop">01　 Drop Web/Desktop ↗</a><a href="https://github.com/erikraft/Drop-Android">02　 Drop Android ↗</a></div></div><aside><small>PONTO DE ENTRADA PLANEJADO</small><code>erikraftwifi://open</code><p>Deep link exploratório. A troca real de dados exige contrato de API, permissões e validação de segurança.</p><a href="https://github.com/erikraft/WiFi">Leia a documentação ↗</a></aside></section><section class="closing"><p class="eyebrow">CONSTRUÍDO ABERTAMENTE</p><h2>Vamos conectar as possibilidades.</h2><p>Explore o código, acompanhe o roadmap e contribua com melhorias testáveis.</p><a class="button white" href="https://github.com/erikraft/WiFi">Contribuir no GitHub ↗</a></section></main><footer><a class="brand" href="#inicio"><span class="brand-mark">W</span>ErikrafT <b>Wi-Fi™</b></a><span>Open source · Construído por ErikrafT</span><a href="https://github.com/erikraft/WiFi">Código-fonte ↗</a></footer><script src="assets/js/main.js"></script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#4285F4">
+<meta name="author" content="ErikrafT">
+<meta name="creator" content="ErikrafT">
+<meta name="publisher" content="ErikrafT">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+<meta name="googlebot" content="index,follow">
+<meta name="bingbot" content="index,follow">
+<meta name="keywords" content="ErikrafT Wi-Fi, ErikrafT WiFi, local network, LAN discovery, Wi-Fi connectivity, Android, NSD, DNS-SD, mDNS, open source, peer-to-peer, ErikrafT Drop">
+<link rel="canonical" href="https://wifi.erikraft.com/">
+<link rel="alternate" hreflang="en" href="https://wifi.erikraft.com/">
+<link rel="alternate" hreflang="pt-BR" href="https://wifi.erikraft.com/">
+<link rel="alternate" hreflang="x-default" href="https://wifi.erikraft.com/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ErikrafT Wi-Fi™">
+<meta property="og:title" content="ErikrafT Wi-Fi™">
+<meta property="og:description" content="An open-source foundation for local network discovery and device connectivity, with a roadmap toward ErikrafT Drop™ integration.">
+<meta property="og:url" content="https://wifi.erikraft.com/">
+<meta property="og:image" content="https://wifi.erikraft.com/assets/ErikrafT_Wifi_Icon_Logo.svg">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ErikrafT Wi-Fi™">
+<meta name="twitter:description" content="Open-source local network discovery and device connectivity by ErikrafT.">
+<meta name="twitter:creator" content="@ErikrafTbr">
+<link rel="alternate" type="text/plain" href="/llms.txt" title="LLM guidance">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {"@type":"Person","@id":"https://erikraft.com/#creator","name":"ErikrafT","url":"https://erikraft.com/","sameAs":["https://github.com/erikraft","https://github.com/erikraft/WiFi","https://www.youtube.com/@ErikrafT","https://x.com/ErikrafTbr"]},
+    {"@type":"Organization","@id":"https://wifi.erikraft.com/#organization","name":"ErikrafT","url":"https://erikraft.com/","founder":{"@id":"https://erikraft.com/#creator"}},
+    {"@type":"WebSite","@id":"https://wifi.erikraft.com/#website","url":"https://wifi.erikraft.com/","name":"ErikrafT Wi-Fi™","description":"Open-source local network discovery and device connectivity project.","inLanguage":["en","pt-BR"],"publisher":{"@id":"https://wifi.erikraft.com/#organization"}},
+    {"@type":"SoftwareApplication","@id":"https://wifi.erikraft.com/#software","name":"ErikrafT Wi-Fi™","applicationCategory":"NetworkingApplication","operatingSystem":"Android","url":"https://wifi.erikraft.com/","codeRepository":"https://github.com/erikraft/WiFi","description":"An experimental open-source Android project for discovering devices on a local network using NSD/DNS-SD (mDNS). Wi-Fi Direct, mesh networking, secure file transfer, and functional Drop integration remain planned work.","creator":{"@id":"https://erikraft.com/#creator"},"publisher":{"@id":"https://wifi.erikraft.com/#organization"},"isAccessibleForFree":true}
+  ]
+}
+</script>
+<meta name="description" content="ErikrafT Wi-Fi™ is an open-source project for local network device discovery and connectivity, with an experimental Android app and a roadmap toward ErikrafT Drop™ integration.">
+<title>ErikrafT Wi-Fi™</title>
+<link rel="icon" type="image/svg+xml" href="/assets/ErikrafT_Wifi_Icon_Logo.svg">
+<link rel="shortcut icon" href="/assets/ErikrafT_Wifi_Icon_Logo.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/ErikrafT_Wifi_Icon_Logo.svg">
+<link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+<!-- SVG Icon Library -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true" focusable="false">
+  <symbol id="icon-language-auto" viewBox="0 0 640 640"><path fill="currentColor" d="M320 64C178.6 64 64 178.6 64 320s114.6 256 256 256 256-114.6 256-256S461.4 64 320 64zm-26 80c-28 42-43 91-44 144h-82c8-63 58-119 126-144zm-126 208h82c1 53 16 102 44 144-68-25-118-81-126-144zm152 170c-34-41-52-104-54-170h108c-2 66-20 129-54 170zm54-234H266c2-66 20-129 54-170 34 41 52 104 54 170zm22 208c28-42 43-91 44-144h82c-8 63-58 119-126 144zm44-208c-1-53-16-102-44-144 68 25 118 81 126 144z"/></symbol>
+  <symbol id="flag-brazil" viewBox="0 0 2000 1400"><image href="assets/brazil_flag.svg" width="2000" height="1400" preserveAspectRatio="none"/></symbol>
+  <symbol id="flag-england" viewBox="0 0 1000 600"><image href="assets/english_language_flag.svg" width="1000" height="600" preserveAspectRatio="none"/></symbol>
+</svg>
+<div class="site-loader" id="site-loader" role="status" aria-label="Loading">
+  <div id="wifi-loader" aria-hidden="true">
+    <svg class="circle-outer" viewBox="0 0 86 86"><circle class="back" cx="43" cy="43" r="40"/><circle class="front" cx="43" cy="43" r="40"/></svg>
+    <svg class="circle-middle" viewBox="0 0 60 60"><circle class="back" cx="30" cy="30" r="27"/><circle class="front" cx="30" cy="30" r="27"/></svg>
+    <svg class="circle-inner" viewBox="0 0 34 34"><circle class="back" cx="17" cy="17" r="14"/><circle class="front" cx="17" cy="17" r="14"/></svg>
+    <div class="loader-text" data-text="Loading"><span data-i18n="loading">Carregando</span></div>
+  </div>
+</div>
+<header class="topbar">
+  <a class="brand" href="#inicio"><span class="brand-mark"><img src="assets/ErikrafT_Wifi_Icon_Logo_White.svg" alt="" aria-hidden="true"></span><span>ErikrafT <b>Wi-Fi™</b></span></a>
+  <nav aria-label="Main navigation">
+    <a href="#recursos" data-i18n="nav_features">Recursos</a><a href="#integracao" data-i18n="nav_integration">Integração</a><a href="#doar" data-i18n="nav_donate">Doar</a><a href="https://github.com/erikraft/WiFi">GitHub ↗</a>
+  </nav>
+  <div class="top-actions">
+    <label class="language-picker" aria-label="Language selector">
+      <svg id="language-flag" viewBox="0 0 60 36" role="img" aria-label="Brazilian Portuguese"><use href="#flag-brazil"></use></svg>
+      <select id="language-select" aria-label="Language">
+        <option value="pt-BR">Português (Brasil)</option>
+        <option value="en">English</option>
+      </select>
+    </label>
+    <a class="nav-cta" href="https://github.com/erikraft/WiFi" data-i18n="view_project">Ver projeto</a>
+  </div>
+</header>
+<main id="inicio">
+<section class="hero">
+  <div class="hero-copy">
+    <p class="eyebrow" data-i18n="eyebrow">CONECTIVIDADE ABERTA · EM DESENVOLVIMENTO</p>
+    <h1 data-i18n="hero_title">Seus dispositivos.<br><span>Sua rede.</span></h1>
+    <p class="lead" data-i18n="hero_lead">Uma base aberta para descobrir dispositivos próximos e construir experiências de conectividade local — com um caminho de integração para o ErikrafT Drop™.</p>
+    <div class="hero-actions"><a class="button primary" href="https://github.com/erikraft/WiFi" data-i18n="explore_github">Explorar no GitHub ↗</a><a class="button secondary" href="#recursos" data-i18n="learn_project">Conhecer o projeto</a></div>
+    <p class="fineprint" data-i18n="fineprint">Usa tecnologias de rede existentes; não é um protocolo de rádio proprietário.</p>
+  </div>
+  <div class="device-scene" aria-hidden="true">
+    <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+    <div class="node phone"><div class="phone-screen"><div class="screen-top"><i></i><i></i><i></i></div><div class="screen-lines"><i></i><i></i><i></i><i></i></div><div class="screen-block"></div><div class="screen-lines lower"><i></i><i></i></div></div></div>
+    <div class="node laptop"><div class="laptop-screen"><span>● ● ●</span><div class="lines"><i></i><i></i><i></i></div></div><div class="laptop-base"></div></div>
+    <div class="tag">LAN · P2P</div>
+  </div>
+  <div class="hero-bottom"><span data-i18n="opensource">PROJETO OPEN SOURCE</span><span data-i18n="platforms">ANDROID · WEB · DESKTOP — ROADMAP</span></div>
+</section>
+<section id="recursos" class="section">
+  <p class="eyebrow" data-i18n="section_eyebrow">UMA BASE, VÁRIAS POSSIBILIDADES</p><h2 data-i18n="section_title">Conectividade pensada<br>para o mundo real.</h2><p class="muted" data-i18n="section_intro">Começamos pelo que é possível testar hoje e documentamos o que ainda está no roadmap.</p>
+  <div class="grid">
+    <article><div class="icon">⌕</div><h3 data-i18n="feature_discovery">Descoberta local</h3><p data-i18n="feature_discovery_desc">O app Android anuncia o nó e procura instâncias na mesma rede via NSD/DNS-SD (mDNS). Ainda é experimental.</p><small data-i18n="experimental">Android · experimental</small></article>
+    <article><div class="icon">⇄</div><h3 data-i18n="feature_drop">Integração com Drop</h3><p data-i18n="feature_drop_desc">Deep link registrado e contrato documentado para uma integração futura com ErikrafT Drop™.</p><small data-i18n="in_development">Em desenvolvimento</small></article>
+    <article><div class="icon">◈</div><h3 data-i18n="feature_mesh">Wi-Fi Direct e Mesh</h3><p data-i18n="feature_mesh_desc">Arquitetura futura sujeita às APIs, permissões e limitações de cada plataforma.</p><small data-i18n="roadmap">Roadmap</small></article>
+  </div>
+</section>
+<section id="integracao" class="integration">
+  <div><p class="eyebrow" data-i18n="ecosystem">NO ECOSSISTEMA ERIKRAFT</p><h2 data-i18n="integration_title">Conectividade e transferência, lado a lado.</h2><p class="muted" data-i18n="integration_desc">Os projetos são separados. Esta base descreve como aproximá-los sem afirmar que Wi-Fi Direct, mesh ou transferência segura já estejam prontos.</p><div class="links"><a href="https://github.com/erikraft/Drop">01　 Drop Web/Desktop ↗</a><a href="https://github.com/erikraft/Drop-Android">02　 Drop Android ↗</a></div></div>
+  <aside><small data-i18n="planned_entry">PONTO DE ENTRADA PLANEJADO</small><code>erikraftwifi://open</code><p data-i18n="deep_link_desc">Deep link registrado. A integração funcional e a troca segura de dados ainda exigem contrato de API, permissões e validação de segurança.</p><a href="https://github.com/erikraft/WiFi" data-i18n="read_docs">Leia a documentação ↗</a></aside>
+</section>
+<section id="doar" class="donations">
+  <div class="donation-heading"><img class="bitcoin-logo" src="assets/bitcoin-logo.svg" alt="Bitcoin"><div><p class="eyebrow" data-i18n="support_project">APOIE O PROJETO</p><h2 data-i18n="donate_title">Ajude a manter o projeto aberto.</h2><p class="muted" data-i18n="donate_desc">Se o ErikrafT Wi-Fi™ é útil para você, contribua com Bitcoin. Confira a carteira antes de enviar; transações na blockchain são irreversíveis.</p></div></div>
+  <div class="wallet-grid">
+    <article class="wallet-card"><span class="wallet-label" data-i18n="primary_account">Conta principal</span><code>bc1qn8pvw3fvl5dt0eq9fe4js6l3k3j2kekqwxdah2</code><button class="copy-wallet" data-copy="bc1qn8pvw3fvl5dt0eq9fe4js6l3k3j2kekqwxdah2" data-i18n="copy_address">Copiar endereço</button></article>
+    <article class="wallet-card"><span class="wallet-label" data-i18n="email_account">Conta de e-mail</span><code>bc1q0mtp0lcyfr7c29xa6ngf8nyv4j0dts4hwynq6d</code><button class="copy-wallet" data-copy="bc1q0mtp0lcyfr7c29xa6ngf8nyv4j0dts4hwynq6d" data-i18n="copy_address">Copiar endereço</button></article>
+  </div><p class="donation-note" data-i18n="bitcoin_note">Envie apenas Bitcoin pela rede Bitcoin. Sempre confira o endereço na sua carteira antes de confirmar.</p>
+</section>
+<section class="closing"><p class="eyebrow" data-i18n="built_openly">CONSTRUÍDO ABERTAMENTE</p><h2 data-i18n="closing_title">Vamos conectar as possibilidades.</h2><p data-i18n="closing_desc">Explore o código, acompanhe o roadmap e contribua com melhorias testáveis.</p><a class="button white" href="https://github.com/erikraft/WiFi" data-i18n="contribute">Contribuir no GitHub ↗</a></section>
+</main>
+<footer><a class="brand" href="#inicio"><span class="brand-mark"><img src="assets/ErikrafT_Wifi_Icon_Logo_White.svg" alt="" aria-hidden="true"></span>ErikrafT <b>Wi-Fi™</b></a><span data-i18n="footer_text">Open source · Construído por ErikrafT</span><a href="https://github.com/erikraft/WiFi" data-i18n="source_code">Código-fonte ↗</a></footer>
+<script src="assets/js/main.js"></script>
+</body></html>
