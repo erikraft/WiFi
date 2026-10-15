@@ -11,6 +11,7 @@ import android.os.Looper;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -54,6 +55,12 @@ public final class MainActivity extends Activity {
         page.setBackgroundColor(Color.rgb(246, 249, 255));
         scroll.addView(page);
 
+        ImageView logo = new ImageView(this);
+        logo.setImageResource(com.erikraft.wifi.R.drawable.erikraft_wifi_app_icon);
+        logo.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        LinearLayout.LayoutParams logoParams = lp(dp(58), dp(61));
+        logoParams.bottomMargin = dp(14);
+        page.addView(logo, logoParams);
         page.addView(label("ErikrafT Wi-Fi™", 18, blue, true));
         TextView title = label("Seus dispositivos.\nSua rede.", 34, Color.rgb(16, 26, 43), true);
         LinearLayout.LayoutParams tp = lp(-1, -2); tp.topMargin = dp(34); page.addView(title, tp);
