@@ -1,48 +1,41 @@
-# Builds e assinatura
+# Builds and signing
 
-## Android: APK e AAB
+## Android: APK and AAB
+The `.github/workflows/android-release.yml` workflow builds an APK and Android App Bundle (AAB) when manually triggered (**Actions → Android APK and AAB → Run workflow**) or when a `v*` tag is published. It uses Java 17, Android SDK 36, and Gradle 8.13.
 
-O workflow `.github/workflows/android-release.yml` gera APK e Android App Bundle (AAB) em execução manual (**Actions → Android APK and AAB → Run workflow**) ou quando uma tag `v*` é publicada. O workflow usa Java 17, Android SDK 36 e Gradle 8.13.
+### Signing releases with a Base64 keystore
+Never commit a private key, place it in source code, or expose it in logs. Under **Settings → Secrets and variables → Actions**, configure these repository secrets:
 
-### Assinatura de release com keystore em Base64
+- `ANDROID_KEYSTORE_BASE64`: Base64 contents of the JKS/PKCS12 keystore, on one line.
+- `ANDROID_KEY_ALIAS`: key alias inside the keystore.
+- `ANDROID_KEYSTORE_PASSWORD`: keystore password.
+- `ANDROID_KEY_PASSWORD`: key password.
 
-A chave privada não deve ser commitada no repositório, colocada no código ou enviada em logs. Em **Settings → Secrets and variables → Actions**, configure estes quatro repository secrets:
-
-- `ANDROID_KEYSTORE_BASE64`: conteúdo Base64 do arquivo keystore JKS/PKCS12, em uma única linha.
-- `ANDROID_KEY_ALIAS`: alias da chave dentro do keystore.
-- `ANDROID_KEYSTORE_PASSWORD`: senha do keystore.
-- `ANDROID_KEY_PASSWORD`: senha da chave.
-
-Exemplo local para codificar o arquivo sem inserir a chave no Git:
-
+Encode the file locally:
 ```bash
 base64 -w 0 erikraft-wifi-release.jks
 ```
-
-No macOS, se o `base64` não aceitar `-w 0`, use:
-
+On macOS, if `base64` does not support `-w 0`, use:
 ```bash
 base64 < erikraft-wifi-release.jks | tr -d '\\n'
 ```
 
-Copie a saída diretamente para o secret `ANDROID_KEYSTORE_BASE64`. Não cole a keystore, senha ou chave privada em Issues, PRs, arquivos YAML ou no chat. Guarde uma cópia de segurança offline: perder a chave de assinatura pode impedir atualizações compatíveis da aplicação publicada.
+Copy the output into `ANDROID_KEYSTORE_BASE64`. Never paste the keystore, passwords, or private key into issues, pull requests, YAML files, or chat. Keep an offline backup: losing the signing key may prevent compatible updates to the published app.
 
-Se os quatro secrets estiverem configurados, o workflow assina e verifica o APK e assina/verifica o AAB. Se estiverem ausentes, ele ainda gera artefatos de release **não assinados**, com aviso explícito; eles não devem ser distribuídos como versão final. Pull requests de forks não recebem secrets do repositório, por segurança.
+When all four secrets are configured, the workflow signs and verifies the APK and signs/verifies the AAB. If they are missing, it still creates **unsigned** release artifacts with an explicit warning; do not distribute these as a final release. Fork pull requests do not receive repository secrets.
 
-A assinatura só prova a identidade da chave que assinou o pacote; não prova que o app foi testado em todos os dispositivos. Para Google Play, siga também o fluxo de Play App Signing.
+Signing identifies the key used to sign a package; it does not prove that the app has been tested on every device. For Google Play, also follow Play App Signing.
 
-Referências:
+References:
 - Android App Signing: https://developer.android.com/studio/publish/app-signing
 - GitHub Actions secrets: https://docs.github.com/en/actions/security-for-github-actions/security-guides/using-secrets-in-github-actions
 
-## Windows, Linux e macOS
+## Windows, Linux, and macOS
+The repository contains a **native Java Android app** and a static landing page. It has no desktop client, Electron/Tauri/Qt project, or desktop discovery/connection logic. Claiming that a workflow produces a functional `.exe`, AppImage/`.deb`, or `.dmg` would be misleading.
 
-O repositório atual contém um aplicativo **Android nativo Java** e uma landing page estática. Ainda não existe um cliente desktop nativo ou multiplataforma, nem projeto Electron/Tauri/Qt, nem lógica desktop para descoberta e conexão. Portanto, criar um workflow que alegue produzir um executável funcional `.exe`, AppImage/`.deb` ou `.dmg` seria enganoso.
+A real desktop release first requires choosing and implementing a desktop client that reuses a common, secure protocol. Separate builds can then be added on `windows-latest`, `ubuntu-latest`, and `macos-latest` with appropriate tests and packaging. Until then, this repository produces Android artifacts, not desktop executables.
 
-Para gerar executáveis de verdade, primeiro é necessário decidir e implementar um cliente desktop reutilizando um protocolo comum e seguro. Depois disso, adicionar builds separados em runners `windows-latest`, `ubuntu-latest` e `macos-latest`, com testes e empacotamento apropriados. Até essa etapa, o workflow deste repositório gera artefatos Android, e não executáveis desktop.
-
-## Limites dos builds
-
-- O build automatizado de PR compila o APK debug; não substitui testes físicos Android.
-- O workflow de release não comprova descoberta mDNS, Wi-Fi Direct, mesh, acesso à Internet ou integração com Drop.
-- Não publicar builds experimentais como estáveis sem testar instalação, assinatura, permissões e comportamento em aparelhos reais.
+## Build limitations
+- Automated pull-request builds compile the debug APK; they do not replace physical-device testing.
+- The release workflow does not prove mDNS discovery, Wi-Fi Direct, mesh networking, Internet access, or Drop integration.
+- Do not publish experimental builds as stable without testing installation, signing, permissions, and behavior on real devices.
