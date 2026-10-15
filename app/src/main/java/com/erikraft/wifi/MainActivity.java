@@ -25,7 +25,7 @@ import java.util.Set;
 
 /** ErikrafT Wi-Fi Android prototype: LAN discovery only, no file transfer. */
 public final class MainActivity extends Activity {
-    private final int blue = Color.rgb(23, 105, 255);
+    private final int blue = Color.rgb(66, 133, 244);
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
     private final Set<String> peerKeys = new HashSet<>();
     private LinearLayout peerList;
@@ -40,8 +40,8 @@ public final class MainActivity extends Activity {
 
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
-        getWindow().setStatusBarColor(Color.rgb(12, 39, 91));
-        getWindow().setNavigationBarColor(Color.rgb(12, 39, 91));
+        getWindow().setStatusBarColor(Color.rgb(66, 133, 244));
+        getWindow().setNavigationBarColor(Color.rgb(66, 133, 244));
         pipEnabled = getPreferences(MODE_PRIVATE).getBoolean("pip_enabled", false);
         discovery = new LanDiscovery(this, new LanDiscovery.Listener() {
             @Override public void onStatus(String value) {
@@ -61,7 +61,7 @@ public final class MainActivity extends Activity {
         LinearLayout page = new LinearLayout(this);
         page.setOrientation(LinearLayout.VERTICAL);
         page.setPadding(dp(24), dp(28), dp(24), dp(32));
-        page.setBackgroundColor(Color.rgb(246, 249, 255));
+        page.setBackgroundColor(Color.WHITE);
         scroll.addView(page);
 
         ImageView logo = new ImageView(this);
@@ -71,9 +71,9 @@ public final class MainActivity extends Activity {
         logoParams.bottomMargin = dp(14);
         page.addView(logo, logoParams);
         page.addView(label("ErikrafT Wi-Fi™", 18, blue, true));
-        TextView title = label("Seus dispositivos.\nSua rede.", 34, Color.rgb(16, 26, 43), true);
+        TextView title = label("Seus dispositivos.\nSua rede.", 34, Color.rgb(31, 31, 31), true);
         LinearLayout.LayoutParams tp = lp(-1, -2); tp.topMargin = dp(34); page.addView(title, tp);
-        TextView sub = label("Descubra dispositivos ErikrafT Wi-Fi conectados à mesma rede local.", 16, Color.rgb(91, 105, 128), false);
+        TextView sub = label("Descubra dispositivos ErikrafT Wi-Fi conectados à mesma rede local.", 16, Color.rgb(95, 99, 104), false);
         LinearLayout.LayoutParams sp = lp(-1, -2); sp.topMargin = dp(12); page.addView(sub, sp);
 
         LinearLayout card = new LinearLayout(this);
@@ -82,7 +82,7 @@ public final class MainActivity extends Activity {
         card.setBackgroundColor(Color.WHITE);
         LinearLayout.LayoutParams cp = lp(-1, -2); cp.topMargin = dp(26); page.addView(card, cp);
         card.addView(label("DESCOBERTA NA REDE LOCAL", 11, blue, true));
-        status = label("Pronto para procurar dispositivos na rede Wi-Fi atual.", 14, Color.rgb(43, 57, 78), false);
+        status = label("Pronto para procurar dispositivos na rede Wi-Fi atual.", 14, Color.rgb(31, 31, 31), false);
         LinearLayout.LayoutParams stp = lp(-1, -2); stp.topMargin = dp(12); card.addView(status, stp);
         discoverButton = new Button(this);
         discoverButton.setText("Procurar dispositivos");
