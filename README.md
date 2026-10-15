@@ -21,6 +21,15 @@ O objetivo de longo prazo é permitir que dispositivos compatíveis formem ou us
 - **Integração planejada:** deep link `erikraftwifi://open`; isso não significa que a integração com Drop já funcione.
 - **Builds:** workflow de validação compila APK debug; workflow de release gera APK/AAB e usa assinatura Base64 via GitHub Actions secrets, se configurada.
 
+## Interface Android, Quick Settings e PiP
+
+## Interface Android, Quick Settings e PiP
+
+- A interface oferece uma entrada de configurações avançadas para consultar o estado real e os recursos ainda pendentes, sem apresentá-los como já disponíveis.
+- O usuário pode habilitar o Picture-in-Picture (PiP) ao sair do app em Android 8.0 ou superior; o recurso depende do suporte do aparelho e das configurações do sistema.
+- O serviço Quick Settings adiciona um atalho para abrir o ErikrafT Wi-Fi. Ele usa um VectorDrawable Android com a geometria do símbolo branco de `assets/ErikrafT_Wifi_Icon_Logo_White.svg`, dimensionado para 24 dp; o arquivo SVG original não é alterado. O atalho não liga/desliga o Wi-Fi nem cria uma conexão sozinho.
+- A interface ainda é um protótipo; o painel avançado não configura mesh ou gateways porque essas funções ainda não existem no núcleo de rede.
+
 ## Build e distribuição
 
 Abra `app/` no Android Studio ou consulte [docs/builds.md](docs/builds.md) para executar os workflows e configurar a assinatura com segurança. Não adicione keystores, senhas ou chaves privadas ao Git.
