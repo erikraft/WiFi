@@ -20,6 +20,12 @@ O app pode rodar em aparelhos que também tenham 2G/3G/4G/5G, mas isso não faz 
 
 A implementação deve utilizar APIs oficiais do sistema e rádios existentes, sem alterar potência, frequências ou firmware. Para o contexto regulatório brasileiro, leia [platform-compatibility.md](platform-compatibility.md).
 
+## Objetivo de conectividade de longo prazo
+
+A meta é permitir conectividade interoperável com a Internet usando interfaces de rede existentes e rotas autorizadas, com suporte futuro a conexões diretas entre dispositivos, encaminhamento multi-hop e gateways quando tecnicamente possível. O cliente deve detectar e descrever capacidades reais por dispositivo e manter fallback para redes locais quando não houver rota externa.
+
+Não existe uma técnica de software que garanta acesso a qualquer site público sem que algum caminho de rede alcance a Internet. Wi-Fi Direct pode criar um enlace local; mesh pode encaminhar tráfego entre nós se houver roteamento funcional; somente um gateway com upstream fornece saída à Internet. DNS, NAT, IPv4/IPv6, firewall, captive portals, TLS, políticas dos provedores e consentimento dos operadores precisam ser considerados e testados.
+
 ## Direção técnica
 1. Usar APIs de rede existentes; não inventar protocolo de rádio.
 2. Separar descoberta, identidade de nó, sessão autenticada e transporte.
