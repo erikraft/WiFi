@@ -1,47 +1,43 @@
-# Compatibilidade de rede e limites regulatórios
+# Network compatibility and regulatory limitations
 
-## Princípio
+## Principle
+ErikrafT Wi-Fi is intended to use network APIs and radios already available on devices. It does not create a new radio waveform, turn a phone into a 2G/3G/4G/5G base station, or transmit on licensed carrier bands.
 
-ErikrafT Wi-Fi é um software que deve usar APIs e rádios já existentes nos dispositivos. O aplicativo não cria uma nova forma de onda de rádio, não transforma o telefone em uma estação-base 2G/3G/4G/5G e não deve tentar transmitir nas faixas licenciadas de operadoras.
+Compatibility means running on different devices and using the network interfaces exposed by their operating systems. It does not mean every device supports every mode or that the app controls the cellular modem.
 
-Compatibilidade significa poder executar em diferentes aparelhos e aproveitar as interfaces de rede que o sistema operacional oferece. Não significa que todo aparelho suporte todos os modos, nem que o aplicativo controle o modem celular.
+## Scenarios
 
-## Cenários
-
-| Cenário | Comportamento possível | Limite |
+| Scenario | Possible behavior | Limitation |
 |---|---|---|
-| Sem Wi-Fi de infraestrutura e sem sinal celular | Dispositivos compatíveis podem conectar diretamente via Wi-Fi Direct, ou formar uma rede local usando equipamento compatível | Wi-Fi Direct ainda não está implementado neste protótipo; alcance e compatibilidade variam por aparelho |
-| Cidade, sem dados móveis, com Wi-Fi conectado à Internet | O tráfego pode sair pelo Wi-Fi sem usar o pacote de dados móveis | Precisa de um ponto de acesso/gateway com Internet e autorização para usá-lo |
-| Sem sinal de operadora, com outros nós locais | Serviços locais podem funcionar; uma malha pode encaminhar tráfego se houver nós e software de roteamento apropriados | Mesh routing ainda não está implementado. Sem gateway conectado, não há acesso à Internet pública |
-| Celular 2G/3G/4G/5G | O app pode funcionar por Wi-Fi em aparelhos que também tenham essas tecnologias celulares | Não fornece nem substitui a rede móvel; o sistema operacional e o hardware controlam o modem |
-| iOS, Android, Windows, Linux e macOS | Compatibilidade futura depende de APIs, permissões, hardware e cliente próprio em cada plataforma | Atualmente o cliente de rede é Android; a landing page não é um cliente de conectividade |
+| No infrastructure Wi-Fi and no cellular signal | Compatible devices may connect through Wi-Fi Direct or form a local network with compatible equipment | Wi-Fi Direct is not implemented; range and compatibility vary |
+| No mobile data, but Wi-Fi has Internet access | Traffic may use Wi-Fi without consuming the mobile data allowance | Requires an Internet-connected access point/gateway and permission to use it |
+| No carrier signal, but local nodes exist | Local services may work; a mesh could forward traffic with suitable nodes and routing software | Mesh routing is not implemented. Without a connected gateway, there is no public Internet access |
+| Phone with 2G/3G/4G/5G | The app may work over Wi-Fi on a device that also has cellular technology | It does not provide or replace mobile service; the OS and hardware control the modem |
+| iOS, Android, Windows, Linux, and macOS | Future compatibility depends on APIs, permissions, hardware, and a client for each platform | The current network client is Android-only; the landing page is not a connectivity client |
 
-## Caminho sem construir torres
+## A path that does not require building towers
+1. **Now:** test LAN discovery between Android devices on the same Wi-Fi network.
+2. **Next:** implement Wi-Fi Direct using official APIs and test compatible hardware.
+3. **Then:** create an authenticated, encrypted session protocol before carrying files or third-party traffic.
+4. **Only after that:** evaluate multi-hop forwarding and gateways, including battery use, loop prevention, consent, traffic limits, and security.
+5. **Internet access:** reuse a router, a phone sharing its connection, an authorized community network, or an existing provider/gateway. A node without an external route cannot create Internet access by itself.
 
-1. **Agora:** testar descoberta LAN entre aparelhos Android na mesma rede Wi-Fi.
-2. **Próximo:** implementar Wi-Fi Direct com APIs oficiais e testar em hardware compatível.
-3. **Depois:** criar um protocolo de sessão autenticada e criptografada antes de transportar arquivos ou tráfego de terceiros.
-4. **Só então:** avaliar encaminhamento multi-hop e gateways, incluindo consumo de bateria, prevenção de loops, consentimento do usuário, limites de tráfego e segurança.
-5. **Acesso à Internet:** reutilizar um roteador, telefone compartilhando conexão, rede comunitária autorizada ou provedor/gateway existente. Um nó sem rota externa não consegue inventar acesso à Internet.
+Development can begin without building a tower. However, gateways, dedicated radio links, custom transmitting equipment, or providing connectivity to third parties may involve specific obligations depending on the architecture and actual use.
 
-Não é necessário comprar ou construir uma torre para começar o desenvolvimento. Ainda assim, gateways, enlaces de rádio dedicados, equipamentos de transmissão próprios ou oferta de serviço de telecomunicações podem ter obrigações específicas; isso depende da arquitetura e do uso real.
+## Anatel and radio-frequency use in Brazil
+Use normal Android APIs and approved Wi-Fi equipment in accordance with applicable rules. Do not modify firmware to increase power, unlock frequencies, transmit on licensed bands, or advertise a private cellular network.
 
-## Anatel e uso de radiofrequência no Brasil
+Anatel states that telecommunications products—including devices that emit radio frequency, such as Wi-Fi equipment—are generally subject to certification/homologation for commercialization or use under applicable regulations. Using an approved phone or router does not automatically authorize every additional device, radio link, or service model. Before selling hardware, deploying dedicated links, or providing connectivity as a service, confirm requirements with Anatel or a qualified regulatory professional.
 
-Este projeto deve limitar-se a APIs normais do Android e a equipamentos de Wi-Fi homologados, operando conforme as regras aplicáveis. Não modificar firmware para aumentar potência, não desbloquear frequências, não transmitir em faixas licenciadas e não anunciar uma rede celular própria.
-
-A Anatel informa que, em regra, produtos de telecomunicações — incluindo dispositivos que emitem radiofrequência, como Wi-Fi — estão sujeitos à homologação para comercialização/uso conforme a regulamentação aplicável. Usar um telefone ou roteador homologado não significa automaticamente que qualquer equipamento adicional, enlace ou modelo de prestação de serviço esteja autorizado. Antes de comercializar hardware, instalar enlaces dedicados ou oferecer conectividade a terceiros como serviço, confirme o enquadramento com a Anatel ou profissional regulatório qualificado.
-
-Referências oficiais:
-- Anatel — dúvidas frequentes sobre certificação e homologação: https://www.gov.br/anatel/pt-br/regulado/certificacao-de-produtos/duvidas-frequentes
-- Anatel — regulamentação: https://www.gov.br/anatel/pt-br/regulado/certificacao-de-produtos/regulamentacao
+Official references:
+- Anatel — certification and homologation FAQ: https://www.gov.br/anatel/pt-br/regulado/certificacao-de-produtos/duvidas-frequentes
+- Anatel — regulations: https://www.gov.br/anatel/pt-br/regulado/certificacao-de-produtos/regulamentacao
 - Android — Wi-Fi Direct: https://developer.android.com/develop/connectivity/wifi/wifi-direct
-- Android — descoberta de serviços de rede (NSD): https://developer.android.com/develop/connectivity/wifi/use-nsd
-- Android — permissões de Wi-Fi próximo: https://developer.android.com/develop/connectivity/wifi/wifi-permissions
+- Android — network service discovery (NSD): https://developer.android.com/develop/connectivity/wifi/use-nsd
+- Android — nearby Wi-Fi permissions: https://developer.android.com/develop/connectivity/wifi/wifi-permissions
 
-## Estado real do repositório
-
-- Implementado experimentalmente: descoberta NSD/DNS-SD na mesma LAN.
-- Ainda pendente: Wi-Fi Direct, mesh routing, gateways, transporte seguro e integração funcional com ErikrafT Drop.
-- Não existe cliente desktop executável neste momento.
-- A compatibilidade precisa ser validada por versão de Android, fabricante e hardware; “compatível com tudo” não é uma promessa tecnicamente verificável.
+## Actual repository status
+- Experimentally implemented: NSD/DNS-SD discovery on the same LAN.
+- Pending: Wi-Fi Direct, mesh routing, gateways, secure transport, and functional ErikrafT Drop integration.
+- No executable desktop client is available.
+- Compatibility must be validated by Android version, manufacturer, and hardware; universal support is not a technically verifiable promise.
