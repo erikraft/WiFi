@@ -1,6 +1,7 @@
 package com.erikraft.wifi;
 
 import android.app.Activity;
+import android.app.PictureInPictureParams;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
@@ -8,6 +9,8 @@ import android.net.NetworkCapabilities;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Build;
+import android.util.Rational;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -28,12 +31,18 @@ public final class MainActivity extends Activity {
     private LinearLayout peerList;
     private TextView status;
     private Button discoverButton;
+    private Button advancedButton;
+    private Button pipButton;
+    private TextView advancedDetails;
+    private boolean advancedVisible;
+    private boolean pipEnabled;
     private LanDiscovery discovery;
 
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
         getWindow().setStatusBarColor(Color.rgb(12, 39, 91));
         getWindow().setNavigationBarColor(Color.rgb(12, 39, 91));
+        pipEnabled = getPreferences(MODE_PRIVATE).getBoolean("pip_enabled", false);
         discovery = new LanDiscovery(this, new LanDiscovery.Listener() {
             @Override public void onStatus(String value) {
                 mainHandler.post(() -> {
@@ -97,6 +106,41 @@ public final class MainActivity extends Activity {
             }
         });
 
+        advancedButton = new Button(this);
+        advancedButton.setText("Configurações avançadas");
+        advancedButton.setAllCaps(false);
+        advancedButton.setTextColor(blue);
+        advancedButton.setBackgroundTintList(android.content.res.ColorStateList.valueOf(Color.rgb(230, 239, 255)));
+        LinearLayout.LayoutParams abp = lp(-1, -2); abp.topMargin = dp(10); card.addView(advancedButton, abp);
+
+        pipButton = new Button(this);
+        pipButton.setAllCaps(false);
+        pipButton.setTextColor(blue);
+        pipButton.setBackgroundTintList(android.content.res.ColorStateList.valueOf(Color.rgb(230, 239, 255)));
+        pipButton.setText(pipEnabled ? "Desativar PiP ao sair do app" : "Ativar PiP ao sair do app");
+        LinearLayout.LayoutParams pip = lp(-1, -2); pip.topMargin = dp(8); card.addView(pipButton, pip);
+        pipButton.setOnClickListener(v -> {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+                Toast.makeText(this, "PiP exige Android 8.0 ou superior.", Toast.LENGTH_LONG).show();
+                return;
+            }
+            pipEnabled = !pipEnabled;
+            getPreferences(MODE_PRIVATE).edit().putBoolean("pip_enabled", pipEnabled).apply();
+            pipButton.setText(pipEnabled ? "Desativar PiP ao sair do app" : "Ativar PiP ao sair do app");
+            Toast.makeText(this, pipEnabled
+                    ? "PiP ativado. Ao sair do app, a janela pode permanecer flutuante."
+                    : "PiP desativado.", Toast.LENGTH_SHORT).show();
+        });
+
+        advancedDetails = label("Avançado: a descoberta atual usa NSD/mDNS na rede local. Wi-Fi Direct, roteamento mesh, seleção de gateway, encaminhamento de tráfego e transporte criptografado ainda não estão implementados. Só use gateways confiáveis e autorizados.", 13, Color.rgb(65, 82, 108), false);
+        advancedDetails.setVisibility(View.GONE);
+        LinearLayout.LayoutParams adp = lp(-1, -2); adp.topMargin = dp(10); card.addView(advancedDetails, adp);
+        advancedButton.setOnClickListener(v -> {
+            advancedVisible = !advancedVisible;
+            advancedDetails.setVisibility(advancedVisible ? View.VISIBLE : View.GONE);
+            advancedButton.setText(advancedVisible ? "Ocultar configurações avançadas" : "Configurações avançadas");
+        });
+
         TextView peersTitle = label("Dispositivos encontrados", 18, Color.rgb(16, 26, 43), true);
         LinearLayout.LayoutParams ptp = lp(-1, -2); ptp.topMargin = dp(26); page.addView(peersTitle, ptp);
         peerList = new LinearLayout(this);
@@ -140,6 +184,20 @@ public final class MainActivity extends Activity {
         TextView endpoint = label(address + ":" + port, 12, Color.rgb(91, 105, 128), false);
         LinearLayout.LayoutParams ep = lp(-1, -2); ep.topMargin = dp(4); row.addView(endpoint, ep);
         row.addView(label("Encontrado na rede local · transferência indisponível", 11, Color.rgb(112, 126, 147), false));
+    }
+
+    @Override protected void onUserLeaveHint() {
+        super.onUserLeaveHint();
+        if (pipEnabled && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            try {
+                PictureInPictureParams params = new PictureInPictureParams.Builder()
+                        .setAspectRatio(new Rational(9, 16))
+                        .build();
+                enterPictureInPictureMode(params);
+            } catch (IllegalStateException ignored) {
+                // PiP can be unavailable on some devices, window modes, or system configurations.
+            }
+        }
     }
 
     @Override protected void onDestroy() {
