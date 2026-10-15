@@ -48,3 +48,30 @@
   .hero .device-scene .laptop { right:4%; }
   .hero .device-scene .tag { right:1%; }
 }
+
+
+/* Responsive device layout: reserve separate horizontal zones for both existing devices. */
+.device-scene .phone{
+  left:2%;
+  width:clamp(100px,10.5vw,132px);
+  max-width:34%;
+}
+.device-scene .laptop{
+  right:2%;
+  width:clamp(160px,17vw,214px);
+  max-width:58%;
+}
+@media(min-width:981px){
+  .device-scene{width:43%;right:3%}
+  .device-scene .phone{left:1%;width:clamp(104px,10.5vw,132px)}
+  .device-scene .laptop{right:2%;width:clamp(164px,17vw,214px)}
+}
+@media(min-width:701px) and (max-width:980px){
+  .device-scene{right:-8%;width:66%;height:460px}
+  .device-scene .phone{left:1%;top:20%;width:clamp(100px,11vw,128px)}
+  .device-scene .laptop{right:2%;top:43%;width:clamp(160px,18vw,205px)}
+  .device-scene .tag{right:1%;top:12%;font-size:10px}
+}
+@media(max-width:700px),(hover:none) and (pointer:coarse){
+  .device-scene{display:none!important}
+}
