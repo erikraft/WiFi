@@ -1,12 +1,17 @@
 # ErikrafT Wi-Fi™
 
+<p align="center">
+  <img src="assets/ErikrafT_Wifi_Icon_Logo.svg" alt="ErikrafT Wi-Fi™ logo" width="120">
+</p>
+
 Projeto open-source para conectividade local usando tecnologias Wi-Fi existentes. O protótipo Android anuncia o próprio nó e procura outros nós ErikrafT Wi-Fi na mesma rede local usando Android Network Service Discovery (DNS-SD/mDNS).
 
 > **Estado do protótipo:** descoberta LAN experimental. O endpoint TCP responde apenas metadados públicos; não transfere arquivos nem autentica pares. Não use para dados sensíveis. Wi-Fi Direct, mesh, gateways, transporte seguro e integração funcional com Drop ainda não estão implementados.
 
 ## Componentes
 - **Android:** app nativo Java com interface azul e descoberta LAN experimental por NSD/mDNS.
-- **Landing page:** site responsivo azul com visão geral e links para os repositórios Drop.
+- **Identidade visual:** logotipos SVG colorido e branco em `assets/`; o app Android usa o ícone branco sobre azul `#4285F4`, alinhado ao ErikrafT Drop™ for Android.
+- **Landing page:** site responsivo azul com visão geral, logotipo oficial e links para os repositórios Drop.
 - **Integração planejada:** deep link `erikraftwifi://open`; isso não significa que a integração com Drop já funcione.
 - **Builds:** workflow de validação compila APK debug; workflow de release gera APK/AAB e usa assinatura Base64 via GitHub Actions secrets, se configurada.
 
