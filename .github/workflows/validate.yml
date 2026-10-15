@@ -17,6 +17,7 @@ jobs:
           test -s app/src/main/java/com/erikraft/wifi/LanDiscovery.java
           test -s docs/lan-discovery.md
           test -s docs/builds.md
+          test -s docs/platform-compatibility.md
       - name: JavaScript syntax
         run: node --check assets/js/main.js
       - name: Android manifest XML
