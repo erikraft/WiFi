@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.drawable.Icon;
 import android.service.quicksettings.Tile;
 import android.service.quicksettings.TileService;
+import android.os.Build;
 
 /** Quick Settings shortcut that opens ErikrafT Wi-Fi; it does not silently change system Wi-Fi settings. */
 public final class WifiQuickSettingsTileService extends TileService {
@@ -12,7 +13,9 @@ public final class WifiQuickSettingsTileService extends TileService {
         Tile tile = getQsTile();
         if (tile != null) {
             tile.setLabel("ErikrafT Wi-Fi");
-            tile.setContentDescription("Abrir o ErikrafT Wi-Fi");
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                tile.setContentDescription("Abrir o ErikrafT Wi-Fi");
+            }
             tile.setIcon(Icon.createWithResource(this, R.drawable.erikraft_wifi_qs_icon));
             tile.setState(Tile.STATE_INACTIVE);
             tile.updateTile();
