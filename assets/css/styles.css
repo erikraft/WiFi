@@ -38,17 +38,6 @@
 @media(prefers-reduced-motion:reduce){.device-scene,.device-scene *{scroll-behavior:auto}}
 
 
-/* Keep the existing device illustration only when the hero has enough room. */
-@media (min-width:701px) and (max-width:1199px), (min-width:701px) and (max-height:680px) {
-  .hero .device-scene { display:none!important; }
-}
-@media (min-width:1200px) and (min-height:681px) {
-  .hero .device-scene { width:min(43%, 760px); right:3%; }
-  .hero .device-scene .phone { left:16%; }
-  .hero .device-scene .laptop { right:4%; }
-  .hero .device-scene .tag { right:1%; }
-}
-
 
 /* Responsive device layout: reserve separate horizontal zones for both existing devices. */
 .device-scene .phone{
