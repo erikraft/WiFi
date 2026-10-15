@@ -8,6 +8,12 @@ Projeto open-source para conectividade local usando tecnologias Wi-Fi existentes
 
 > **Estado do protótipo:** descoberta LAN experimental. O endpoint TCP responde apenas metadados públicos; não transfere arquivos nem autentica pares. Não use para dados sensíveis. Wi-Fi Direct, mesh, gateways, transporte seguro e integração funcional com Drop ainda não estão implementados.
 
+## Objetivo de conectividade
+
+O objetivo de longo prazo é permitir que dispositivos compatíveis formem ou usem uma rede Wi-Fi e alcancem serviços da Internet por uma rota disponível, inclusive por um gateway autorizado ou por nós intermediários quando o roteamento mesh estiver implementado. O projeto deve priorizar compatibilidade com APIs e hardware existentes, em vez de depender de rádio proprietário.
+
+**Limite fundamental:** Wi-Fi cria um enlace de rede, não uma conexão automática à Internet. Para abrir sites públicos, precisa existir uma rota externa funcional (roteador, conexão compartilhada ou gateway com Internet). Sem essa rota, o modo offline pode atender comunicação e serviços locais, mas não acessar arbitrariamente a Web pública. Wi-Fi Direct, roteamento mesh e gateways ainda não estão implementados; consulte [compatibilidade e limites](docs/platform-compatibility.md).
+
 ## Componentes
 - **Android:** app nativo Java com interface azul e descoberta LAN experimental por NSD/mDNS.
 - **Identidade visual:** logotipos SVG colorido e branco em `assets/`; o app Android usa o ícone branco sobre azul `#4285F4`, alinhado ao ErikrafT Drop™ for Android.
