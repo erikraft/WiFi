@@ -3,50 +3,55 @@
   <h1 align="center"><a href="https://wifi.erikraft.com/">ErikrafT Wi-Fi™</a></h1>
 </p>
 
-Projeto open-source para conectividade local usando tecnologias Wi-Fi existentes. O protótipo Android anuncia o próprio nó e procura outros nós ErikrafT Wi-Fi na mesma rede local usando Android Network Service Discovery (DNS-SD/mDNS).
+<p align="center"><a href="README.md">English</a> · <a href="README_PT-BR.md">Português (Brasil)</a></p>
 
-> **Estado do protótipo:** descoberta LAN experimental. O endpoint TCP responde apenas metadados públicos; não transfere arquivos nem autentica pares. Não use para dados sensíveis. Wi-Fi Direct, mesh, gateways, transporte seguro e integração funcional com Drop ainda não estão implementados.
+An open-source project exploring local connectivity using existing Wi-Fi technologies. The experimental Android prototype advertises its own node and discovers other ErikrafT Wi-Fi nodes on the same local network using Android Network Service Discovery (DNS-SD/mDNS).
 
-## Objetivo de conectividade
+> **Prototype status:** LAN discovery is experimental. The TCP endpoint returns public metadata only; it does not transfer files or authenticate peers. Do not use it for sensitive data. Wi-Fi Direct, mesh networking, gateways, secure transport, and functional ErikrafT Drop™ integration are not implemented yet.
 
-O objetivo de longo prazo é permitir que dispositivos compatíveis formem ou usem uma rede Wi-Fi e alcancem serviços da Internet por uma rota disponível, inclusive por um gateway autorizado ou por nós intermediários quando o roteamento mesh estiver implementado. O projeto deve priorizar compatibilidade com APIs e hardware existentes, em vez de depender de rádio proprietário.
+## Connectivity goal
 
-**Limite fundamental:** Wi-Fi cria um enlace de rede, não uma conexão automática à Internet. Para abrir sites públicos, precisa existir uma rota externa funcional (roteador, conexão compartilhada ou gateway com Internet). Sem essa rota, o modo offline pode atender comunicação e serviços locais, mas não acessar arbitrariamente a Web pública. Wi-Fi Direct, roteamento mesh e gateways ainda não estão implementados; consulte [compatibilidade e limites](docs/platform-compatibility.md).
+The long-term goal is to let compatible devices form or use a Wi-Fi network and reach Internet services through an available route, including an authorized gateway or intermediate nodes once mesh routing is implemented. The project prioritizes compatibility with existing APIs and hardware rather than relying on proprietary radio technology.
 
-## Componentes
-- **Android:** app nativo Java com interface azul e descoberta LAN experimental por NSD/mDNS.
-- **Identidade visual:** logotipos SVG colorido e branco em `assets/`; o app Android usa o ícone branco sobre azul `#4285F4`, alinhado ao ErikrafT Drop™ for Android.
-- **Landing page:** site responsivo azul com visão geral, logotipo oficial e links para os repositórios Drop.
-- **Integração planejada:** deep link `erikraftwifi://open`; isso não significa que a integração com Drop já funcione.
-- **Builds:** workflow de validação compila APK debug; workflow de release gera APK/AAB e usa assinatura Base64 via GitHub Actions secrets, se configurada.
+**Important limitation:** Wi-Fi creates a network link, not automatic Internet access. Public websites require a working external route, such as a router, shared connection, or Internet-connected gateway. Without that route, offline mode may support local communication and services, but it cannot access the public Web arbitrarily. Wi-Fi Direct, mesh routing, and gateways are not implemented; see [platform compatibility and limitations](docs/platform-compatibility.md).
 
-## Interface Android, Quick Settings e PiP
+## Components
 
-## Interface Android, Quick Settings e PiP
+- **Android app:** native Java app with a blue interface and experimental LAN discovery using NSD/mDNS.
+- **Visual identity:** color and white SVG logos in `assets/`. The Android app uses the white icon on blue `#4285F4`, consistent with ErikrafT Drop™ for Android.
+- **Landing page:** responsive blue website with an overview, official logo, and links to the Drop repositories.
+- **Planned integration:** the `erikraftwifi://open` deep link is an exploratory entry point; it does not mean Drop integration already works.
+- **Builds:** the validation workflow compiles a debug APK. The release workflow creates APK/AAB artifacts and can sign them using a Base64 keystore supplied through GitHub Actions secrets.
 
-- A interface oferece uma entrada de configurações avançadas para consultar o estado real e os recursos ainda pendentes, sem apresentá-los como já disponíveis.
-- O usuário pode habilitar o Picture-in-Picture (PiP) ao sair do app em Android 8.0 ou superior; o recurso depende do suporte do aparelho e das configurações do sistema.
-- O serviço Quick Settings adiciona um atalho para abrir o ErikrafT Wi-Fi. Ele usa um VectorDrawable Android com a geometria do símbolo branco de `assets/ErikrafT_Wifi_Icon_Logo_White.svg`, dimensionado para 24 dp; o arquivo SVG original não é alterado. O atalho não liga/desliga o Wi-Fi nem cria uma conexão sozinho.
-- A interface ainda é um protótipo; o painel avançado não configura mesh ou gateways porque essas funções ainda não existem no núcleo de rede.
+## Android interface, Quick Settings, and PiP
 
-## Build e distribuição
+- The interface provides an advanced-settings entry to inspect actual status and pending capabilities without presenting them as available features.
+- Users can enable Picture-in-Picture (PiP) when leaving the app on Android 8.0 or later; availability depends on device support and system settings.
+- The Quick Settings service adds a shortcut to open ErikrafT Wi-Fi. It uses an Android VectorDrawable based on the white symbol in `assets/ErikrafT_Wifi_Icon_Logo_White.svg`, sized to 24 dp; the original SVG is not modified. The shortcut does not turn Wi-Fi on or off and does not create a connection by itself.
+- The app remains a prototype. Advanced settings do not configure mesh networking or gateways because those capabilities do not yet exist in the networking core.
 
-Abra `app/` no Android Studio ou consulte [docs/builds.md](docs/builds.md) para executar os workflows e configurar a assinatura com segurança. Não adicione keystores, senhas ou chaves privadas ao Git.
+## Build and distribution
 
-A aplicação atual é Android nativa. Ainda não existe cliente desktop para gerar executáveis funcionais Windows, Linux ou macOS. Consulte [docs/platform-compatibility.md](docs/platform-compatibility.md) para limites e roadmap.
+Open `app/` in Android Studio or follow [the build and signing guide](docs/builds.md). Never add keystores, passwords, or private keys to Git.
 
-## Documentação
-- [Arquitetura](docs/architecture.md)
-- [Descoberta LAN](docs/lan-discovery.md)
-- [Compatibilidade de plataformas e limites regulatórios](docs/platform-compatibility.md)
-- [Builds e assinatura](docs/builds.md)
-- [Segurança](docs/security.md)
-- [Integração com Drop](docs/drop-integration.md)
+The current application is native Android. There is no functional desktop client or executable for Windows, Linux, or macOS yet. See [platform compatibility and limitations](docs/platform-compatibility.md).
 
-## Repositórios relacionados
+## Documentation
+
+- [Architecture](docs/architecture.md) · [Português](docs/architecture_PT-BR.md)
+- [LAN discovery](docs/lan-discovery.md) · [Português](docs/lan-discovery_PT-BR.md)
+- [Platform compatibility and regulatory limitations](docs/platform-compatibility.md) · [Português](docs/platform-compatibility_PT-BR.md)
+- [Builds and signing](docs/builds.md) · [Português](docs/builds_PT-BR.md)
+- [Security](docs/security.md) · [Português](docs/security_PT-BR.md)
+- [ErikrafT Drop™ integration](docs/drop-integration.md) · [Português](docs/drop-integration_PT-BR.md)
+- [AI-readable project guide](llms.txt) · [Português](llms_PT-BR.txt)
+
+## Related repositories
+
 - [ErikrafT Drop™ Web/Desktop](https://github.com/erikraft/Drop)
 - [ErikrafT Drop™ for Android](https://github.com/erikraft/Drop-Android)
-- [Site ErikrafT](https://github.com/erikraft/site)
+- [ErikrafT website](https://github.com/erikraft/site)
 
-## Segurança e compatibilidade
-Descoberta não é autenticação. O endpoint atual não fornece um canal autenticado ou criptografado. Não transfira arquivos privados até que autenticação, integridade e criptografia ponta a ponta estejam implementadas e testadas. Compatibilidade varia conforme Android, fabricante, permissões e hardware; não é tecnicamente correto prometer suporte universal.
+## Security and compatibility
+
+Discovery is not authentication. The current endpoint does not provide an authenticated or encrypted channel. Do not transfer private files until authentication, integrity protection, and end-to-end encryption have been implemented and tested. Compatibility varies by Android version, manufacturer, permissions, and hardware; universal support must not be assumed.

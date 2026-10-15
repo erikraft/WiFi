@@ -1,13 +1,13 @@
-# Integração com ErikrafT Drop™
+# ErikrafT Drop™ integration
 
-Alvos: [Drop Web/Desktop](https://github.com/erikraft/Drop) e [Drop Android](https://github.com/erikraft/Drop-Android).
+Targets: [Drop Web/Desktop](https://github.com/erikraft/Drop) and [Drop Android](https://github.com/erikraft/Drop-Android).
 
-## Estado atual
-A integração ainda não é funcional. O app Android registra o deep link erikraftwifi://open como ponto de entrada exploratório; isso não cria uma API de dados nem uma sessão segura.
+## Current status
+Integration is not functional yet. The Android app registers the `erikraftwifi://open` deep link as an exploratory entry point; this does not create a data API or a secure session.
 
-## Próximas etapas
-- Definir contrato de API/IPC versionado e modelo de permissões.
-- Fazer Drop consultar capacidades e disponibilidade sem presumir Wi-Fi Direct ou Mesh.
-- Exigir consentimento e validar a origem antes de transferências.
-- Reutilizar o mecanismo de transferência do Drop quando possível, evitando duplicar lógica de arquivos.
-- Testar Web/Desktop e Android separadamente e documentar fallbacks.
+## Next steps
+- Define a versioned API/IPC contract and permission model.
+- Have Drop query capabilities and availability without assuming Wi-Fi Direct or mesh support.
+- Require user consent and validate the origin before transfers.
+- Reuse Drop's transfer mechanism where possible instead of duplicating file-transfer logic.
+- Test Web/Desktop and Android separately and document fallback behavior.

@@ -1,11 +1,11 @@
-# Segurança do protótipo
+# Prototype security
 
-A descoberta LAN usa NSD/DNS-SD para anunciar e localizar instâncias do ErikrafT Wi-Fi na rede local. O endpoint TCP anunciado responde somente metadados públicos de serviço, versão e capacidades; não recebe arquivos nem conteúdo do usuário.
+LAN discovery uses NSD/DNS-SD to advertise and locate ErikrafT Wi-Fi instances on the local network. The advertised TCP endpoint returns public service, version, and capability metadata only; it does not receive files or user content.
 
-**Limitações atuais**
-- Não há autenticação ou identidade criptográfica de pares.
-- O endpoint de metadados não é um canal seguro e não deve ser tratado como prova de identidade.
-- Não há transferência de arquivos, Wi-Fi Direct, mesh routing ou gateways implementados.
-- Dispositivos na mesma rede podem ser hostis ou estar comprometidos.
+## Current limitations
+- Peer authentication and cryptographic peer identity are not implemented.
+- The metadata endpoint is not a secure channel and must not be treated as proof of identity.
+- File transfer, Wi-Fi Direct, mesh routing, and gateways are not implemented.
+- Devices on the same network may be hostile or compromised.
 
-Antes de ativar comunicação de dados, implementar e testar identidade de pares, consentimento explícito, autenticação mútua, criptografia ponta a ponta, proteção contra replay, validação de payloads, limites de tamanho e tempo, cancelamento e logs sem conteúdo sensível. Estar na mesma rede Wi-Fi não é uma prova de confiança.
+Before enabling data communication, implement and test peer identity, explicit consent, mutual authentication, end-to-end encryption, replay protection, payload validation, size and time limits, cancellation, and logs that exclude sensitive content. Being on the same Wi-Fi network is not proof of trust.
