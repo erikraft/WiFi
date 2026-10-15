@@ -1,45 +1,40 @@
-# Arquitetura inicial
+# Initial architecture
 
-## Implementado nesta etapa
-- Landing page estática responsiva em azul.
-- App Android nativo com interface inicial e deep link `erikraftwifi://open`.
-- Descoberta experimental de nós na mesma rede local usando Android NSD/DNS-SD (mDNS).
-- Endpoint TCP efêmero que responde apenas metadados públicos de protocolo/capacidades; não recebe nem envia arquivos.
-- Workflow de CI que tenta compilar o APK debug e workflow manual/tag para APK/AAB Android.
+## Implemented in this stage
+- Responsive static landing page with a blue visual identity.
+- Native Android app with an initial interface and the `erikraftwifi://open` deep link.
+- Experimental discovery of nodes on the same local network using Android NSD/DNS-SD (mDNS).
+- Ephemeral TCP endpoint that returns public protocol and capability metadata only; it does not receive or send files.
+- CI workflow that attempts to compile a debug APK, plus a manual/tag-triggered workflow for Android APK/AAB artifacts.
 
-## Interface Android e atalhos
+## Android interface and shortcuts
+- **Main screen:** keeps LAN discovery as the primary action and uses direct wording.
+- **Advanced settings:** explains current capabilities and pending networking features. It does not expose pretend controls for unimplemented mesh or gateway functionality.
+- **Quick Settings:** `WifiQuickSettingsTileService` provides a shortcut to open the app. The white symbol is reproduced as an Android VectorDrawable at 24 dp without modifying the original SVG. The shortcut does not toggle Wi-Fi.
+- **PiP:** optional and disabled by default; the preference is persisted. On Android 8.0+, the app requests Picture-in-Picture when the user leaves it. Device manufacturers and system policies may restrict this behavior.
 
-## Interface Android e atalhos
-
-- **Acesso simples:** a tela principal mantém a descoberta LAN como ação principal e usa linguagem direta.
-- **Configurações avançadas:** uma seção expansível explica as capacidades atuais e os recursos de rede ainda pendentes. Ela não finge oferecer controles de mesh/gateway que ainda não foram implementados.
-- **Quick Settings:** o serviço `WifiQuickSettingsTileService` oferece um atalho para abrir o app. O símbolo branco é reproduzido como VectorDrawable Android no tamanho de 24 dp, sem modificar o SVG original. O atalho não alterna o rádio Wi-Fi.
-- **PiP:** opcional e desativado por padrão; a preferência é persistida. Em Android 8.0+, ao sair do app, ele solicita Picture-in-Picture. Fabricantes e políticas do sistema podem limitar esse comportamento.
-
-
-## Ainda não implementado
+## Not implemented yet
 - Wi-Fi Direct / Wi-Fi P2P.
-- Mesh routing, encaminhamento entre nós e gateways para Internet.
-- Autenticação de pares, canal criptografado e transferência segura.
-- Integração funcional com Drop Web/Desktop e Drop Android. O deep link é apenas um ponto de entrada.
-- Cliente desktop executável para Windows, Linux e macOS.
-- Suporte a iOS ou qualquer capacidade de operar como estação-base de rede celular.
+- Mesh routing, forwarding between nodes, and Internet gateways.
+- Peer authentication, encrypted channels, and secure file transfer.
+- Functional integration with Drop Web/Desktop and Drop Android. The deep link is only an entry point.
+- Executable desktop clients for Windows, Linux, and macOS.
+- iOS support or the ability to operate as a cellular-network base station.
 
-## Compatibilidade e limites
-O app pode rodar em aparelhos que também tenham 2G/3G/4G/5G, mas isso não faz com que o app forneça essas redes celulares. O tráfego via Internet precisa de uma rota para um gateway conectado. Sem gateway, nós podem oferecer apenas conectividade local quando o transporte correspondente estiver implementado.
+## Compatibility and limitations
+The app may run on devices that also support 2G/3G/4G/5G, but this does not make it a provider of those cellular networks. Internet traffic needs a route to a connected gateway. Without a gateway, nodes can provide local connectivity only when the relevant transport is implemented.
 
-A implementação deve utilizar APIs oficiais do sistema e rádios existentes, sem alterar potência, frequências ou firmware. Para o contexto regulatório brasileiro, leia [platform-compatibility.md](platform-compatibility.md).
+The implementation should use official operating-system APIs and existing radios, without changing transmission power, frequencies, or firmware. For Brazilian regulatory context, see [platform compatibility](platform-compatibility.md).
 
-## Objetivo de conectividade de longo prazo
+## Long-term connectivity goal
+The goal is to let compatible devices reach the Internet through existing network interfaces and authorized routes, with future support for direct device links, multi-hop forwarding, and gateways where technically feasible. The client should detect actual per-device capabilities and fall back to local networking when no external route is available.
 
-A meta é permitir conectividade interoperável com a Internet usando interfaces de rede existentes e rotas autorizadas, com suporte futuro a conexões diretas entre dispositivos, encaminhamento multi-hop e gateways quando tecnicamente possível. O cliente deve detectar e descrever capacidades reais por dispositivo e manter fallback para redes locais quando não houver rota externa.
+No software technique can guarantee access to public websites without a network path to the Internet. Wi-Fi Direct can create a local link; mesh networking can forward traffic between nodes if routing works; only a gateway with upstream connectivity provides Internet access. DNS, NAT, IPv4/IPv6, firewalls, captive portals, TLS, provider policies, and operator consent must be considered and tested.
 
-Não existe uma técnica de software que garanta acesso a qualquer site público sem que algum caminho de rede alcance a Internet. Wi-Fi Direct pode criar um enlace local; mesh pode encaminhar tráfego entre nós se houver roteamento funcional; somente um gateway com upstream fornece saída à Internet. DNS, NAT, IPv4/IPv6, firewall, captive portals, TLS, políticas dos provedores e consentimento dos operadores precisam ser considerados e testados.
-
-## Direção técnica
-1. Usar APIs de rede existentes; não inventar protocolo de rádio.
-2. Separar descoberta, identidade de nó, sessão autenticada e transporte.
-3. Definir capacidades por plataforma, pois Android, iOS e desktop diferem.
-4. Nunca tratar presença na mesma LAN como prova de confiança.
-5. Adicionar testes de protocolo e revisão de segurança antes de habilitar transferência.
-6. Não marcar funcionalidade como concluída apenas porque existe um workflow ou uma interface; exigir testes em hardware e evidências.
+## Technical direction
+1. Use existing network APIs; do not invent a radio protocol.
+2. Separate discovery, node identity, authenticated sessions, and transport.
+3. Define capabilities per platform because Android, iOS, and desktop differ.
+4. Never treat presence on the same LAN as proof of trust.
+5. Add protocol tests and security review before enabling transfers.
+6. Require hardware tests and evidence before marking a feature complete; a workflow or interface alone is not proof.
