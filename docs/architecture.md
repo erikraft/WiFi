@@ -7,6 +7,16 @@
 - Endpoint TCP efêmero que responde apenas metadados públicos de protocolo/capacidades; não recebe nem envia arquivos.
 - Workflow de CI que tenta compilar o APK debug e workflow manual/tag para APK/AAB Android.
 
+## Interface Android e atalhos
+
+## Interface Android e atalhos
+
+- **Acesso simples:** a tela principal mantém a descoberta LAN como ação principal e usa linguagem direta.
+- **Configurações avançadas:** uma seção expansível explica as capacidades atuais e os recursos de rede ainda pendentes. Ela não finge oferecer controles de mesh/gateway que ainda não foram implementados.
+- **Quick Settings:** o serviço `WifiQuickSettingsTileService` oferece um atalho para abrir o app. O símbolo branco é reproduzido como VectorDrawable Android no tamanho de 24 dp, sem modificar o SVG original. O atalho não alterna o rádio Wi-Fi.
+- **PiP:** opcional e desativado por padrão; a preferência é persistida. Em Android 8.0+, ao sair do app, ele solicita Picture-in-Picture. Fabricantes e políticas do sistema podem limitar esse comportamento.
+
+
 ## Ainda não implementado
 - Wi-Fi Direct / Wi-Fi P2P.
 - Mesh routing, encaminhamento entre nós e gateways para Internet.
