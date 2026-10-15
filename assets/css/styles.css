@@ -75,3 +75,8 @@
 @media(max-width:700px),(hover:none) and (pointer:coarse){
   .device-scene{display:none!important}
 }
+
+/* Fail closed when the hero cannot safely fit both illustrated devices. */
+@media (min-width:701px) and (max-width:1100px),(min-width:701px) and (max-height:650px){
+  .device-scene{display:none!important}
+}
