@@ -12,6 +12,7 @@ jobs:
           test -s index.html
           test -s assets/css/styles.css
           test -s assets/js/main.js
+          test -s assets/bitcoin-logo.svg
           test -s app/src/main/AndroidManifest.xml
           test -s app/src/main/java/com/erikraft/wifi/MainActivity.java
           test -s app/src/main/java/com/erikraft/wifi/LanDiscovery.java
@@ -22,6 +23,8 @@ jobs:
         run: node --check assets/js/main.js
       - name: Android manifest XML
         run: python -c "import xml.etree.ElementTree as E; E.parse('app/src/main/AndroidManifest.xml')"
+      - name: Validate site HTML
+        run: python -c "from html.parser import HTMLParser; HTMLParser().feed(open('index.html', encoding='utf-8').read())"
 
   android-build:
     name: Compile Android debug APK
@@ -32,9 +35,10 @@ jobs:
         with:
           distribution: temurin
           java-version: "17"
-      - uses: android-actions/setup-android@v3
-      - name: Install Android SDK
-        run: sdkmanager "platforms;android-36" "build-tools;36.0.0"
+      - name: Accept Android SDK licenses
+        run: yes | sdkmanager --licenses || true
+      - name: Install Android SDK packages
+        run: sdkmanager --install "platforms;android-36" "build-tools;36.0.0" "platform-tools"
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: "8.13"
