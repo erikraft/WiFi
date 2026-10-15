@@ -14,6 +14,8 @@ jobs:
           test -s assets/js/main.js
           test -s app/src/main/AndroidManifest.xml
           test -s app/src/main/java/com/erikraft/wifi/MainActivity.java
+          test -s app/src/main/java/com/erikraft/wifi/LanDiscovery.java
+          test -s docs/lan-discovery.md
       - name: JavaScript syntax
         run: node --check assets/js/main.js
       - name: Android manifest XML
