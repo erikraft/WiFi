@@ -11,3 +11,7 @@
 .site-loader:not(.hidden){visibility:visible;pointer-events:auto}
 .site-loader.hidden{opacity:0;visibility:hidden;pointer-events:none}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.section::before,.integration::before,.donations::before,.closing::before{display:none}}
+
+/* Keep transition shadows above section backgrounds but below section content. */
+.section::before,.integration::before,.donations::before,.closing::before{z-index:0}
+.section>*,.integration>*,.donations>*,.closing>*{position:relative;z-index:1}
