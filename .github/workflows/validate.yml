@@ -16,8 +16,13 @@ jobs:
           test -s app/src/main/AndroidManifest.xml
           test -s app/src/main/java/com/erikraft/wifi/MainActivity.java
           test -s app/src/main/java/com/erikraft/wifi/LanDiscovery.java
+          test -s app/src/main/java/com/erikraft/wifi/AppStrings.java
+          test -s app/src/main/java/com/erikraft/wifi/OfflineLibraryActivity.java
+          test -s app/src/main/java/com/erikraft/wifi/OfflineArchiveProvider.java
+          test -s app/src/main/assets/mesh_globe.html
           test -s docs/lan-discovery.md
           test -s docs/builds.md
+          ! grep -Eq 'href="docs/[^"]+\.md"' index.html
           test -s docs/platform-compatibility.md
       - name: JavaScript syntax
         run: node --check assets/js/main.js
