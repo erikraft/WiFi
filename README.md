@@ -31,6 +31,18 @@ The long-term goal is to let compatible devices form or use a Wi-Fi network and 
 - The Quick Settings service adds a shortcut to open ErikrafT Wi-Fi. It uses an Android VectorDrawable based on the white symbol in `assets/ErikrafT_Wifi_Icon_Logo_White.svg`, sized to 24 dp; the original SVG is not modified. The shortcut does not turn Wi-Fi on or off and does not create a connection by itself.
 - The app remains a prototype. Advanced settings do not configure mesh networking or gateways because those capabilities do not yet exist in the networking core.
 
+## Android offline web library and mesh-globe preview
+
+The Android app includes an experimental offline web library:
+- Open a website URL and save a WebView MHTML archive for later local reading.
+- Reopen saved archives, import HTML/MHTML files through Android's document picker, and export an archive to a user-selected location.
+- Accept shared text/URL or a shared file from compatible Android apps.
+- Open the interactive, touch-friendly globe preview (drag to rotate, zoom, select illustrative nodes).
+
+**Offline archive limitations:** the archive contains only resources WebView successfully captures. Login-only content, DRM, dynamic pages, some cross-origin resources, and pages requiring a live backend may not work offline. Chrome's private “downloaded page” store is sandboxed by Android; the app cannot silently read Chrome's private data. Export/share an actual HTML/MHTML file or select a downloaded file that Android exposes in the document picker. A standalone HTML file whose companion asset folder is missing may render incompletely.
+
+**Mesh and calls status:** the globe is currently a design/interaction preview, not a live map of peers. The existing network core remains experimental NSD/mDNS discovery on a shared LAN. It does not yet provide offline multi-hop mesh chat, audio/video calls, WebRTC signaling, Bluetooth mesh routing, or Wi-Fi Aware transport. Calls with no Internet are technically possible on compatible local peer links, but require a real local signaling and media transport implementation, platform permission handling, and multi-device testing; this release does not claim that capability.
+
 ## Build and distribution
 
 Open `app/` in Android Studio or follow [the build and signing guide](docs/builds.md). Never add keystores, passwords, or private keys to Git.
