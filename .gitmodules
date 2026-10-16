@@ -1,0 +1,25 @@
+# ==============================================================================
+# ErikrafT Wi-Fi™ — Git Submodules
+# ==============================================================================
+#
+# OFFICIAL:
+# Os componentes mantidos oficialmente pelo ErikrafT ficam nos repositórios
+# erikraft/* e são identificados como parte do ecossistema ErikrafT.
+#
+# REFERENCES (THIRD-PARTY / NOT OFFICIAL):
+# Os repositórios em References/ são projetos independentes incluídos apenas
+# como referência de implementação e design. Eles NÃO são produtos oficiais
+# do ErikrafT, não são mantidos pelo ErikrafT e mantêm seus próprios autores,
+# licenças, marcas e histórico.
+#
+# Não copiar código desses projetos sem verificar a licença aplicável.
+# ==============================================================================
+[submodule "References/bitchat"]
+	path = References/bitchat
+	url = https://github.com/permissionlesstech/bitchat.git
+	branch = master
+
+[submodule "References/bitchat-android"]
+	path = References/bitchat-android
+	url = https://github.com/permissionlesstech/bitchat-android.git
+	branch = main
