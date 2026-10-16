@@ -36,9 +36,14 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y build-essential curl wget file libxdo-dev libssl-dev librsvg2-dev patchelf libwebkit2gtk-4.1-dev
-      - name: Install desktop CLI
+      - name: Install desktop CLI and pinned icon rasterizer
         working-directory: desktop
         run: npm install
+      - name: Generate native app icons from the existing project SVG
+        working-directory: desktop
+        run: |
+          node scripts/generate-icons.mjs
+          npm run tauri -- icon src-tauri/icon-source.png
       - name: Build desktop app
         working-directory: desktop
         run: npm run tauri -- build
