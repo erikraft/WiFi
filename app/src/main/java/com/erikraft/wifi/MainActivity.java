@@ -73,7 +73,7 @@ public final class MainActivity extends Activity {
         scroll.addView(page);
 
         ImageView logo = new ImageView(this);
-        logo.setImageResource(com.erikraft.wifi.R.drawable.erikraft_wifi_app_icon);
+        logo.setImageResource(com.erikraft.wifi.R.drawable.launcher_icon_foreground);
         logo.setScaleType(ImageView.ScaleType.FIT_CENTER);
         LinearLayout.LayoutParams logoParams = lp(dp(58), dp(61));
         logoParams.bottomMargin = dp(14);
