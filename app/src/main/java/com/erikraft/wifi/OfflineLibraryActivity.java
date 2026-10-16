@@ -27,6 +27,10 @@ import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.HashMap;
+import java.util.Map;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 /**
  * Offline web library. MHTML archives preserve the rendered page and embedded
@@ -42,6 +46,8 @@ public final class OfflineLibraryActivity extends Activity {
     private EditText address;
     private File archiveDir;
     private String lastArchive;
+    private LanDiscovery globeDiscovery;
+    private final Map<String, String[]> livePeers = new HashMap<>();
 
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
@@ -110,6 +116,7 @@ public final class OfflineLibraryActivity extends Activity {
                 return true;
             }
             @Override public void onPageFinished(WebView view, String url) {
+                if (url.startsWith("file:///android_asset/mesh_globe.html")) publishPeersToGlobe();
                 if (status != null && (url.startsWith("http") || url.startsWith("file:"))) {
                     status.setText(url.startsWith("file:")
                             ? "Visualizando arquivo local/offline."
@@ -130,9 +137,59 @@ public final class OfflineLibraryActivity extends Activity {
     }
 
     private void showGlobe() {
-        web.loadUrl("file:///android_asset/mesh_globe.html");
         address.setText("https://wifi.erikraft.com/");
-        status.setText("Globo interativo demonstrativo. Os pontos são ilustrativos: a descoberta mesh real ainda não está conectada a esta visualização.");
+        status.setText("Globo interativo. Os pares descobertos na rede local serão destacados; posições são apenas visuais, não geográficas.");
+        web.loadUrl("file:///android_asset/mesh_globe.html");
+        if (globeDiscovery != null) globeDiscovery.stop();
+        synchronized (livePeers) { livePeers.clear(); }
+        globeDiscovery = new LanDiscovery(this, new LanDiscovery.Listener() {
+            @Override public void onStatus(String value) {
+                runOnUiThread(() -> {
+                    if (status != null && web != null && "file:///android_asset/mesh_globe.html".equals(web.getUrl())) {
+                        status.setText(value);
+                    }
+                });
+            }
+            @Override public void onPeer(String name, String host, int port) {
+                runOnUiThread(() -> {
+                    synchronized (livePeers) {
+                        livePeers.put(name + "@" + host, new String[]{name, host, String.valueOf(port)});
+                    }
+                    publishPeersToGlobe();
+                });
+            }
+        });
+        globeDiscovery.start();
+    }
+
+    private void publishPeersToGlobe() {
+        if (web == null) return;
+        JSONArray peers = new JSONArray();
+        synchronized (livePeers) {
+            for (String[] peer : livePeers.values()) {
+                JSONObject item = new JSONObject();
+                try {
+                    item.put("name", peer[0]);
+                    item.put("address", peer[1]);
+                    item.put("port", peer[2]);
+                    peers.put(item);
+                } catch (Exception ignored) { }
+            }
+        }
+        web.evaluateJavascript("if(window.ErikrafTMeshUpdatePeers){window.ErikrafTMeshUpdatePeers(" + peers.toString() + ");}", null);
+    }
+
+    @Override protected void onDestroy() {
+        if (globeDiscovery != null) {
+            globeDiscovery.destroy();
+            globeDiscovery = null;
+        }
+        if (web != null) {
+            web.stopLoading();
+            web.destroy();
+            web = null;
+        }
+        super.onDestroy();
     }
 
     private void openAddress() {
