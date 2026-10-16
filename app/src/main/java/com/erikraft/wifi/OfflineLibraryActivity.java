@@ -159,6 +159,14 @@ public final class OfflineLibraryActivity extends Activity {
                     publishPeersToGlobe();
                 });
             }
+            @Override public void onPeerLost(String name) {
+                runOnUiThread(() -> {
+                    synchronized (livePeers) {
+                        livePeers.entrySet().removeIf(entry -> entry.getValue()[0].equals(name));
+                    }
+                    publishPeersToGlobe();
+                });
+            }
         });
         globeDiscovery.start();
     }
