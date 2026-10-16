@@ -21,7 +21,7 @@ O objetivo de longo prazo é permitir que dispositivos compatíveis formem ou us
 - **Identidade visual:** logotipos SVG colorido e branco em `assets/`. O app Android usa o ícone branco sobre azul `#4285F4`, alinhado ao ErikrafT Drop™ for Android.
 - **Landing page:** site azul responsivo com estado do projeto, documentação bilíngue e QR codes de pagamento Bitcoin.
 - **Cliente desktop:** protótipo inicial Tauri + Rust em `desktop/` com alvo Windows, Linux e macOS. É experimental e exige CI e validação em dispositivos reais; não é uma versão estável.
-- **Integração planejada:** o deep link `erikraftwifi://open` é um ponto de entrada exploratório; isso não significa que a integração com Drop já funcione.
+- **Integração planejada:** o deep link `erikraftwifi://open` é um ponto de entrada exploratório; isso não significa que a integração com ErikrafT Drop™ já funcione.
 - **Builds:** o workflow de validação compila um APK debug. O workflow de release gera artefatos APK/AAB e pode assiná-los usando uma keystore em Base64 fornecida por secrets do GitHub Actions.
 
 ## Interface Android, Quick Settings e PiP
@@ -61,7 +61,7 @@ O app Android continua experimental. Um protótipo desktop inicial em `desktop/`
 - [Integração com ErikrafT Drop™](docs/drop-integration_PT-BR.md) · [English](docs/drop-integration.md)
 - [Clientes desktop](docs/desktop-clients_PT-BR.md) · [English](docs/desktop-clients.md)
 - [Visão internacional de regulamentação](docs/international-regulatory-overview_PT-BR.md) · [English](docs/international-regulatory-overview.md)
-- [Roadmap de integração com Drop](docs/drop-integration-roadmap_PT-BR.md) · [English](docs/drop-integration-roadmap.md)
+- [Roadmap de integração com ErikrafT Drop™](docs/drop-integration-roadmap_PT-BR.md) · [English](docs/drop-integration-roadmap.md)
 - [Experiência Web responsiva](docs/web-experience_PT-BR.md) · [English](docs/web-experience.md)
 - [Guia do projeto para sistemas de IA](llms.txt) · [Português](llms_PT-BR.txt)
 
