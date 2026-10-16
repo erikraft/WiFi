@@ -35,10 +35,11 @@ O objetivo de longo prazo é permitir que dispositivos compatíveis formem ou us
 
 O app Android inclui uma biblioteca experimental para leitura offline:
 - Abrir um endereço, salvar uma captura MHTML pelo WebView, reabrir páginas salvas, importar HTML/MHTML e exportar arquivos.
-- Receber URLs ou arquivos compartilhados por apps Android compatíveis.
+- Compartilhar diretamente um arquivo HTML/MHTML salvo com apps Android compatíveis, usando um URI de conteúdo somente leitura com permissão temporária por arquivo.
+- Receber URLs ou arquivos compartilhados por apps Android compatíveis, preservando a extensão `.html` / `.mhtml` dos arquivos de páginas compartilhadas.
 - Abrir o globo interativo com rotação, zoom e seleção de nós.
 - O globo agora recebe pares reais descobertos por NSD/mDNS na mesma rede local, atualiza quando aparecem/desaparecem e exibe endereço/porta ao selecionar um par. As posições são apenas uma disposição visual determinística — não são coordenadas GPS nem um mapa geográfico. Pontos decorativos continuam sendo ilustrativos.
-- Os rótulos e controles do globo têm traduções para 16 variantes de idioma/localidade, de acordo com o idioma do WebView. Isso não significa que toda a interface nativa esteja traduzida.
+- A tela principal Android, biblioteca offline, diagnósticos e status de descoberta contam com seletor de idioma dentro do app e 16 variantes offline; os controles do globo também têm traduções correspondentes.
 
 **Limitações de leitura offline:** o MHTML inclui somente os recursos que o WebView consegue capturar. Páginas com login, DRM, conteúdo dinâmico ou dependência de servidores podem não funcionar offline. O armazenamento privado de páginas baixadas pelo Chrome não pode ser acessado diretamente por outro app; exporte/compartilhe um arquivo que o Android disponibilize.
 
