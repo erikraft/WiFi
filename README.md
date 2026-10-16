@@ -13,7 +13,7 @@ An open-source project exploring local connectivity using existing Wi-Fi technol
 
 The long-term goal is to let compatible devices form or use a Wi-Fi network and reach Internet services through an available route, including an authorized gateway or intermediate nodes once mesh routing is implemented. The project prioritizes compatibility with existing APIs and hardware rather than relying on proprietary radio technology.
 
-**Important limitation:** Wi-Fi creates a network link, not automatic Internet access. Public websites require a working external route, such as a router, shared connection, or Internet-connected gateway. Without that route, offline mode may support local communication and services, but it cannot access the public Web arbitrarily. Wi-Fi Direct, mesh routing, and gateways are not implemented; see [platform compatibility and limitations](docs/platform-compatibility.md).
+**Important limitation:** Wi-Fi creates a network link, not automatic Internet access. Public websites require a working external route, such as a router, shared connection, or Internet-connected gateway. Without that route, offline mode may support local communication and services, but it cannot access the public Web arbitrarily. Direct sharing uses Android's native hotspot and requires a real upstream connection on the gateway device. The app does not yet route IP traffic through a multi-hop mesh. See [Android Internet gateway](docs/internet-gateway.md) and [platform compatibility and limitations](docs/platform-compatibility.md).
 
 ## Components
 
