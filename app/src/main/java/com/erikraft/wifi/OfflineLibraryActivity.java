@@ -3,6 +3,7 @@ package com.erikraft.wifi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.ClipData;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -261,11 +262,28 @@ public final class OfflineLibraryActivity extends Activity {
                     }
                     status.setText("Arquivo local: " + chosen.getName());
                     new AlertDialog.Builder(this).setTitle(chosen.getName())
-                            .setItems(new String[]{"Ler offline", "Exportar arquivo"}, (dialog, action) -> {
+                            .setItems(new String[]{"Ler offline", "Exportar arquivo", "Compartilhar offline"}, (dialog, action) -> {
                                 if (action == 0) web.loadUrl(Uri.fromFile(chosen).toString());
-                                else exportArchive(chosen);
+                                else if (action == 1) exportArchive(chosen);
+                                else shareArchive(chosen);
                             }).show();
                 }).setNegativeButton("Fechar", null).show();
+    }
+
+    private void shareArchive(File file) {
+        try {
+            Uri uri = OfflineArchiveProvider.uriFor(this, file);
+            Intent share = new Intent(Intent.ACTION_SEND);
+            String lower = file.getName().toLowerCase(Locale.ROOT);
+            share.setType(lower.endsWith(".html") || lower.endsWith(".htm")
+                    ? "text/html" : "application/x-mimearchive");
+            share.putExtra(Intent.EXTRA_STREAM, uri);
+            share.setClipData(ClipData.newUri(getContentResolver(), file.getName(), uri));
+            share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            startActivity(Intent.createChooser(share, "Compartilhar página offline"));
+        } catch (Exception e) {
+            toast("Não foi possível compartilhar este arquivo offline.");
+        }
     }
 
     private void chooseImport() {
