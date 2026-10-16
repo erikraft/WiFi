@@ -43,7 +43,7 @@ final class GatewayManager {
 
     static String getStatusText(Context context) {
         return AppStrings.t(context, hasValidatedInternet(context)
-                ? "Internet validada neste dispositivo; o hotspot do Android ainda precisa ser ativado."
+                ? "Internet validada neste dispositivo. Confirme que o Hotspot/Ancoragem do Android está ativo."
                 : "Sem Internet validada neste dispositivo. Um gateway não cria Internet sem uma conexão externa.");
     }
 
