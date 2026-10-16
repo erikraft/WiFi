@@ -3,6 +3,7 @@ package com.erikraft.wifi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.provider.Settings;
 import android.app.PictureInPictureParams;
 import android.graphics.Color;
@@ -77,7 +78,22 @@ public final class MainActivity extends Activity {
         LinearLayout.LayoutParams logoParams = lp(dp(58), dp(61));
         logoParams.bottomMargin = dp(14);
         page.addView(logo, logoParams);
-        page.addView(label("ErikrafT Wi-Fi™", 18, blue, true));
+        LinearLayout topBar = new LinearLayout(this);
+        topBar.setGravity(Gravity.CENTER_VERTICAL);
+        topBar.setOrientation(LinearLayout.HORIZONTAL);
+        TextView brand = label("ErikrafT Wi-Fi™", 18, blue, true);
+        topBar.addView(brand, new LinearLayout.LayoutParams(0, -2, 1));
+        Button websiteButton = new Button(this);
+        websiteButton.setText("Site oficial ↗");
+        websiteButton.setAllCaps(false);
+        websiteButton.setTextColor(primaryText);
+        websiteButton.setBackgroundTintList(android.content.res.ColorStateList.valueOf(surface));
+        topBar.addView(websiteButton, lp(-2, -2));
+        websiteButton.setOnClickListener(v -> {
+            Intent web = new Intent(Intent.ACTION_VIEW, Uri.parse("https://wifi.erikraft.com/"));
+            startActivity(web);
+        });
+        page.addView(topBar);
         TextView title = label("Seus dispositivos.\nSua rede.", 34, primaryText, true);
         LinearLayout.LayoutParams tp = lp(-1, -2); tp.topMargin = dp(34); page.addView(title, tp);
         TextView sub = label("Descubra dispositivos ErikrafT Wi-Fi conectados à mesma rede local.", 16, secondaryText, false);
@@ -133,7 +149,7 @@ public final class MainActivity extends Activity {
         pipButton = new Button(this);
         pipButton.setAllCaps(false);
         pipButton.setTextColor(blue);
-        pipButton.setBackgroundTintList(android.content.res.ColorStateList.valueOf(Color.rgb(230, 239, 255)));
+        pipButton.setBackgroundTintList(android.content.res.ColorStateList.valueOf(surface));
         pipButton.setText(pipEnabled ? "Desativar PiP ao sair do app" : "Ativar PiP ao sair do app");
         LinearLayout.LayoutParams pip = lp(-1, -2); pip.topMargin = dp(8); card.addView(pipButton, pip);
         pipButton.setOnClickListener(v -> {
@@ -149,7 +165,7 @@ public final class MainActivity extends Activity {
                     : "PiP desativado.", Toast.LENGTH_SHORT).show();
         });
 
-        advancedDetails = label("Avançado: a descoberta atual usa NSD/mDNS na rede local. Wi-Fi Direct, roteamento mesh, seleção de gateway, encaminhamento de tráfego e transporte criptografado ainda não estão implementados. Só use gateways confiáveis e autorizados.", 13, Color.rgb(65, 82, 108), false);
+        advancedDetails = label("Avançado: a descoberta atual usa NSD/mDNS na rede local. Wi-Fi Direct, roteamento mesh, seleção de gateway, encaminhamento de tráfego e transporte criptografado ainda não estão implementados. Só use gateways confiáveis e autorizados.", 13, secondaryText, false);
         advancedDetails.setVisibility(View.GONE);
         LinearLayout.LayoutParams adp = lp(-1, -2); adp.topMargin = dp(10); card.addView(advancedDetails, adp);
         advancedButton.setOnClickListener(v -> {
@@ -168,7 +184,7 @@ public final class MainActivity extends Activity {
         TextView note = label("Estado: descoberta LAN experimental. Wi-Fi Direct, Mesh, gateways e transferência segura ainda não estão implementados. A descoberta não autentica dispositivos; não envie dados privados.", 12, secondaryText, false);
         LinearLayout.LayoutParams np = lp(-1, -2); np.topMargin = dp(24); page.addView(note, np);
 
-        TextView links = label("Integração futura: ErikrafT Drop™ e Drop™ for Android", 13, blue, true);
+        TextView links = label("Projeto experimental · Descoberta LAN", 13, blue, true);
         LinearLayout.LayoutParams lnp = lp(-1, -2); lnp.topMargin = dp(16); page.addView(links, lnp);
         setContentView(scroll);
 
