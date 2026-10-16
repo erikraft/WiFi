@@ -41,10 +41,10 @@ Targets:
 - Do not publish user names, filenames, credentials, session tokens, or private network data beyond what discovery requires.
 
 ### Stage 3 — Explicit handoff into ErikrafT Drop™
-- Let the user choose a discovered peer and deliberately open the relevant Drop surface.
+- Let the user choose a discovered peer and deliberately open the relevant ErikrafT Drop™ surface.
 - Keep the deep link as a navigation handoff, not an authorization token. Do not put credentials or file contents in the URI.
 - Revalidate the peer in ErikrafT Drop™ and show the actual target and requested operation before sending.
-- If Drop cannot safely consume the capability information, fall back to its current supported pairing/transfer flow.
+- If ErikrafT Drop™ cannot safely consume the capability information, fall back to its current supported pairing/transfer flow.
 
 ### Stage 4 — Authenticated session
 - Define peer identity, mutual authentication, cryptographic session establishment, replay protection, timeout rules, and cancellation.
@@ -54,8 +54,8 @@ Targets:
 ### Stage 5 — Optional transport reuse
 - Evaluate whether ErikrafT Drop™'s current transport can be reused without bypassing encryption, pairing, quotas, or transfer state.
 - Only consider Wi-Fi Direct or multi-hop routes after the security and network architecture is reviewed separately.
-- Preserve existing Drop fallbacks; a Wi-Fi-specific path must not break normal LAN, WebRTC, room, or other already-supported flows.
+- Preserve existing ErikrafT Drop™ fallbacks; a Wi-Fi-specific path must not break normal LAN, WebRTC, room, or other already-supported flows.
 
 ## Acceptance criteria
 
-Integration is not complete until the contract is documented and versioned, both Drop codebases are reviewed, user consent and authentication are verified, and automated plus physical-device tests cover Android-to-Android, desktop-to-Android, and supported desktop combinations. A registered deep link alone is not integration.
+Integration is not complete until the contract is documented and versioned, both ErikrafT Drop™ codebases are reviewed, user consent and authentication are verified, and automated plus physical-device tests cover Android-to-Android, desktop-to-Android, and supported desktop combinations. A registered deep link alone is not integration.
