@@ -94,12 +94,16 @@ final class GatewayManager {
 
     private static void openHotspotSettings(Activity activity) {
         try {
-            activity.startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));
+            activity.startActivity(new Intent(Settings.ACTION_TETHER_SETTINGS));
         } catch (Exception first) {
             try {
-                activity.startActivity(new Intent(Settings.ACTION_SETTINGS));
+                activity.startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));
             } catch (Exception second) {
-                Toast.makeText(activity, AppStrings.t(activity, "Não foi possível abrir as configurações do Android."), Toast.LENGTH_LONG).show();
+                try {
+                    activity.startActivity(new Intent(Settings.ACTION_SETTINGS));
+                } catch (Exception third) {
+                    Toast.makeText(activity, AppStrings.t(activity, "Não foi possível abrir as configurações do Android."), Toast.LENGTH_LONG).show();
+                }
             }
         }
     }
