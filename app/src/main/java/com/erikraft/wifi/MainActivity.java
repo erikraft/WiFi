@@ -174,7 +174,7 @@ public final class MainActivity extends Activity {
         pipButton.setAllCaps(false);
         pipButton.setTextColor(blue);
         pipButton.setBackgroundTintList(android.content.res.ColorStateList.valueOf(surface));
-        pipButton.setText(pipEnabled ? "Desativar PiP ao sair do app" : "Ativar PiP ao sair do app");
+        pipButton.setText(AppStrings.t(this, pipEnabled ? "Desativar PiP ao sair do app" : "Ativar PiP ao sair do app"));
         LinearLayout.LayoutParams pip = lp(-1, -2); pip.topMargin = dp(8); card.addView(pipButton, pip);
         pipButton.setOnClickListener(v -> {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
@@ -189,13 +189,13 @@ public final class MainActivity extends Activity {
                     : "PiP desativado."), Toast.LENGTH_SHORT).show();
         });
 
-        advancedDetails = label("Avançado: a descoberta atual usa NSD/mDNS na rede local. Wi-Fi Direct, roteamento mesh, seleção de gateway, encaminhamento de tráfego e transporte criptografado ainda não estão implementados. Só use gateways confiáveis e autorizados.", 13, secondaryText, false);
+        advancedDetails = label("Descoberta LAN ativa. Mesh, Wi-Fi Direct e criptografia ainda não estão disponíveis.", 13, secondaryText, false);
         advancedDetails.setVisibility(View.GONE);
         LinearLayout.LayoutParams adp = lp(-1, -2); adp.topMargin = dp(10); card.addView(advancedDetails, adp);
         advancedButton.setOnClickListener(v -> {
             advancedVisible = !advancedVisible;
             advancedDetails.setVisibility(advancedVisible ? View.VISIBLE : View.GONE);
-            advancedButton.setText(advancedVisible ? "Ocultar configurações avançadas" : "Configurações avançadas");
+            advancedButton.setText(AppStrings.t(this, advancedVisible ? "Ocultar configurações avançadas" : "Configurações avançadas"));
         });
 
         TextView peersTitle = label("Dispositivos encontrados", 18, primaryText, true);
@@ -205,7 +205,7 @@ public final class MainActivity extends Activity {
         LinearLayout.LayoutParams plp = lp(-1, -2); plp.topMargin = dp(10); page.addView(peerList, plp);
         peerList.addView(label("Nenhum dispositivo encontrado ainda.", 13, secondaryText, false));
 
-        TextView note = label("Estado: descoberta LAN experimental. Wi-Fi Direct, Mesh, gateways e transferência segura ainda não estão implementados. A descoberta não autentica dispositivos; não envie dados privados.", 12, secondaryText, false);
+        TextView note = label("Protótipo: descoberta LAN sem autenticação, chat mesh ou transferência segura.", 12, secondaryText, false);
         LinearLayout.LayoutParams np = lp(-1, -2); np.topMargin = dp(24); page.addView(note, np);
 
         TextView links = label("Projeto experimental · Descoberta LAN", 13, blue, true);
@@ -232,18 +232,18 @@ public final class MainActivity extends Activity {
     private void showDiagnostics() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
         NetworkCapabilities caps = cm == null ? null : cm.getNetworkCapabilities(cm.getActiveNetwork());
-        String network = caps == null ? "Sem rede ativa detectada"
-                : caps.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ? "Wi-Fi conectado"
-                : caps.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) ? "Ethernet conectada"
-                : "Outra rede ativa";
-        String report = "ErikrafT Wi-Fi — Diagnostics\\n\\n"
+        String network = caps == null ? AppStrings.t(this, "Sem rede ativa detectada")
+                : caps.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ? AppStrings.t(this, "Wi-Fi conectado")
+                : caps.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) ? AppStrings.t(this, "Ethernet conectada")
+                : AppStrings.t(this, "Outra rede ativa");
+        String report = AppStrings.t(this, "ErikrafT Wi-Fi — Diagnóstico") + "\\n\\n"
                 + AppStrings.t(this, "Android: ") + Build.VERSION.RELEASE + AppStrings.t(this, " (API ") + Build.VERSION.SDK_INT + ")\\n"
                 + AppStrings.t(this, "Dispositivo: ") + Build.MANUFACTURER + " " + Build.MODEL + "\\n"
                 + AppStrings.t(this, "Rede: ") + network + "\\n"
-                + AppStrings.t(this, "Descoberta LAN: experimental (NSD/mDNS)\\n")
-                + AppStrings.t(this, "Autenticação de pares: não implementada\\n")
-                + AppStrings.t(this, "Transporte criptografado: não implementado\\n")
-                + AppStrings.t(this, "Wi-Fi Direct / mesh / gateway: não implementados\\n")
+                + AppStrings.t(this, "Descoberta LAN: experimental (NSD/mDNS)") + "\\n"
+                + AppStrings.t(this, "Autenticação de pares: não implementada") + "\\n"
+                + AppStrings.t(this, "Transporte criptografado: não implementado") + "\\n"
+                + AppStrings.t(this, "Wi-Fi Direct / mesh / gateway: não implementados") + "\\n"
                 + AppStrings.t(this, "Transferência de arquivos: não implementada");
         new AlertDialog.Builder(this).setTitle(AppStrings.t(this, "Diagnóstico")).setMessage(report)
                 .setPositiveButton(AppStrings.t(this, "OK"), null)
