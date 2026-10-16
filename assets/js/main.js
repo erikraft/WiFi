@@ -41,7 +41,7 @@ function renderBitcoinQrs(){
           cornersSquareOptions:{color:'#0a090b',type:'square'},
           cornersDotOptions:{color:'#0a090b',type:'square'},
           backgroundOptions:{color:'#ffffff'},
-          imageOptions:{hideBackgroundDots:true,imageSize:0.22,margin:5,crossOrigin:'anonymous'}
+          imageOptions:{hideBackgroundDots:true,imageSize:0.22,margin:5,crossOrigin:'anonymous',saveAsBlob:true}
         });
         qr.append(host);
         host.setAttribute('aria-label','Bitcoin payment QR code with Bitcoin logo. Amount is not preset.');
