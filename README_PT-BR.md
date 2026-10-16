@@ -61,7 +61,7 @@ O app Android continua experimental. Um protótipo desktop inicial em `desktop/`
 - [Integração com ErikrafT Drop™](docs/drop-integration_PT-BR.md) · [English](docs/drop-integration.md)
 - [Clientes desktop](docs/desktop-clients_PT-BR.md) · [English](docs/desktop-clients.md)
 - [Visão internacional de regulamentação](docs/international-regulatory-overview_PT-BR.md) · [English](docs/international-regulatory-overview.md)
-- [Roadmap de integração com ErikrafT Drop™](docs/drop-integration-roadmap_PT-BR.md) · [English](docs/drop-integration-roadmap.md)
+- [Plano de integração com ErikrafT Drop™](docs/drop-integration-roadmap_PT-BR.md) · [English](docs/drop-integration-roadmap.md)
 - [Experiência Web responsiva](docs/web-experience_PT-BR.md) · [English](docs/web-experience.md)
 - [Guia do projeto para sistemas de IA](llms.txt) · [Português](llms_PT-BR.txt)
 
