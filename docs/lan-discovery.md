@@ -13,7 +13,7 @@ The app uses `NsdManager` (Network Service Discovery / DNS-SD over mDNS) to adve
 - Create a hotspot or switch networks.
 - Establish a Wi-Fi Direct connection.
 - Authenticate peers or encrypt the metadata endpoint.
-- Transfer files, route mesh traffic, or provide an Internet gateway.
+- Transfer files or route mesh traffic. Gateway TXT is only a local hint; direct Internet sharing is performed by Android's native hotspot/tethering, not app-level routing.
 
 ## Manual test
 1. Install the same app version on two Android devices.
