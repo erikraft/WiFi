@@ -54,7 +54,7 @@ public final class MainActivity extends Activity {
         surfaceColor = night ? Color.rgb(24, 31, 45) : Color.WHITE;
         primaryTextColor = night ? Color.rgb(239, 243, 250) : Color.rgb(24, 35, 53);
         secondaryTextColor = night ? Color.rgb(169, 182, 202) : Color.rgb(91, 105, 128);
-        softAccentColor = night ? Color.rgb(35, 55, 86) : softAccentColor;
+        softAccentColor = night ? Color.rgb(35, 55, 86) : Color.rgb(230, 239, 255);
         borderColor = night ? Color.rgb(48, 61, 81) : Color.rgb(225, 232, 242);
         getWindow().setStatusBarColor(pageColor);
         getWindow().setNavigationBarColor(pageColor);
@@ -108,6 +108,8 @@ public final class MainActivity extends Activity {
         settingsButton.setOnClickListener(v -> {
             advancedVisible = !advancedVisible;
             advancedDetails.setVisibility(advancedVisible ? View.VISIBLE : View.GONE);
+            if (advancedButton != null) advancedButton.setText(advancedVisible
+                    ? "Ocultar configurações avançadas" : "Configurações avançadas");
             Toast.makeText(this, advancedVisible ? "Configurações avançadas abertas."
                     : "Configurações avançadas recolhidas.", Toast.LENGTH_SHORT).show();
             if (advancedVisible) advancedDetails.getParent().requestChildFocus(advancedDetails, advancedDetails);
