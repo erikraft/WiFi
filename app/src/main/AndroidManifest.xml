@@ -21,6 +21,9 @@
                 <data android:mimeType="text/plain" />
                 <data android:mimeType="text/html" />
                 <data android:mimeType="application/octet-stream" />
+                <data android:mimeType="application/x-mimearchive" />
+                <data android:mimeType="message/rfc822" />
+                <data android:mimeType="multipart/related" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
