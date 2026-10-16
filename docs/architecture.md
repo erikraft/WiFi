@@ -13,11 +13,19 @@
 - **Quick Settings:** `WifiQuickSettingsTileService` provides a shortcut to open the app. The white symbol is reproduced as an Android VectorDrawable at 24 dp without modifying the original SVG. The shortcut does not toggle Wi-Fi.
 - **PiP:** optional and disabled by default; the preference is persisted. On Android 8.0+, the app requests Picture-in-Picture when the user leaves it. Device manufacturers and system policies may restrict this behavior.
 
+## Offline pages and app localization
+
+- Save a rendered page from Android WebView as an MHTML archive for local reading.
+- Import HTML/MHTML files exposed by Android's document picker and export saved archives.
+- Share a saved archive through a read-only `ContentProvider` URI grant; receivers get read-only access to that single file.
+- The Android app language picker provides 16 offline translations for the native screen, diagnostics, archive controls, and discovery status. The interactive globe uses the same selected locale.
+- Sharing a URL is not equivalent to sharing Chrome's privately stored downloaded page. The app cannot access Chrome's private storage; offline reading requires an actual HTML/MHTML file that Android exposes.
+
 ## Not implemented yet
 - Wi-Fi Direct / Wi-Fi P2P.
 - Mesh routing, forwarding between nodes, and Internet gateways.
-- Peer authentication, encrypted channels, and secure file transfer.
-- Functional integration with Drop Web/Desktop and Drop Android. The deep link is only an entry point.
+- Peer authentication, encrypted channels, secure LAN/mesh messaging, media transfer, and real-time audio/video calls.
+- Functional integration with ErikrafT Drop™ for Web/Desktop and ErikrafT Drop™ for Android. The deep link is only an entry point.
 - Executable desktop clients for Windows, Linux, and macOS.
 - iOS support or the ability to operate as a cellular-network base station.
 
