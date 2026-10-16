@@ -55,6 +55,7 @@ O app Android continua experimental. Um protótipo desktop inicial em `desktop/`
 
 - [Arquitetura](docs/architecture_PT-BR.md) · [English](docs/architecture.md)
 - [Descoberta LAN](docs/lan-discovery_PT-BR.md) · [English](docs/lan-discovery.md)
+- [Gateway de Internet no Android](docs/internet-gateway_PT-BR.md) · [English](docs/internet-gateway.md)
 - [Compatibilidade de plataformas e limites regulatórios](docs/platform-compatibility_PT-BR.md) · [English](docs/platform-compatibility.md)
 - [Builds e assinatura](docs/builds_PT-BR.md) · [English](docs/builds.md)
 - [Segurança](docs/security_PT-BR.md) · [English](docs/security.md)
