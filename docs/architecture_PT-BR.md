@@ -26,7 +26,8 @@
 
 ## Ainda não implementado
 - Wi-Fi Direct / Wi-Fi P2P.
-- Mesh routing, encaminhamento entre nós e gateways para Internet.
+- Roteamento IP mesh multi-hop e encaminhamento do tráfego de clientes através de nós intermediários.
+- Túnel de tráfego do sistema do telefone cliente dentro do protocolo do app. O compartilhamento desta etapa é direto pelo hotspot NAT do Android.
 - Autenticação de pares, canal criptografado, mensagens mesh seguras, transferência de mídia e chamadas de áudio/vídeo em tempo real.
 - Integração funcional com ErikrafT Drop™ para Web/Desktop e ErikrafT Drop™ para Android. O deep link é apenas um ponto de entrada.
 - Cliente desktop executável para Windows, Linux e macOS.
