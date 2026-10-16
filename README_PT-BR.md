@@ -7,7 +7,7 @@
 
 Projeto open-source que explora conectividade local usando tecnologias Wi-Fi existentes. O protótipo experimental para Android anuncia o próprio nó e procura outros nós ErikrafT Wi-Fi na mesma rede local usando Android Network Service Discovery (DNS-SD/mDNS).
 
-> **Estado do protótipo:** a descoberta LAN é experimental. O endpoint TCP responde apenas metadados públicos; não transfere arquivos nem autentica pares. Não o use para dados sensíveis. Wi-Fi Direct, rede mesh, gateways, transporte seguro e integração funcional com ErikrafT Drop™ ainda não estão implementados.
+> **Estado do protótipo:** a descoberta LAN é experimental e o endpoint TCP responde apenas metadados públicos, sem transferir arquivos ou autenticar pares. O app agora ajuda a configurar o hotspot/tethering nativo do Android para compartilhamento direto de Internet, com anúncio local opcional de gateway. Roteamento IP por mesh multi-hop, transporte seguro e integração funcional com ErikrafT Drop™ ainda não estão implementados.
 
 ## Objetivo de conectividade
 
