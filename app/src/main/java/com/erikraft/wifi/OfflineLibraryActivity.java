@@ -74,8 +74,8 @@ public final class OfflineLibraryActivity extends Activity {
         address.setSingleLine(true);
         address.setTextColor(Color.WHITE);
         address.setHintTextColor(Color.GRAY);
-        address.setHint("https://wifi.erikraft.com/");
-        address.setText("https://wifi.erikraft.com/");
+        address.setHint(AppStrings.t(this, "https://wifi.erikraft.com/"));
+        address.setText(AppStrings.t(this, "https://wifi.erikraft.com/"));
         address.setInputType(android.text.InputType.TYPE_TEXT_VARIATION_URI);
         address.setSelectAllOnFocus(true);
         address.setPadding(dp(12), 0, dp(12), 0);
@@ -120,9 +120,9 @@ public final class OfflineLibraryActivity extends Activity {
                 if (url.startsWith("file:///android_asset/mesh_globe.html")) {
                     publishPeersToGlobe();
                 } else if (status != null && (url.startsWith("http") || url.startsWith("file:"))) {
-                    status.setText(url.startsWith("file:")
+                    status.setText(AppStrings.t(OfflineLibraryActivity.this, url.startsWith("file:")
                             ? "Visualizando arquivo local/offline."
-                            : "Site aberto. Use “Salvar offline” para criar um arquivo MHTML.");
+                            : "Site aberto. Use “Salvar offline” para criar um arquivo MHTML."));
                 }
             }
         });
@@ -139,8 +139,8 @@ public final class OfflineLibraryActivity extends Activity {
     }
 
     private void showGlobe() {
-        address.setText("https://wifi.erikraft.com/");
-        status.setText("Globo interativo. Os pares descobertos na rede local serão destacados; posições são apenas visuais, não geográficas.");
+        address.setText(AppStrings.t(this, "https://wifi.erikraft.com/"));
+        status.setText(AppStrings.t(this, "Globo visual de dispositivos encontrados na rede local; posições não são geográficas."));
         web.loadUrl("file:///android_asset/mesh_globe.html");
         if (globeDiscovery != null) globeDiscovery.stop();
         synchronized (livePeers) { livePeers.clear(); }
@@ -148,7 +148,7 @@ public final class OfflineLibraryActivity extends Activity {
             @Override public void onStatus(String value) {
                 runOnUiThread(() -> {
                     if (status != null && web != null && "file:///android_asset/mesh_globe.html".equals(web.getUrl())) {
-                        status.setText(value);
+                        status.setText(AppStrings.t(OfflineLibraryActivity.this, value));
                     }
                 });
             }
@@ -210,7 +210,7 @@ public final class OfflineLibraryActivity extends Activity {
             Uri uri = Uri.parse(value);
             if (uri.getHost() == null) throw new IllegalArgumentException();
             web.loadUrl(uri.toString());
-            status.setText("Carregando site. É necessária conexão para abrir páginas que ainda não foram salvas.");
+            status.setText(AppStrings.t(this, "Carregando site. É necessária conexão para abrir páginas que ainda não foram salvas."));
         } catch (Exception e) {
             toast("Informe um endereço HTTP ou HTTPS válido.");
         }
@@ -227,14 +227,14 @@ public final class OfflineLibraryActivity extends Activity {
         if (host == null) host = "site";
         host = host.replaceAll("[^A-Za-z0-9.-]", "_");
         File target = new File(archiveDir, host + "-" + stamp + ".mht");
-        status.setText("Salvando página e recursos disponíveis…");
+        status.setText(AppStrings.t(this, "Salvando página e recursos disponíveis…"));
         web.saveWebArchive(target.getAbsolutePath(), true, path -> runOnUiThread(() -> {
             if (path != null && new File(path).exists() && new File(path).length() > 0) {
                 lastArchive = path;
-                status.setText("Salvo offline: " + new File(path).getName());
+                status.setText(AppStrings.t(this, "Salvo offline: " + new File(path).getName()));
                 toast("Página salva para leitura offline.");
             } else {
-                status.setText("O WebView não conseguiu criar o arquivo offline desta página.");
+                status.setText(AppStrings.t(this, "O WebView não conseguiu criar o arquivo offline desta página."));
                 toast("Falha ao salvar. Algumas páginas bloqueiam ou não suportam arquivamento.");
             }
         }));
@@ -243,15 +243,15 @@ public final class OfflineLibraryActivity extends Activity {
     private void showLibrary() {
         File[] files = archiveDir.listFiles((dir, name) -> name.endsWith(".mht") || name.endsWith(".mhtml") || name.endsWith(".html") || name.endsWith(".htm"));
         if (files == null || files.length == 0) {
-            new AlertDialog.Builder(this).setTitle("Biblioteca offline")
-                    .setMessage("Ainda não há páginas salvas. Abra um site e toque em “Salvar offline”, ou importe um arquivo HTML/MHTML baixado.")
-                    .setPositiveButton("Importar", (d,w) -> chooseImport())
-                    .setNegativeButton("Fechar", null).show();
+            new AlertDialog.Builder(this).setTitle(AppStrings.t(this, "Biblioteca offline"))
+                    .setMessage(AppStrings.t(this, "Ainda não há páginas salvas. Abra um site e toque em “Salvar offline”, ou importe um arquivo HTML/MHTML baixado."))
+                    .setPositiveButton(AppStrings.t(this, "Importar"), (d,w) -> chooseImport())
+                    .setNegativeButton(AppStrings.t(this, "Fechar"), null).show();
             return;
         }
         String[] names = new String[files.length];
         for (int i=0;i<files.length;i++) names[i] = files[i].getName();
-        new AlertDialog.Builder(this).setTitle("Páginas neste dispositivo")
+        new AlertDialog.Builder(this).setTitle(AppStrings.t(this, "Páginas neste dispositivo"))
                 .setItems(names, (d, which) -> {
                     File chosen = files[which];
                     lastArchive = chosen.getAbsolutePath();
@@ -260,14 +260,14 @@ public final class OfflineLibraryActivity extends Activity {
                     } else {
                         web.loadUrl(Uri.fromFile(chosen).toString());
                     }
-                    status.setText("Arquivo local: " + chosen.getName());
+                    status.setText(AppStrings.t(this, "Arquivo local: " + chosen.getName()));
                     new AlertDialog.Builder(this).setTitle(chosen.getName())
-                            .setItems(new String[]{"Ler offline", "Exportar arquivo", "Compartilhar offline"}, (dialog, action) -> {
+                            .setItems(AppStrings.translateArray(this, new String[]{"Ler offline", "Exportar arquivo", "Compartilhar offline"}), (dialog, action) -> {
                                 if (action == 0) web.loadUrl(Uri.fromFile(chosen).toString());
                                 else if (action == 1) exportArchive(chosen);
                                 else shareArchive(chosen);
                             }).show();
-                }).setNegativeButton("Fechar", null).show();
+                }).setNegativeButton(AppStrings.t(this, "Fechar"), null).show();
     }
 
     private void shareArchive(File file) {
@@ -280,7 +280,7 @@ public final class OfflineLibraryActivity extends Activity {
             share.putExtra(Intent.EXTRA_STREAM, uri);
             share.setClipData(ClipData.newUri(getContentResolver(), file.getName(), uri));
             share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            startActivity(Intent.createChooser(share, "Compartilhar página offline"));
+            startActivity(Intent.createChooser(share, AppStrings.t(this, "Compartilhar página offline")));
         } catch (Exception e) {
             toast("Não foi possível compartilhar este arquivo offline.");
         }
@@ -310,7 +310,7 @@ public final class OfflineLibraryActivity extends Activity {
                 }
                 lastArchive = out.getAbsolutePath();
                 web.loadUrl(Uri.fromFile(out).toString());
-                status.setText("Importado para leitura local: " + out.getName());
+                status.setText(AppStrings.t(this, "Importado para leitura local: " + out.getName()));
                 toast("Arquivo importado. Se o Chrome mantém a página só no armazenamento privado dele, exporte/compartilhe o arquivo primeiro.");
             } catch (Exception e) {
                 toast("Não foi possível importar esse arquivo.");
@@ -359,7 +359,7 @@ public final class OfflineLibraryActivity extends Activity {
                 }
                 lastArchive = out.getAbsolutePath();
                 web.loadUrl(Uri.fromFile(out).toString());
-                status.setText("Página compartilhada aberta localmente.");
+                status.setText(AppStrings.t(this, "Página compartilhada aberta localmente."));
                 return;
             } catch (Exception ignored) { }
         }
@@ -384,15 +384,15 @@ public final class OfflineLibraryActivity extends Activity {
 
     private Button button(String caption, int color) {
         Button b = new Button(this);
-        b.setText(caption); b.setTextSize(11); b.setAllCaps(false); b.setTextColor(Color.WHITE);
+        b.setText(AppStrings.t(this, caption)); b.setTextSize(11); b.setAllCaps(false); b.setTextColor(Color.WHITE);
         b.setBackgroundTintList(android.content.res.ColorStateList.valueOf(color));
         return b;
     }
     private TextView text(String value, int size, int color, boolean bold) {
-        TextView t = new TextView(this); t.setText(value); t.setTextSize(size); t.setTextColor(color);
+        TextView t = new TextView(this); t.setText(AppStrings.t(this, value)); t.setTextSize(size); t.setTextColor(color);
         if (bold) t.setTypeface(android.graphics.Typeface.DEFAULT, android.graphics.Typeface.BOLD);
         return t;
     }
     private int dp(int n) { return (int)(n * getResources().getDisplayMetrics().density + 0.5f); }
-    private void toast(String message) { Toast.makeText(this, message, Toast.LENGTH_LONG).show(); }
+    private void toast(String message) { Toast.makeText(this, AppStrings.t(this, message), Toast.LENGTH_LONG).show(); }
 }
