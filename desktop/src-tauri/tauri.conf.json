@@ -29,7 +29,7 @@
   "bundle": {
     "active": true,
     "targets": "all",
-    "category": "Network",
+    "category": "Utility",
     "shortDescription": "Experimental local network device discovery",
     "longDescription": "ErikrafT Wi-Fi desktop prototype for discovering compatible nodes on a local network.",
     "icon": [
