@@ -31,14 +31,14 @@ The long-term goal is to let compatible devices form or use a Wi-Fi network and 
 - The Quick Settings service adds a shortcut to open ErikrafT Wi-Fi. It uses an Android VectorDrawable based on the white symbol in `assets/ErikrafT_Wifi_Icon_Logo_White.svg`, sized to 24 dp; the original SVG is not modified. The shortcut does not turn Wi-Fi on or off and does not create a connection by itself.
 - The app remains a prototype. Advanced settings do not configure mesh networking or gateways because those capabilities do not yet exist in the networking core.
 
-## Android offline web library and mesh-globe preview
+## Android offline web library and geographic globe
 
 The Android app includes an experimental offline web library:
 - Open a website URL and save a WebView MHTML archive for later local reading.
 - Reopen saved archives, import HTML/MHTML files through Android's document picker, and export an archive to a user-selected location.
 - Share a saved HTML/MHTML archive directly with compatible Android apps through a read-only, per-file content URI grant.
 - Accept shared text/URL or a shared file from compatible Android apps, retaining `.html` / `.mhtml` extensions for shared archive files.
-- Open the interactive globe: it now receives real peers discovered by Android NSD/mDNS on the same local network, updates when peers appear/disappear, and shows their LAN address/port when selected. Peer positions are deterministic visual placement only—not GPS coordinates or geographic locations. Decorative background points are explicitly illustrative.
+- Open the interactive geographic globe with simplified latitude/longitude coast outlines that rotate with the sphere. It receives real peers discovered by Android NSD/mDNS on the same local network, updates when peers appear/disappear, and shows their LAN address/port when selected. Peer markers use illustrative visual placements only—not GPS coordinates or actual geographic locations. The globe does not implement mesh routing.
 - The Android home screen, offline-library controls, diagnostics and discovery statuses support an in-app language picker with 16 offline language variants; the globe controls also include matching translations.
 
 **Offline archive limitations:** the archive contains only resources WebView successfully captures. Login-only content, DRM, dynamic pages, some cross-origin resources, and pages requiring a live backend may not work offline. Chrome's private “downloaded page” store is sandboxed by Android; the app cannot silently read Chrome's private data. Export/share an actual HTML/MHTML file or select a downloaded file that Android exposes in the document picker. A standalone HTML file whose companion asset folder is missing may render incompletely.
