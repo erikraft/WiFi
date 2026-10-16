@@ -1,0 +1,46 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap');
+:root{color-scheme:light;--blue:#4285F4;--blue-strong:#2268d5;--blue-soft:#e8f0fe;--ink:#17263e;--muted:#63738a;--border:#dce5f2;--surface:#fff;--canvas:#f5f8fd;--mono:"Space Mono",monospace;--sans:"DM Sans",Arial,sans-serif}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at 84% 0%,rgba(66,133,244,.13),transparent 40%),var(--canvas);color:var(--ink);font:15px/1.6 var(--sans);min-width:320px}
+a{color:var(--blue-strong);text-decoration:none}
+a:hover{text-decoration:underline}
+.app-shell{width:min(920px,100%);margin:0 auto;padding:0 clamp(18px,4vw,48px) 28px}
+.topbar{height:72px;display:flex;align-items:center;justify-content:space-between;gap:14px;border-bottom:1px solid var(--border)}
+.brand{display:flex;align-items:center;gap:10px;color:var(--ink);font-weight:800;white-space:nowrap}
+.brand img{width:34px;height:34px;display:block}
+.brand b{color:var(--blue)}
+.platform-label,.eyebrow{font:700 10px/1.5 var(--mono);letter-spacing:1.1px;color:var(--blue-strong)}
+.platform-label{padding:7px 10px;border-radius:999px;background:var(--blue-soft);white-space:nowrap}
+.intro{padding:clamp(30px,6vw,58px) 0 28px;max-width:720px}
+.intro .eyebrow{margin:0 0 12px}
+h1{font-size:clamp(38px,6vw,68px);letter-spacing:-2.8px;line-height:1.04;margin:0 0 18px;font-weight:800}
+h1 span{color:var(--blue)}
+.lead{max-width:680px;color:var(--muted);font-size:clamp(14px,1.8vw,17px);margin:0}
+.card{border:1px solid var(--border);border-radius:22px;background:rgba(255,255,255,.94);box-shadow:0 18px 55px rgba(29,66,120,.08);padding:clamp(18px,3.5vw,30px)}
+.card-heading{display:flex;justify-content:space-between;align-items:center;gap:16px}
+.card-heading .eyebrow{margin:0 0 6px}
+h2{font-size:clamp(23px,3vw,30px);letter-spacing:-.8px;line-height:1.2;margin:0}
+.status-dot{width:10px;height:10px;border-radius:50%;background:#8a98ab;box-shadow:0 0 0 5px #e9eef5;flex:0 0 auto}
+.status-dot.running{background:#16a36a;box-shadow:0 0 0 5px #e2f5eb}
+.status{margin:22px 0;color:var(--muted);overflow-wrap:anywhere}
+.actions{display:flex;gap:10px;flex-wrap:wrap}
+button{font:700 13px var(--sans);border-radius:11px;padding:12px 16px;cursor:pointer;transition:transform .15s,background .15s,border-color .15s}
+button:hover{transform:translateY(-1px)}
+button:focus-visible,a:focus-visible{outline:3px solid #9dc2ff;outline-offset:3px}
+button:disabled{cursor:not-allowed;opacity:.58;transform:none}
+.primary{background:var(--blue);border:1px solid var(--blue);color:white}
+.primary:hover{background:var(--blue-strong)}
+.secondary{background:white;border:1px solid var(--border);color:var(--ink)}
+.peer-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:18px}
+.empty{grid-column:1/-1;border:1px dashed #c9d6e9;border-radius:14px;padding:22px;text-align:center;color:#73839a;margin:0}
+.peer{min-width:0;border:1px solid var(--border);border-radius:14px;padding:15px;background:#fbfdff}
+.peer-name{font-weight:800;overflow-wrap:anywhere}
+.peer-address{font:11px/1.6 var(--mono);color:var(--muted);overflow-wrap:anywhere;margin-top:5px}
+.peer-note{margin:8px 0 0;color:#718198;font-size:11px}
+.notice{margin:18px 0 34px;padding:18px 20px;border-left:3px solid var(--blue);background:#edf4ff;border-radius:0 12px 12px 0;font-size:13px}
+.notice p{margin:6px 0 10px;color:#53647b}
+.notice strong{color:var(--ink)}
+footer{border-top:1px solid var(--border);padding-top:18px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:12px}
+@media(max-width:600px){.topbar{height:auto;min-height:68px;flex-wrap:wrap;padding:12px 0}.platform-label{font-size:8px;padding:6px 8px}.intro{padding-top:32px}h1{letter-spacing:-1.8px}.peer-list{grid-template-columns:1fr}.actions button{flex:1 1 100%}.card{border-radius:17px}.status{margin:16px 0}}
+@media(max-width:360px){.app-shell{padding-left:14px;padding-right:14px}.brand{font-size:13px}.brand img{width:30px;height:30px}.platform-label{letter-spacing:.5px}.card{padding:15px}h1{font-size:38px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;scroll-behavior:auto!important}}
