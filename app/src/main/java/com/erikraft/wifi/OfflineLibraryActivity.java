@@ -141,7 +141,10 @@ public final class OfflineLibraryActivity extends Activity {
     private void showGlobe() {
         address.setText(AppStrings.t(this, "https://wifi.erikraft.com/"));
         status.setText(AppStrings.t(this, "Globo visual de dispositivos encontrados na rede local; posições não são geográficas."));
-        web.loadUrl("file:///android_asset/mesh_globe.html");
+        String globeUrl = "file:///android_asset/mesh_globe.html";
+        String selectedLanguage = AppStrings.selectedCode(this);
+        if (!selectedLanguage.isEmpty()) globeUrl += "?lang=" + Uri.encode(selectedLanguage);
+        web.loadUrl(globeUrl);
         if (globeDiscovery != null) globeDiscovery.stop();
         synchronized (livePeers) { livePeers.clear(); }
         globeDiscovery = new LanDiscovery(this, new LanDiscovery.Listener() {
