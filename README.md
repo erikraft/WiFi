@@ -55,7 +55,6 @@ The Android app remains experimental. An initial desktop prototype in `desktop/`
 
 - [ErikrafT Drop™ Web/Desktop](https://github.com/erikraft/Drop)
 - [ErikrafT Drop™ for Android](https://github.com/erikraft/Drop-Android)
-- [ErikrafT website](https://github.com/erikraft/site)
 
 ## Security and compatibility
 
