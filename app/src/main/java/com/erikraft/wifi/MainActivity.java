@@ -1,6 +1,9 @@
 package com.erikraft.wifi;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Intent;
+import android.provider.Settings;
 import android.app.PictureInPictureParams;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -26,6 +29,10 @@ import java.util.Set;
 /** ErikrafT Wi-Fi Android prototype: LAN discovery only, no file transfer. */
 public final class MainActivity extends Activity {
     private final int blue = Color.rgb(66, 133, 244);
+    private final int background = Color.rgb(12, 18, 30);
+    private final int surface = Color.rgb(22, 31, 48);
+    private final int primaryText = Color.rgb(238, 243, 251);
+    private final int secondaryText = Color.rgb(166, 180, 201);
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
     private final Set<String> peerKeys = new HashSet<>();
     private LinearLayout peerList;
@@ -40,8 +47,8 @@ public final class MainActivity extends Activity {
 
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
-        getWindow().setStatusBarColor(Color.rgb(66, 133, 244));
-        getWindow().setNavigationBarColor(Color.rgb(66, 133, 244));
+        getWindow().setStatusBarColor(background);
+        getWindow().setNavigationBarColor(background);
         pipEnabled = getPreferences(MODE_PRIVATE).getBoolean("pip_enabled", false);
         discovery = new LanDiscovery(this, new LanDiscovery.Listener() {
             @Override public void onStatus(String value) {
@@ -61,7 +68,7 @@ public final class MainActivity extends Activity {
         LinearLayout page = new LinearLayout(this);
         page.setOrientation(LinearLayout.VERTICAL);
         page.setPadding(dp(24), dp(28), dp(24), dp(32));
-        page.setBackgroundColor(Color.WHITE);
+        page.setBackgroundColor(background);
         scroll.addView(page);
 
         ImageView logo = new ImageView(this);
@@ -71,18 +78,18 @@ public final class MainActivity extends Activity {
         logoParams.bottomMargin = dp(14);
         page.addView(logo, logoParams);
         page.addView(label("ErikrafT Wi-Fi™", 18, blue, true));
-        TextView title = label("Seus dispositivos.\nSua rede.", 34, Color.rgb(31, 31, 31), true);
+        TextView title = label("Seus dispositivos.\nSua rede.", 34, primaryText, true);
         LinearLayout.LayoutParams tp = lp(-1, -2); tp.topMargin = dp(34); page.addView(title, tp);
-        TextView sub = label("Descubra dispositivos ErikrafT Wi-Fi conectados à mesma rede local.", 16, Color.rgb(95, 99, 104), false);
+        TextView sub = label("Descubra dispositivos ErikrafT Wi-Fi conectados à mesma rede local.", 16, secondaryText, false);
         LinearLayout.LayoutParams sp = lp(-1, -2); sp.topMargin = dp(12); page.addView(sub, sp);
 
         LinearLayout card = new LinearLayout(this);
         card.setOrientation(LinearLayout.VERTICAL);
         card.setPadding(dp(18), dp(20), dp(18), dp(20));
-        card.setBackgroundColor(Color.WHITE);
+        card.setBackgroundColor(surface);
         LinearLayout.LayoutParams cp = lp(-1, -2); cp.topMargin = dp(26); page.addView(card, cp);
         card.addView(label("DESCOBERTA NA REDE LOCAL", 11, blue, true));
-        status = label("Pronto para procurar dispositivos na rede Wi-Fi atual.", 14, Color.rgb(31, 31, 31), false);
+        status = label("Pronto para procurar dispositivos na rede Wi-Fi atual.", 14, primaryText, false);
         LinearLayout.LayoutParams stp = lp(-1, -2); stp.topMargin = dp(12); card.addView(status, stp);
         discoverButton = new Button(this);
         discoverButton.setText("Procurar dispositivos");
@@ -110,8 +117,18 @@ public final class MainActivity extends Activity {
         advancedButton.setText("Configurações avançadas");
         advancedButton.setAllCaps(false);
         advancedButton.setTextColor(blue);
-        advancedButton.setBackgroundTintList(android.content.res.ColorStateList.valueOf(Color.rgb(230, 239, 255)));
+        advancedButton.setBackgroundTintList(android.content.res.ColorStateList.valueOf(Color.rgb(35, 52, 78)));
         LinearLayout.LayoutParams abp = lp(-1, -2); abp.topMargin = dp(10); card.addView(advancedButton, abp);
+
+        Button settingsButton = new Button(this);
+        settingsButton.setText("Configurações e diagnóstico");
+        settingsButton.setAllCaps(false);
+        settingsButton.setTextColor(primaryText);
+        settingsButton.setBackgroundTintList(android.content.res.ColorStateList.valueOf(Color.rgb(35, 52, 78)));
+        LinearLayout.LayoutParams settingsParams = lp(-1, -2);
+        settingsParams.topMargin = dp(10);
+        card.addView(settingsButton, settingsParams);
+        settingsButton.setOnClickListener(v -> showSettingsDialog());
 
         pipButton = new Button(this);
         pipButton.setAllCaps(false);
@@ -141,14 +158,14 @@ public final class MainActivity extends Activity {
             advancedButton.setText(advancedVisible ? "Ocultar configurações avançadas" : "Configurações avançadas");
         });
 
-        TextView peersTitle = label("Dispositivos encontrados", 18, Color.rgb(16, 26, 43), true);
+        TextView peersTitle = label("Dispositivos encontrados", 18, primaryText, true);
         LinearLayout.LayoutParams ptp = lp(-1, -2); ptp.topMargin = dp(26); page.addView(peersTitle, ptp);
         peerList = new LinearLayout(this);
         peerList.setOrientation(LinearLayout.VERTICAL);
         LinearLayout.LayoutParams plp = lp(-1, -2); plp.topMargin = dp(10); page.addView(peerList, plp);
-        peerList.addView(label("Nenhum dispositivo encontrado ainda.", 13, Color.rgb(112, 126, 147), false));
+        peerList.addView(label("Nenhum dispositivo encontrado ainda.", 13, secondaryText, false));
 
-        TextView note = label("Estado: descoberta LAN experimental. Wi-Fi Direct, Mesh, gateways e transferência segura ainda não estão implementados. A descoberta não autentica dispositivos; não envie dados privados.", 12, Color.rgb(112, 126, 147), false);
+        TextView note = label("Estado: descoberta LAN experimental. Wi-Fi Direct, Mesh, gateways e transferência segura ainda não estão implementados. A descoberta não autentica dispositivos; não envie dados privados.", 12, secondaryText, false);
         LinearLayout.LayoutParams np = lp(-1, -2); np.topMargin = dp(24); page.addView(note, np);
 
         TextView links = label("Integração futura: ErikrafT Drop™ e Drop™ for Android", 13, blue, true);
@@ -157,6 +174,65 @@ public final class MainActivity extends Activity {
 
         if ("erikraftwifi".equals(getIntent().getScheme())) {
             Toast.makeText(this, "ErikrafT Wi-Fi aberto pelo link de integração.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void showSettingsDialog() {
+        String[] options = {"Diagnóstico do dispositivo", "Idioma do aplicativo", "Configurações do Android"};
+        new AlertDialog.Builder(this).setTitle("Configurações")
+                .setItems(options, (dialog, which) -> {
+                    if (which == 0) showDiagnostics();
+                    else if (which == 1) showLanguageSettings();
+                    else startActivity(new Intent(Settings.ACTION_SETTINGS));
+                })
+                .setNegativeButton("Fechar", null)
+                .show();
+    }
+
+    private void showDiagnostics() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+        NetworkCapabilities caps = cm == null ? null : cm.getNetworkCapabilities(cm.getActiveNetwork());
+        String network = caps == null ? "Sem rede ativa detectada"
+                : caps.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ? "Wi-Fi conectado"
+                : caps.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) ? "Ethernet conectada"
+                : "Outra rede ativa";
+        String report = "ErikrafT Wi-Fi — Diagnóstico\n\n"
+                + "Android: " + Build.VERSION.RELEASE + " (API " + Build.VERSION.SDK_INT + ")\n"
+                + "Dispositivo: " + Build.MANUFACTURER + " " + Build.MODEL + "\n"
+                + "Rede: " + network + "\n"
+                + "Descoberta LAN: experimental (NSD/mDNS)\n"
+                + "Autenticação de pares: não implementada\n"
+                + "Transporte criptografado: não implementado\n"
+                + "Wi-Fi Direct / mesh / gateway: não implementados\n"
+                + "Transferência de arquivos: não implementada";
+        new AlertDialog.Builder(this).setTitle("Diagnóstico").setMessage(report)
+                .setPositiveButton("OK", null)
+                .setNeutralButton("Compartilhar", (d, w) -> {
+                    Intent share = new Intent(Intent.ACTION_SEND);
+                    share.setType("text/plain");
+                    share.putExtra(Intent.EXTRA_TEXT, report);
+                    startActivity(Intent.createChooser(share, "Compartilhar diagnóstico"));
+                }).show();
+    }
+
+    private void showLanguageSettings() {
+        if (Build.VERSION.SDK_INT >= 33) {
+            try {
+                Intent intent = new Intent("android.settings.APP_LOCALE_SETTINGS");
+                intent.setData(android.net.Uri.parse("package:" + getPackageName()));
+                startActivity(intent);
+                return;
+            } catch (Exception ignored) {
+                // Fall through to system locale settings on OEM builds.
+            }
+        }
+        Toast.makeText(this,
+                "A seleção de idioma do sistema está disponível; as traduções completas do app ainda precisam ser adicionadas.",
+                Toast.LENGTH_LONG).show();
+        try {
+            startActivity(new Intent(Settings.ACTION_LOCALE_SETTINGS));
+        } catch (Exception ignored) {
+            startActivity(new Intent(Settings.ACTION_SETTINGS));
         }
     }
 
@@ -178,12 +254,12 @@ public final class MainActivity extends Activity {
         LinearLayout row = new LinearLayout(this);
         row.setOrientation(LinearLayout.VERTICAL);
         row.setPadding(dp(14), dp(14), dp(14), dp(14));
-        row.setBackgroundColor(Color.WHITE);
+        row.setBackgroundColor(surface);
         LinearLayout.LayoutParams rp = lp(-1, -2); rp.bottomMargin = dp(8); peerList.addView(row, rp);
-        row.addView(label(name, 14, Color.rgb(25, 42, 66), true));
-        TextView endpoint = label(address + ":" + port, 12, Color.rgb(91, 105, 128), false);
+        row.addView(label(name, 14, primaryText, true));
+        TextView endpoint = label(address + ":" + port, 12, secondaryText, false);
         LinearLayout.LayoutParams ep = lp(-1, -2); ep.topMargin = dp(4); row.addView(endpoint, ep);
-        row.addView(label("Encontrado na rede local · transferência indisponível", 11, Color.rgb(112, 126, 147), false));
+        row.addView(label("Encontrado na rede local · transferência indisponível", 11, secondaryText, false));
     }
 
     @Override protected void onUserLeaveHint() {
