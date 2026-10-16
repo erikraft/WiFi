@@ -97,7 +97,7 @@ public final class OfflineLibraryActivity extends Activity {
         actions.addView(importPage, new LinearLayout.LayoutParams(0, dp(44), 1));
         root.addView(actions);
 
-        status = text("Sites salvos ficam neste dispositivo. Para importar uma página do Chrome, escolha o arquivo baixado ou compartilhe-o com ErikrafT Wi-Fi.", 12, Color.rgb(164,178,197), false);
+        status = text("Páginas são salvas neste dispositivo. Importe um HTML/MHTML exportado ou compartilhado pelo Chrome.", 12, Color.rgb(164,178,197), false);
         LinearLayout.LayoutParams st = new LinearLayout.LayoutParams(-1, -2);
         st.topMargin = dp(6);
         st.bottomMargin = dp(6);
@@ -311,7 +311,7 @@ public final class OfflineLibraryActivity extends Activity {
                 lastArchive = out.getAbsolutePath();
                 web.loadUrl(Uri.fromFile(out).toString());
                 status.setText(AppStrings.t(this, "Importado para leitura local: " + out.getName()));
-                toast("Arquivo importado. Se o Chrome mantém a página só no armazenamento privado dele, exporte/compartilhe o arquivo primeiro.");
+                toast("Para páginas salvas pelo Chrome, exporte ou compartilhe o arquivo; o armazenamento privado não pode ser lido diretamente.");
             } catch (Exception e) {
                 toast("Não foi possível importar esse arquivo.");
             }
@@ -350,7 +350,11 @@ public final class OfflineLibraryActivity extends Activity {
         Uri shared = intent.getParcelableExtra(Intent.EXTRA_STREAM);
         if (shared != null) {
             try {
-                File out = new File(archiveDir, "shared-" + System.currentTimeMillis() + ".mht");
+                String sharedName = queryDisplayName(shared);
+                String extension = ".mht";
+                if (sharedName != null && sharedName.matches("(?i).+\\.html?$")) extension = ".html";
+                else if (sharedName != null && sharedName.matches("(?i).+\\.mhtml$")) extension = ".mhtml";
+                File out = new File(archiveDir, "shared-" + System.currentTimeMillis() + extension);
                 try (InputStream in = getContentResolver().openInputStream(shared);
                      OutputStream os = new FileOutputStream(out)) {
                     if (in == null) throw new IllegalStateException();
