@@ -251,7 +251,7 @@ public final class MainActivity extends Activity {
                     Intent share = new Intent(Intent.ACTION_SEND);
                     share.setType("text/plain");
                     share.putExtra(Intent.EXTRA_TEXT, report);
-                    startActivity(Intent.createChooser(share, "Compartilhar diagnóstico"));
+                    startActivity(Intent.createChooser(share, AppStrings.t(this, "Compartilhar diagnóstico")));
                 }).show();
     }
 
