@@ -13,7 +13,7 @@ Projeto open-source que explora conectividade local usando tecnologias Wi-Fi exi
 
 O objetivo de longo prazo é permitir que dispositivos compatíveis formem ou usem uma rede Wi-Fi e alcancem serviços da Internet por uma rota disponível, inclusive por um gateway autorizado ou por nós intermediários quando o roteamento mesh estiver implementado. O projeto prioriza compatibilidade com APIs e hardware existentes, em vez de depender de tecnologia de rádio proprietária.
 
-**Limite importante:** Wi-Fi cria um enlace de rede, não acesso automático à Internet. Para abrir sites públicos, é necessária uma rota externa funcional, como um roteador, uma conexão compartilhada ou um gateway conectado à Internet. Sem essa rota, o modo offline pode oferecer comunicação e serviços locais, mas não acessar arbitrariamente a Web pública. Wi-Fi Direct, roteamento mesh e gateways ainda não estão implementados; consulte [compatibilidade e limites das plataformas](docs/platform-compatibility_PT-BR.md).
+**Limite importante:** Wi-Fi cria um enlace de rede, não acesso automático à Internet. Para abrir sites públicos, é necessária uma rota externa funcional, como um roteador, uma conexão compartilhada ou um gateway conectado à Internet. Sem essa rota, o modo offline pode oferecer comunicação e serviços locais, mas não acessar arbitrariamente a Web pública. O compartilhamento direto usa o hotspot nativo do Android e requer que o aparelho gateway tenha uma conexão externa real. O app ainda não encaminha tráfego IP por mesh multi-hop. Consulte [gateway de Internet no Android](docs/internet-gateway_PT-BR.md) e [compatibilidade e limites das plataformas](docs/platform-compatibility_PT-BR.md).
 
 ## Componentes
 
