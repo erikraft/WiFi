@@ -11,24 +11,59 @@ try{const saved=localStorage.getItem('erikraft-wifi-language');setLanguage(saved
 document.querySelectorAll('.copy-wallet').forEach(button=>button.addEventListener('click',async()=>{const original=button.textContent;try{await navigator.clipboard.writeText(button.dataset.copy);button.textContent=translations[document.documentElement.lang]?.copied||'Copied!';}catch{const field=document.createElement('textarea');field.value=button.dataset.copy;field.setAttribute('readonly','');field.style.position='fixed';field.style.opacity='0';document.body.appendChild(field);field.select();const copied=document.execCommand('copy');field.remove();button.textContent=copied?(translations[document.documentElement.lang]?.copied||'Copied!'):original;}setTimeout(()=>{button.textContent=translations[document.documentElement.lang]?.copy_address||'Copy address';},1800);}));
 
 function renderBitcoinQrs(){
-  const canvases=document.querySelectorAll('canvas.bitcoin-qr');
-  if(!window.QRCode||typeof window.QRCode.toCanvas!=='function'){
-    canvases.forEach(canvas=>canvas.setAttribute('aria-label','QR code could not be generated. Use the visible wallet address.'));
+  const hosts=[...document.querySelectorAll('.bitcoin-qr-host')];
+  const markUnavailable=()=>{
+    hosts.forEach(host=>{
+      host.setAttribute('aria-label','QR code unavailable. Use the visible Bitcoin address or open it in your wallet.');
+      host.classList.add('qr-unavailable');
+      host.textContent='';
+    });
+  };
+  const draw=()=>{
+    if(typeof window.QRCodeStyling!=='function'){
+      markUnavailable();
+      return;
+    }
+    hosts.forEach(host=>{
+      const address=host.dataset.address;
+      if(!address)return;
+      host.replaceChildren();
+      try{
+        const qr=new window.QRCodeStyling({
+          width:440,
+          height:440,
+          type:'svg',
+          data:'bitcoin:'+address,
+          image:'assets/bitcoin-logo.svg',
+          margin:10,
+          qrOptions:{errorCorrectionLevel:'H',typeNumber:0,mode:'Byte'},
+          dotsOptions:{color:'#0a090b',type:'square'},
+          cornersSquareOptions:{color:'#0a090b',type:'square'},
+          cornersDotOptions:{color:'#0a090b',type:'square'},
+          backgroundOptions:{color:'#ffffff'},
+          imageOptions:{hideBackgroundDots:true,imageSize:0.22,margin:5,crossOrigin:'anonymous',saveAsBlob:true}
+        });
+        qr.append(host);
+        host.setAttribute('aria-label','Bitcoin payment QR code with Bitcoin logo. Amount is not preset.');
+        host.classList.remove('qr-unavailable');
+      }catch(error){
+        console.error('Unable to render Bitcoin QR code:',error);
+        host.setAttribute('aria-label','QR code unavailable. Use the visible Bitcoin address or open it in your wallet.');
+        host.classList.add('qr-unavailable');
+      }
+    });
+  };
+  if(typeof window.QRCodeStyling==='function'){
+    draw();
     return;
   }
-  canvases.forEach(canvas=>{
-    const address=canvas.dataset.address;
-    if(!address)return;
-    // BIP 321-compatible Bitcoin payment URI. No amount is prefilled.
-    const paymentUri=`bitcoin:${address}`;
-    window.QRCode.toCanvas(canvas,paymentUri,{
-      errorCorrectionLevel:'H',margin:2,width:220,
-      color:{dark:'#0a090b',light:'#ffffff'}
-    },error=>{
-      if(error)canvas.setAttribute('aria-label','QR code could not be generated. Use the visible wallet address.');
-      else canvas.setAttribute('aria-label',`Bitcoin QR code for ${address}; payment amount is not preset.`);
-    });
-  });
+  // Load a pinned, open-source library from an alternate CDN if jsDelivr is blocked.
+  const fallback=document.createElement('script');
+  fallback.src='https://unpkg.com/qr-code-styling@1.9.2/lib/qr-code-styling.js';
+  fallback.async=true;
+  fallback.onload=draw;
+  fallback.onerror=markUnavailable;
+  document.head.appendChild(fallback);
 }
 renderBitcoinQrs();
 document.querySelectorAll('a[href^="#"]').forEach(link=>link.addEventListener('click',event=>{const target=document.querySelector(link.getAttribute('href'));if(target){event.preventDefault();target.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});}}));
