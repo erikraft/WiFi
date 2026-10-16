@@ -1,43 +1,50 @@
-# Network compatibility and regulatory limitations
+# Network and platform compatibility
 
 ## Principle
-ErikrafT Wi-Fi is intended to use network APIs and radios already available on devices. It does not create a new radio waveform, turn a phone into a 2G/3G/4G/5G base station, or transmit on licensed carrier bands.
 
-Compatibility means running on different devices and using the network interfaces exposed by their operating systems. It does not mean every device supports every mode or that the app controls the cellular modem.
+ErikrafT Wi-Fi uses network interfaces and radio hardware already provided by the operating system. It does not invent a radio protocol, turn a phone into a cellular base station, or bypass radio controls. Compatibility means that a client can run on a platform and use the APIs that platform exposes; it does not mean all devices support every network mode.
 
-## Scenarios
+## Current platform status
 
-| Scenario | Possible behavior | Limitation |
+| Platform | Repository component | Current status |
 |---|---|---|
-| No infrastructure Wi-Fi and no cellular signal | Compatible devices may connect through Wi-Fi Direct or form a local network with compatible equipment | Wi-Fi Direct is not implemented; range and compatibility vary |
-| No mobile data, but Wi-Fi has Internet access | Traffic may use Wi-Fi without consuming the mobile data allowance | Requires an Internet-connected access point/gateway and permission to use it |
-| No carrier signal, but local nodes exist | Local services may work; a mesh could forward traffic with suitable nodes and routing software | Mesh routing is not implemented. Without a connected gateway, there is no public Internet access |
-| Phone with 2G/3G/4G/5G | The app may work over Wi-Fi on a device that also has cellular technology | It does not provide or replace mobile service; the OS and hardware control the modem |
-| iOS, Android, Windows, Linux, and macOS | Future compatibility depends on APIs, permissions, hardware, and a client for each platform | The current network client is Android-only; the landing page is not a connectivity client |
+| Android | `app/` | Native Java prototype; experimental LAN service discovery using NSD/DNS-SD (mDNS) |
+| Windows | `desktop/` | Initial Tauri + Rust prototype; CI build and hardware discovery testing required |
+| Linux | `desktop/` | Initial Tauri + Rust prototype; distribution/WebKitGTK and hardware testing required |
+| macOS | `desktop/` | Initial Tauri + Rust prototype; signing, notarization, permission, and hardware testing required |
+| iOS | None | No client implemented |
+| Website | `index.html` | Project information and documentation, not a network-connectivity client |
 
-## A path that does not require building towers
-1. **Now:** test LAN discovery between Android devices on the same Wi-Fi network.
-2. **Next:** implement Wi-Fi Direct using official APIs and test compatible hardware.
-3. **Then:** create an authenticated, encrypted session protocol before carrying files or third-party traffic.
-4. **Only after that:** evaluate multi-hop forwarding and gateways, including battery use, loop prevention, consent, traffic limits, and security.
-5. **Internet access:** reuse a router, a phone sharing its connection, an authorized community network, or an existing provider/gateway. A node without an external route cannot create Internet access by itself.
+The desktop prototype shares the Android metadata contract, but this is not proof of full feature parity or release readiness.
 
-Development can begin without building a tower. However, gateways, dedicated radio links, custom transmitting equipment, or providing connectivity to third parties may involve specific obligations depending on the architecture and actual use.
+## Connectivity scenarios
 
-## Anatel and radio-frequency use in Brazil
-Use normal Android APIs and approved Wi-Fi equipment in accordance with applicable rules. Do not modify firmware to increase power, unlock frequencies, transmit on licensed bands, or advertise a private cellular network.
+| Scenario | Possible behaviour | Limitation |
+|---|---|---|
+| Same LAN with multicast enabled | Compatible clients may announce and discover services | Client isolation, VPNs, firewalls, sleep policies, and router settings may block discovery |
+| Wi-Fi without mobile data, but with an Internet-connected router | Traffic may use Wi-Fi | Requires a working upstream route and permission to use the network |
+| No external Internet route | Local services may work when their transports are implemented | The software cannot create a route to the public Internet by itself |
+| Direct device-to-device link | A supported OS/hardware mode may be suitable | Wi-Fi Direct is not implemented in this project |
+| Multiple nodes / mesh | A future implementation could relay traffic with suitable routing | Mesh routing, relay consent, loop avoidance, and gateway support are not implemented |
+| Cellular-capable phone | The app may use Wi-Fi on that device | The app does not provide or control cellular service |
 
-Anatel states that telecommunications products—including devices that emit radio frequency, such as Wi-Fi equipment—are generally subject to certification/homologation for commercialization or use under applicable regulations. Using an approved phone or router does not automatically authorize every additional device, radio link, or service model. Before selling hardware, deploying dedicated links, or providing connectivity as a service, confirm requirements with Anatel or a qualified regulatory professional.
+## Safe technical path
 
-Official references:
-- Anatel — certification and homologation FAQ: https://www.gov.br/anatel/pt-br/regulado/certificacao-de-produtos/duvidas-frequentes
-- Anatel — regulations: https://www.gov.br/anatel/pt-br/regulado/certificacao-de-produtos/regulamentacao
-- Android — Wi-Fi Direct: https://developer.android.com/develop/connectivity/wifi/wifi-direct
-- Android — network service discovery (NSD): https://developer.android.com/develop/connectivity/wifi/use-nsd
-- Android — nearby Wi-Fi permissions: https://developer.android.com/develop/connectivity/wifi/wifi-permissions
+1. Validate current LAN discovery and the public metadata contract on each supported platform.
+2. Implement and test an explicit, versioned capability model.
+3. Design peer authentication and encrypted sessions before sending private content.
+4. Evaluate direct links and routing only against official platform APIs and documented hardware capabilities.
+5. Add gateway forwarding only after consent, security, rate limiting, battery, abuse, and failure modes are reviewed.
 
-## Actual repository status
-- Experimentally implemented: NSD/DNS-SD discovery on the same LAN.
-- Pending: Wi-Fi Direct, mesh routing, gateways, secure transport, and functional ErikrafT Drop integration.
-- No executable desktop client is available.
-- Compatibility must be validated by Android version, manufacturer, and hardware; universal support is not a technically verifiable promise.
+For market-specific radio, product, privacy, and distribution requirements, see the [international regulatory overview](international-regulatory-overview.md). Certification of an existing phone or router does not certify arbitrary new radio hardware or authorize bypassing its normal controls.
+
+## Official technical references
+
+- [Android Network Service Discovery](https://developer.android.com/develop/connectivity/wifi/use-nsd)
+- [Android Wi-Fi Direct](https://developer.android.com/develop/connectivity/wifi/wifi-direct)
+- [Tauri 2 platform prerequisites](https://v2.tauri.app/start/prerequisites/)
+- [Tauri security capabilities](https://v2.tauri.app/security/capabilities/)
+
+## Evidence required for compatibility claims
+
+A CI compile is only build evidence. For each supported OS, record the OS version, device/model, network topology, firewall/VPN state, discovery start/stop results, duplicate/lost service handling, suspend/resume, and logs. Avoid the claim “works on every device”; publish only configurations that have been actually tested.
