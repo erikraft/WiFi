@@ -11,45 +11,58 @@ try{const saved=localStorage.getItem('erikraft-wifi-language');setLanguage(saved
 document.querySelectorAll('.copy-wallet').forEach(button=>button.addEventListener('click',async()=>{const original=button.textContent;try{await navigator.clipboard.writeText(button.dataset.copy);button.textContent=translations[document.documentElement.lang]?.copied||'Copied!';}catch{const field=document.createElement('textarea');field.value=button.dataset.copy;field.setAttribute('readonly','');field.style.position='fixed';field.style.opacity='0';document.body.appendChild(field);field.select();const copied=document.execCommand('copy');field.remove();button.textContent=copied?(translations[document.documentElement.lang]?.copied||'Copied!'):original;}setTimeout(()=>{button.textContent=translations[document.documentElement.lang]?.copy_address||'Copy address';},1800);}));
 
 function renderBitcoinQrs(){
-  const images=document.querySelectorAll('img.bitcoin-qr');
-  const draw=()=>{
-    if(!window.QRCode||typeof window.QRCode.toDataURL!=='function'){
-      images.forEach(img=>{
-        img.alt='QR code unavailable. Use the visible Bitcoin address or open it in your wallet.';
-        img.classList.add('qr-unavailable');
-      });
-      return;
-    }
-    images.forEach(img=>{
-      const address=img.dataset.address;
-      if(!address)return;
-      // BIP 321-compatible Bitcoin payment URI. No amount is prefilled.
-      const paymentUri='bitcoin:'+address;
-      window.QRCode.toDataURL(paymentUri,{
-        errorCorrectionLevel:'H',margin:2,width:440,
-        color:{dark:'#0a090b',light:'#ffffff'}
-      },(error,dataUrl)=>{
-        if(error||!dataUrl){
-          img.alt='QR code unavailable. Use the visible Bitcoin address or open it in your wallet.';
-          img.classList.add('qr-unavailable');
-          return;
-        }
-        img.src=dataUrl;
-        img.alt='Bitcoin payment QR code. Amount is not preset.';
-        img.classList.remove('qr-unavailable');
-      });
+  const hosts=[...document.querySelectorAll('.bitcoin-qr-host')];
+  const markUnavailable=()=>{
+    hosts.forEach(host=>{
+      host.setAttribute('aria-label','QR code unavailable. Use the visible Bitcoin address or open it in your wallet.');
+      host.classList.add('qr-unavailable');
+      host.textContent='';
     });
   };
-  if(window.QRCode&&typeof window.QRCode.toDataURL==='function'){
+  const draw=()=>{
+    if(typeof window.QRCodeStyling!=='function'){
+      markUnavailable();
+      return;
+    }
+    hosts.forEach(host=>{
+      const address=host.dataset.address;
+      if(!address)return;
+      host.replaceChildren();
+      try{
+        const qr=new window.QRCodeStyling({
+          width:440,
+          height:440,
+          type:'svg',
+          data:'bitcoin:'+address,
+          image:'assets/bitcoin-logo.svg',
+          margin:10,
+          qrOptions:{errorCorrectionLevel:'H',typeNumber:0,mode:'Byte'},
+          dotsOptions:{color:'#0a090b',type:'square'},
+          cornersSquareOptions:{color:'#0a090b',type:'square'},
+          cornersDotOptions:{color:'#0a090b',type:'square'},
+          backgroundOptions:{color:'#ffffff'},
+          imageOptions:{hideBackgroundDots:true,imageSize:0.22,margin:5,crossOrigin:'anonymous'}
+        });
+        qr.append(host);
+        host.setAttribute('aria-label','Bitcoin payment QR code with Bitcoin logo. Amount is not preset.');
+        host.classList.remove('qr-unavailable');
+      }catch(error){
+        console.error('Unable to render Bitcoin QR code:',error);
+        host.setAttribute('aria-label','QR code unavailable. Use the visible Bitcoin address or open it in your wallet.');
+        host.classList.add('qr-unavailable');
+      }
+    });
+  };
+  if(typeof window.QRCodeStyling==='function'){
     draw();
     return;
   }
-  // Retry through an alternate CDN if the primary QR library was blocked or unavailable.
+  // Load a pinned, open-source library from an alternate CDN if jsDelivr is blocked.
   const fallback=document.createElement('script');
-  fallback.src='https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.5.3/qrcode.min.js';
+  fallback.src='https://unpkg.com/qr-code-styling@1.9.2/lib/qr-code-styling.js';
   fallback.async=true;
   fallback.onload=draw;
-  fallback.onerror=draw;
+  fallback.onerror=markUnavailable;
   document.head.appendChild(fallback);
 }
 renderBitcoinQrs();
