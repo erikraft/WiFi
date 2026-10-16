@@ -17,7 +17,7 @@
 [submodule "References/bitchat"]
 	path = References/bitchat
 	url = https://github.com/permissionlesstech/bitchat.git
-	branch = master
+	branch = main
 
 [submodule "References/bitchat-android"]
 	path = References/bitchat-android
