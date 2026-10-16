@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#4285F4">
+  <meta name="color-scheme" content="light">
+  <title>ErikrafT Wi-Fi™</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="ErikrafT Wi-Fi home">
+        <img src="assets/wifi-mark.svg" alt="">
+        <span>ErikrafT <b>Wi-Fi™</b></span>
+      </a>
+      <span class="platform-label" data-i18n="platform">DESKTOP PROTOTYPE</span>
+    </header>
+
+    <section class="intro">
+      <p class="eyebrow" data-i18n="eyebrow">LOCAL NETWORK · EXPERIMENTAL</p>
+      <h1 data-i18n="headline">Your devices.<br><span>Your network.</span></h1>
+      <p class="lead" data-i18n="intro">Discover compatible ErikrafT Wi-Fi nodes on the same local network. This prototype does not transfer files or provide Internet access by itself.</p>
+    </section>
+
+    <section class="discovery card" aria-labelledby="discovery-title">
+      <div class="card-heading">
+        <div>
+          <p class="eyebrow" data-i18n="network">NETWORK DISCOVERY</p>
+          <h2 id="discovery-title" data-i18n="discovery">Nearby devices</h2>
+        </div>
+        <span class="status-dot" id="status-dot" aria-hidden="true"></span>
+      </div>
+      <p id="status" class="status" role="status" aria-live="polite" data-i18n="ready">Ready to search the current local network.</p>
+      <div class="actions">
+        <button class="primary" id="toggle-discovery" type="button" data-i18n="start">Discover devices</button>
+        <button class="secondary" id="clear-peers" type="button" data-i18n="clear">Clear list</button>
+      </div>
+      <div id="peer-list" class="peer-list">
+        <p id="empty-state" class="empty" data-i18n="empty">No compatible devices found yet.</p>
+      </div>
+    </section>
+
+    <section class="notice">
+      <strong data-i18n="prototype-title">Prototype limitations</strong>
+      <p data-i18n="prototype-note">Discovery is not authentication. The metadata endpoint is not encrypted; do not send private data. Wi-Fi Direct, mesh routing, gateways, file transfer, and functional Drop integration are not implemented.</p>
+      <a href="https://github.com/erikraft/WiFi/tree/main/docs" target="_blank" rel="noreferrer" data-i18n="docs">Read the project documentation ↗</a>
+    </section>
+
+    <footer>
+      <span data-i18n="footer">Open source · Built by ErikrafT</span>
+      <a href="https://github.com/erikraft/WiFi" target="_blank" rel="noreferrer">GitHub ↗</a>
+    </footer>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>

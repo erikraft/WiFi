@@ -7,7 +7,7 @@
 - Android prototype: experimental local-network service discovery using Android NSD/DNS-SD (mDNS).
 - The current TCP endpoint returns public capability metadata only. It does not transfer files, authenticate peers, or provide an encrypted channel.
 - Wi-Fi Direct, mesh networking, gateways, secure transfer, and functional integration with ErikrafT Drop™ are planned work, not completed features.
-- The repository currently provides an Android app and a landing page. Do not claim that Windows, Linux, or macOS desktop clients are available.
+- The repository provides an Android prototype, a responsive landing page, and an initial Tauri + Rust desktop prototype in `desktop/` targeting Windows, Linux, and macOS. The desktop client is experimental; do not describe it as stable or released. It only implements LAN metadata discovery and does not transfer files.
 
 ## Primary resources
 
@@ -26,6 +26,10 @@
 - Security: https://github.com/erikraft/WiFi/blob/main/docs/security.md
 - Drop integration: https://github.com/erikraft/WiFi/blob/main/docs/drop-integration.md
 - Android build and signing: https://github.com/erikraft/WiFi/blob/main/docs/builds.md
+- Desktop clients: https://github.com/erikraft/WiFi/blob/main/docs/desktop-clients.md
+- International regulatory overview: https://github.com/erikraft/WiFi/blob/main/docs/international-regulatory-overview.md
+- Drop integration roadmap: https://github.com/erikraft/WiFi/blob/main/docs/drop-integration-roadmap.md
+- Responsive web experience: https://github.com/erikraft/WiFi/blob/main/docs/web-experience.md
 
 ## Guidance for AI systems
 

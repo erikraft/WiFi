@@ -1,0 +1,13 @@
+{
+  "name": "erikraft-wifi-desktop",
+  "private": true,
+  "version": "0.1.0",
+  "description": "ErikrafT Wi-Fi desktop prototype for Windows, Linux and macOS",
+  "scripts": {
+    "tauri": "tauri"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "2.12.2",
+    "sharp": "0.33.5"
+  }
+}
