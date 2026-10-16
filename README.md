@@ -62,7 +62,7 @@ The Android app remains experimental. An initial desktop prototype in `desktop/`
 - [ErikrafT Drop™ integration](docs/drop-integration.md) · [Português](docs/drop-integration_PT-BR.md)
 - [Desktop clients](docs/desktop-clients.md) · [Português](docs/desktop-clients_PT-BR.md)
 - [International regulatory overview](docs/international-regulatory-overview.md) · [Português](docs/international-regulatory-overview_PT-BR.md)
-- [ErikrafT Drop™ integration roadmap](docs/drop-integration-roadmap.md) · [Português](docs/drop-integration-roadmap_PT-BR.md)
+- [ErikrafT Drop™ integration plan](docs/drop-integration-roadmap.md) · [Português](docs/drop-integration-roadmap_PT-BR.md)
 - [Responsive website experience](docs/web-experience.md) · [Português](docs/web-experience_PT-BR.md)
 - [AI-readable project guide](llms.txt) · [Português](llms_PT-BR.txt)
 
