@@ -8,7 +8,7 @@
         android:allowBackup="false"
         android:label="ErikrafT Wi-Fi"
         android:icon="@mipmap/ic_launcher"
-        android:theme="@android:style/Theme.Material.Light.NoActionBar"
+        android:theme="@android:style/Theme.Material.NoActionBar"
         android:usesCleartextTraffic="false">
         <activity
             android:name=".MainActivity"
