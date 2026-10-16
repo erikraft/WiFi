@@ -99,6 +99,7 @@ async function connectNative() {
   button.addEventListener("click", async () => {
     button.disabled = true;
     if (!running) {
+      clearPeers();
       setStatus(t("starting"), false);
       try {
         await api.core.invoke("start_discovery");
