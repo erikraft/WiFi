@@ -30,6 +30,7 @@ final class LanDiscovery {
     interface Listener {
         void onStatus(String status);
         void onPeer(String name, String address, int port);
+        default void onPeerLost(String name) { }
     }
 
     private static final String SERVICE_TYPE = "_erikraftwifi._tcp.";
@@ -129,6 +130,7 @@ final class LanDiscovery {
             @Override public void onDiscoveryStopped(String type) { }
             @Override public void onServiceLost(NsdServiceInfo service) {
                 resolving.remove(service.getServiceName());
+                listener.onPeerLost(service.getServiceName());
             }
             @Override public void onServiceFound(NsdServiceInfo service) {
                 String name = service.getServiceName();

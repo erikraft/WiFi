@@ -31,6 +31,19 @@ O objetivo de longo prazo é permitir que dispositivos compatíveis formem ou us
 - O serviço Quick Settings adiciona um atalho para abrir o ErikrafT Wi-Fi. Ele usa um VectorDrawable Android baseado no símbolo branco de `assets/ErikrafT_Wifi_Icon_Logo_White.svg`, dimensionado para 24 dp; o SVG original não é alterado. O atalho não liga/desliga o Wi-Fi nem cria uma conexão sozinho.
 - O app continua sendo um protótipo. As configurações avançadas não configuram mesh nem gateways porque essas funções ainda não existem no núcleo de rede.
 
+## Biblioteca offline e globo de pares LAN
+
+O app Android inclui uma biblioteca experimental para leitura offline:
+- Abrir um endereço, salvar uma captura MHTML pelo WebView, reabrir páginas salvas, importar HTML/MHTML e exportar arquivos.
+- Receber URLs ou arquivos compartilhados por apps Android compatíveis.
+- Abrir o globo interativo com rotação, zoom e seleção de nós.
+- O globo agora recebe pares reais descobertos por NSD/mDNS na mesma rede local, atualiza quando aparecem/desaparecem e exibe endereço/porta ao selecionar um par. As posições são apenas uma disposição visual determinística — não são coordenadas GPS nem um mapa geográfico. Pontos decorativos continuam sendo ilustrativos.
+- Os rótulos e controles do globo têm traduções para 16 variantes de idioma/localidade, de acordo com o idioma do WebView. Isso não significa que toda a interface nativa esteja traduzida.
+
+**Limitações de leitura offline:** o MHTML inclui somente os recursos que o WebView consegue capturar. Páginas com login, DRM, conteúdo dinâmico ou dependência de servidores podem não funcionar offline. O armazenamento privado de páginas baixadas pelo Chrome não pode ser acessado diretamente por outro app; exporte/compartilhe um arquivo que o Android disponibilize.
+
+**Estado de mesh e chamadas:** a visualização de pares LAN não é uma rede mesh multi-hop. Ainda não há chat mesh offline, chamadas de áudio/vídeo sem Internet, sinalização WebRTC, roteamento Bluetooth mesh, transporte Wi-Fi Aware ou encaminhamento por gateway. Essas capacidades exigem implementação e testes adicionais em vários dispositivos.
+
 ## Build e distribuição
 
 Abra `app/` no Android Studio ou siga [o guia de build e assinatura](docs/builds_PT-BR.md). Nunca adicione keystores, senhas ou chaves privadas ao Git.

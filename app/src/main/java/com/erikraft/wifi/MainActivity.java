@@ -152,6 +152,17 @@ public final class MainActivity extends Activity {
         card.addView(settingsButton, settingsParams);
         settingsButton.setOnClickListener(v -> showSettingsDialog());
 
+        Button offlineButton = new Button(this);
+        offlineButton.setText("Globo mesh e sites offline");
+        offlineButton.setAllCaps(false);
+        offlineButton.setTextColor(primaryText);
+        offlineButton.setBackgroundTintList(android.content.res.ColorStateList.valueOf(surface));
+        LinearLayout.LayoutParams offlineParams = lp(-1, -2);
+        offlineParams.topMargin = dp(10);
+        card.addView(offlineButton, offlineParams);
+        offlineButton.setOnClickListener(v ->
+                startActivity(new Intent(this, OfflineLibraryActivity.class)));
+
         pipButton = new Button(this);
         pipButton.setAllCaps(false);
         pipButton.setTextColor(blue);
