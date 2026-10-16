@@ -116,8 +116,9 @@ public final class OfflineLibraryActivity extends Activity {
                 return true;
             }
             @Override public void onPageFinished(WebView view, String url) {
-                if (url.startsWith("file:///android_asset/mesh_globe.html")) publishPeersToGlobe();
-                if (status != null && (url.startsWith("http") || url.startsWith("file:"))) {
+                if (url.startsWith("file:///android_asset/mesh_globe.html")) {
+                    publishPeersToGlobe();
+                } else if (status != null && (url.startsWith("http") || url.startsWith("file:"))) {
                     status.setText(url.startsWith("file:")
                             ? "Visualizando arquivo local/offline."
                             : "Site aberto. Use “Salvar offline” para criar um arquivo MHTML.");
