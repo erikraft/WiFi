@@ -183,7 +183,7 @@ public final class MainActivity extends Activity {
             }
             pipEnabled = !pipEnabled;
             getPreferences(MODE_PRIVATE).edit().putBoolean("pip_enabled", pipEnabled).apply();
-            pipButton.setText(pipEnabled ? "Desativar PiP ao sair do app" : "Ativar PiP ao sair do app");
+            pipButton.setText(AppStrings.t(this, pipEnabled ? "Desativar PiP ao sair do app" : "Ativar PiP ao sair do app"));
             Toast.makeText(this, AppStrings.t(this, pipEnabled
                     ? "PiP ativado. Ao sair do app, a janela pode permanecer flutuante."
                     : "PiP desativado."), Toast.LENGTH_SHORT).show();
