@@ -16,11 +16,26 @@ jobs:
           test -s app/src/main/AndroidManifest.xml
           test -s app/src/main/java/com/erikraft/wifi/MainActivity.java
           test -s app/src/main/java/com/erikraft/wifi/LanDiscovery.java
+          test -s app/src/main/java/com/erikraft/wifi/AppStrings.java
+          test -s app/src/main/java/com/erikraft/wifi/OfflineLibraryActivity.java
+          test -s app/src/main/java/com/erikraft/wifi/OfflineArchiveProvider.java
+          test -s app/src/main/assets/mesh_globe.html
           test -s docs/lan-discovery.md
           test -s docs/builds.md
+          ! grep -Eq 'href="docs/[^"]+\.md"' index.html
           test -s docs/platform-compatibility.md
       - name: JavaScript syntax
         run: node --check assets/js/main.js
+      - name: Interactive globe JavaScript syntax
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          html = Path('app/src/main/assets/mesh_globe.html').read_text(encoding='utf-8')
+          start = html.index('<script>') + len('<script>')
+          end = html.index('</script>', start)
+          Path('/tmp/mesh-globe.js').write_text(html[start:end], encoding='utf-8')
+          PY
+          node --check /tmp/mesh-globe.js
       - name: Android manifest XML
         run: python -c "import xml.etree.ElementTree as E; E.parse('app/src/main/AndroidManifest.xml')"
       - name: Validate site HTML

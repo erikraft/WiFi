@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="color-scheme" content="dark">
-<title>ErikrafT Wi-Fi — Mesh Globe</title>
+<title>ErikrafT Wi-Fi — Interactive Globe</title>
 <style>
 :root{color-scheme:dark;--blue:#4285f4;--green:#37d56a;--muted:#8b9bb0}
 *{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05080d;color:#eef3fb;font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
@@ -18,7 +18,7 @@
 </style>
 </head>
 <body>
-<canvas id="scene" aria-label="Interactive illustrative globe. Drag to rotate, pinch or use zoom buttons."></canvas>
+<canvas id="scene" aria-label="Interactive geographic globe; peer positions are illustrative."></canvas>
 <div class="overlay top"><div class="pill"><div class="brand">● ErikrafT / Wi-Fi</div><div style="font-size:10px;color:var(--muted);margin-top:5px"><span data-i18n="globeLabel">LAN PEER VIEW · NOT GEOLOCATED</span></div><div id="peerCount" style="font-size:11px;color:#37d56a;margin-top:6px">0 dispositivos encontrados</div></div><div class="pill status"><span data-i18n="instructions">Drag to rotate<br>Pinch to zoom · Tap a node</span></div></div>
 <div id="detail"><strong>Node selected</strong><small data-i18n="sampleDetail">Illustrative point · Not a live peer</small></div>
 <div class="overlay bottom"><div class="pill controls"><button id="minus" aria-label="Zoom out">−</button><button id="plus" aria-label="Zoom in">＋</button><button id="reset" data-i18n="reset">Reset view</button></div></div>
@@ -30,6 +30,37 @@ const nodes=Array.from({length:48},(_,i)=>{const y=1-2*(i+.5)/48, a=Math.PI*(3-M
 function resize(){dpr=Math.min(devicePixelRatio||1,2);w=c.clientWidth;h=c.clientHeight;c.width=Math.round(w*dpr);c.height=Math.round(h*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);draw()}
 function project(p,R){let x=p.x*Math.cos(rot)+p.z*Math.sin(rot),z=-p.x*Math.sin(rot)+p.z*Math.cos(rot),y=p.y*Math.cos(tilt)-z*Math.sin(tilt);z=p.y*Math.sin(tilt)+z*Math.cos(tilt);return{x:w/2+x*R,y:h/2+y*R,z,visible:z>-.02}}
 function line(a,b,R){const A=project(a,R),B=project(b,R);if(A.visible&&B.visible){ctx.beginPath();ctx.moveTo(A.x,A.y);ctx.lineTo(B.x,B.y);ctx.stroke()}}
+const continents = [
+ [[72,-150],[65,-165],[55,-160],[50,-145],[58,-130],[55,-125],[48,-124],[40,-125],[32,-117],[25,-110],[15,-100],[8,-83],[20,-80],[30,-85],[35,-75],[45,-65],[55,-60],[65,-80],[70,-100],[72,-130],[72,-150]],
+ [[83,-50],[75,-60],[60,-45],[65,-25],[78,-18],[83,-30],[83,-50]],
+ [[12,-81],[5,-77],[-5,-81],[-15,-75],[-30,-72],[-53,-70],[-55,-65],[-45,-40],[-25,-45],[-5,-35],[5,-50],[12,-65],[12,-81]],
+ [[70,-10],[72,30],[66,60],[72,100],[66,140],[55,160],[45,150],[35,138],[25,122],[15,110],[3,100],[10,85],[5,70],[20,60],[30,45],[38,30],[50,20],[60,0],[70,-10]],
+ [[37,-10],[35,10],[30,35],[12,50],[0,42],[-15,38],[-35,18],[-33,0],[-10,-15],[10,-18],[25,-12],[37,-10]],
+ [[25,68],[28,88],[15,82],[5,77],[8,72],[25,68]],
+ [[45,140],[35,138],[30,132],[35,130],[40,135],[45,140]],
+ [[5,95],[-8,105],[-10,120],[-5,130],[0,120],[5,110],[5,95]],
+ [[-10,113],[-22,112],[-35,115],[-43,135],[-38,153],[-25,154],[-12,135],[-10,113]],
+ [[-12,49],[-25,47],[-26,44],[-15,45],[-12,49]],
+ [[-65,-180],[-72,-135],[-68,-90],[-70,-45],[-67,0],[-70,45],[-68,90],[-72,135],[-65,180]]
+];
+function toGeographicPoint(point){
+ const lat=point[0]*Math.PI/180,lon=point[1]*Math.PI/180;
+ return {x:Math.cos(lat)*Math.cos(lon),y:Math.sin(lat),z:Math.cos(lat)*Math.sin(lon)};
+}
+function drawCoastlines(R){
+ ctx.strokeStyle='rgba(66,133,244,.56)';ctx.lineWidth=1.15;
+ for(const polygon of continents){
+  ctx.beginPath();let previous=null;
+  for(const coordinates of polygon){
+   const current=project(toGeographicPoint(coordinates),R);
+   if(previous&&previous.visible&&current.visible){ctx.moveTo(previous.x,previous.y);ctx.lineTo(current.x,current.y);}
+   previous=current;
+  }
+  const first=project(toGeographicPoint(polygon[0]),R),last=project(toGeographicPoint(polygon[polygon.length-1]),R);
+  if(first.visible&&last.visible){ctx.moveTo(last.x,last.y);ctx.lineTo(first.x,first.y);}
+  ctx.stroke();
+ }
+}
 function draw(){if(!w||!h)return;ctx.clearRect(0,0,w,h);const R=Math.min(w*.46,h*.31)*zoom,cx=w/2,cy=h/2;
 const glow=ctx.createRadialGradient(cx,cy,R*.2,cx,cy,R*1.25);glow.addColorStop(0,'rgba(28,92,63,.18)');glow.addColorStop(1,'rgba(2,7,12,0)');ctx.fillStyle=glow;ctx.fillRect(0,0,w,h);
 const sphere=ctx.createRadialGradient(cx-R*.35,cy-R*.4,R*.08,cx,cy,R);sphere.addColorStop(0,'#1a2a2b');sphere.addColorStop(.65,'#0d1a1d');sphere.addColorStop(1,'#050a10');ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fillStyle=sphere;ctx.fill();
@@ -39,42 +70,44 @@ for(let lat=-75;lat<=75;lat+=25){ctx.beginPath();for(let lon=0;lon<=360;lon+=3){
 for(let lon=0;lon<180;lon+=30){ctx.beginPath();for(let lat=-90;lat<=90;lat+=3){const a=lon*Math.PI/180,b=lat*Math.PI/180,p=project({x:Math.cos(b)*Math.cos(a),y:Math.sin(b),z:Math.cos(b)*Math.sin(a)},R);if(lat===-90)ctx.moveTo(p.x,p.y);else ctx.lineTo(p.x,p.y)}ctx.stroke()}
 ctx.strokeStyle='rgba(130,158,166,.45)';ctx.lineWidth=1.1;ctx.beginPath();ctx.ellipse(cx,cy,R,R*.32,0,0,Math.PI*2);ctx.stroke();
 ctx.strokeStyle='rgba(66,133,244,.28)';ctx.beginPath();ctx.ellipse(cx,cy,R*.55,R,0,0,Math.PI*2);ctx.stroke();
-// Stylized land contours are decorative only, not a navigational map.
-ctx.strokeStyle='rgba(66,133,244,.34)';ctx.lineWidth=1.1;
-const land=[[-.78,-.1],[-.66,-.34],[-.48,-.4],[-.37,-.23],[-.42,-.02],[-.55,.18],[-.62,.43],[-.73,.28],[-.84,.04],[-.78,-.1],[.02,-.52],[.22,-.62],[.42,-.5],[.54,-.32],[.43,-.18],[.22,-.12],[.13,.04],[.02,-.08],[-.06,-.31],[.02,-.52],[.26,.08],[.46,.03],[.62,.18],[.55,.43],[.42,.61],[.31,.42],[.24,.22],[.26,.08]];
-ctx.beginPath();land.forEach((p,i)=>{const x=cx+p[0]*R,y=cy+p[1]*R;i?ctx.lineTo(x,y):ctx.moveTo(x,y)});ctx.stroke();
+// Coastlines use latitude/longitude projected onto the rotating sphere.
+drawCoastlines(R);
 for(const n of nodes){const p=project(n,R);if(!p.visible)continue;ctx.beginPath();ctx.arc(p.x,p.y,n.live?2.2:1.4,0,Math.PI*2);ctx.fillStyle=n.live?'#7c8b97':'#65717c';ctx.globalAlpha=n.live?.52:.36;ctx.fill();ctx.globalAlpha=1}
 for(let i=0;i<livePeers.length;i++){const n=peerPosition(livePeers[i],i),p=project(n,R);if(!p.visible)continue;ctx.beginPath();ctx.arc(p.x,p.y,7,0,Math.PI*2);ctx.strokeStyle='rgba(66,133,244,.35)';ctx.lineWidth=1.2;ctx.stroke();ctx.beginPath();ctx.arc(p.x,p.y,3.1,0,Math.PI*2);ctx.fillStyle='#4285f4';ctx.fill();}
 ctx.restore();
 ctx.strokeStyle='rgba(113,154,170,.28)';ctx.lineWidth=1;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.stroke();
 }
 const translations={
-en:{globeLabel:"LAN PEER VIEW · NOT GEOLOCATED",instructions:"Drag to rotate<br>Pinch to zoom · Tap a node",reset:"Reset view",sampleDetail:"Illustrative point · Not a live peer",count:n=>n+" device(s) discovered on the local network",peer:"Discovered via NSD/mDNS"},
-"pt-BR":{globeLabel:"DISPOSITIVOS NA REDE LOCAL · SEM GEOLOCALIZAÇÃO",instructions:"Arraste para girar<br>Use zoom · Toque em um nó",reset:"Redefinir visualização",sampleDetail:"Ponto ilustrativo · Não é um dispositivo conectado",count:n=>n+" dispositivo(s) encontrado(s) na rede local",peer:"Descoberto via NSD/mDNS"},
-es:{globeLabel:"DISPOSITIVOS LAN · SIN GEOLOCALIZACIÓN",instructions:"Arrastra para girar<br>Usa zoom · Toca un nodo",reset:"Restablecer vista",sampleDetail:"Punto ilustrativo · No es un dispositivo conectado",count:n=>n+" dispositivo(s) encontrado(s) en la red local",peer:"Descubierto mediante NSD/mDNS"},
-fr:{globeLabel:"APPAREILS LAN · SANS GÉOLOCALISATION",instructions:"Faites glisser pour tourner<br>Zoom · Touchez un nœud",reset:"Réinitialiser",sampleDetail:"Point illustratif · Aucun appareil connecté",count:n=>n+" appareil(s) détecté(s) sur le réseau local",peer:"Découvert via NSD/mDNS"},
-de:{globeLabel:"LAN-GERÄTE · OHNE GEOLOKALISIERUNG",instructions:"Ziehen zum Drehen<br>Zoom · Knoten antippen",reset:"Ansicht zurücksetzen",sampleDetail:"Illustrativer Punkt · Kein verbundenes Gerät",count:n=>n+" Gerät(e) im lokalen Netzwerk gefunden",peer:"Über NSD/mDNS entdeckt"},
-it:{globeLabel:"DISPOSITIVI LAN · SENZA GEOLOCALIZZAZIONE",instructions:"Trascina per ruotare<br>Zoom · Tocca un nodo",reset:"Reimposta vista",sampleDetail:"Punto illustrativo · Nessun dispositivo connesso",count:n=>n+" dispositivo/i trovato/i nella rete locale",peer:"Rilevato tramite NSD/mDNS"},
-ja:{globeLabel:"LAN デバイス · 位置情報なし",instructions:"ドラッグして回転<br>ズーム · ノードをタップ",reset:"表示をリセット",sampleDetail:"説明用ポイント · 接続デバイスではありません",count:n=>"ローカルネットワークで "+n+" 台を検出",peer:"NSD/mDNS で検出"},
-"zh-CN":{globeLabel:"局域网设备 · 不代表地理位置",instructions:"拖动旋转<br>缩放 · 点击节点",reset:"重置视图",sampleDetail:"示意点 · 并非已连接设备",count:n=>"在本地网络中发现 "+n+" 台设备",peer:"通过 NSD/mDNS 发现"},
-ru:{globeLabel:"УСТРОЙСТВА LAN · БЕЗ ГЕОЛОКАЦИИ",instructions:"Перетащите для вращения<br>Масштаб · Нажмите узел",reset:"Сбросить вид",sampleDetail:"Условная точка · Не подключённое устройство",count:n=>"Устройств в локальной сети: "+n,peer:"Обнаружено через NSD/mDNS"},
-ar:{globeLabel:"أجهزة الشبكة المحلية · دون تحديد الموقع",instructions:"اسحب للتدوير<br>تكبير · اضغط على عقدة",reset:"إعادة ضبط العرض",sampleDetail:"نقطة توضيحية · ليست جهازًا متصلًا",count:n=>"الأجهزة المكتشفة على الشبكة المحلية: "+n,peer:"تم الاكتشاف عبر NSD/mDNS"},
-hi:{globeLabel:"LAN डिवाइस · भौगोलिक स्थान नहीं",instructions:"घुमाने के लिए खींचें<br>ज़ूम · नोड टैप करें",reset:"दृश्य रीसेट करें",sampleDetail:"उदाहरण बिंदु · कनेक्टेड डिवाइस नहीं",count:n=>"स्थानीय नेटवर्क पर "+n+" डिवाइस मिले",peer:"NSD/mDNS से मिला"},
-ko:{globeLabel:"LAN 장치 · 지리적 위치 아님",instructions:"드래그하여 회전<br>확대/축소 · 노드 탭",reset:"보기 초기화",sampleDetail:"예시 지점 · 연결된 장치가 아님",count:n=>"로컬 네트워크에서 장치 "+n+"개 발견",peer:"NSD/mDNS로 검색됨"},
-nl:{globeLabel:"LAN-APPARATEN · GEEN GEOLOCATIE",instructions:"Sleep om te draaien<br>Zoom · Tik op een knooppunt",reset:"Weergave herstellen",sampleDetail:"Illustratief punt · Geen verbonden apparaat",count:n=>n+" apparaat/apparaten gevonden op het lokale netwerk",peer:"Gevonden via NSD/mDNS"},
-pl:{globeLabel:"URZĄDZENIA LAN · BEZ GEOLOKALIZACJI",instructions:"Przeciągnij, aby obrócić<br>Zoom · Dotknij węzła",reset:"Resetuj widok",sampleDetail:"Punkt ilustracyjny · Brak połączonego urządzenia",count:n=>"Urządzenia w sieci lokalnej: "+n,peer:"Wykryto przez NSD/mDNS"},
-tr:{globeLabel:"LAN CİHAZLARI · KONUM BİLGİSİ YOK",instructions:"Döndürmek için sürükleyin<br>Yakınlaştır · Düğüme dokunun",reset:"Görünümü sıfırla",sampleDetail:"Temsili nokta · Bağlı cihaz değil",count:n=>"Yerel ağda bulunan cihaz: "+n,peer:"NSD/mDNS ile bulundu"},
-id:{globeLabel:"PERANGKAT LAN · TANPA GEOLOKASI",instructions:"Seret untuk memutar<br>Zoom · Ketuk node",reset:"Atur ulang tampilan",sampleDetail:"Titik ilustrasi · Bukan perangkat terhubung",count:n=>n+" perangkat ditemukan di jaringan lokal",peer:"Ditemukan melalui NSD/mDNS"}
+en:{globeLabel:"GEOGRAPHIC GLOBE · PEERS NOT GEOLOCATED",canvasLabel:"Interactive geographic globe. Drag to rotate or use zoom controls; peer points are illustrative, not locations.",zoomOut:"Zoom out",zoomIn:"Zoom in",sampleTitle:"Illustrative point",peerFallback:"LAN peer",instructions:"Drag to rotate<br>Pinch to zoom · Tap a node",reset:"Reset view",sampleDetail:"Illustrative point · Not a live peer",count:n=>n+" device(s) discovered on the local network",peer:"Discovered via NSD/mDNS"},
+"pt-BR":{globeLabel:"GLOBO GEOGRÁFICO · PARES NÃO GEOLOCALIZADOS",canvasLabel:"Globo geográfico interativo. Arraste para girar ou use os controles de zoom; os pontos são ilustrativos, não localizações.",zoomOut:"Diminuir zoom",zoomIn:"Aumentar zoom",sampleTitle:"Ponto ilustrativo",peerFallback:"Par LAN",instructions:"Arraste para girar<br>Use zoom · Toque em um nó",reset:"Redefinir visualização",sampleDetail:"Ponto ilustrativo · Não é um dispositivo conectado",count:n=>n+" dispositivo(s) encontrado(s) na rede local",peer:"Descoberto via NSD/mDNS"},
+es:{globeLabel:"GLOBO GEOGRÁFICO · PARES SIN GEOLOCALIZAR",canvasLabel:"Globo geográfico interactivo. Arrastra para girar o usa los controles de zoom; los puntos son ilustrativos, no ubicaciones.",zoomOut:"Alejar",zoomIn:"Acercar",sampleTitle:"Punto ilustrativo",peerFallback:"Par LAN",instructions:"Arrastra para girar<br>Usa zoom · Toca un nodo",reset:"Restablecer vista",sampleDetail:"Punto ilustrativo · No es un dispositivo conectado",count:n=>n+" dispositivo(s) encontrado(s) en la red local",peer:"Descubierto mediante NSD/mDNS"},
+fr:{globeLabel:"GLOBE GÉOGRAPHIQUE · PAIRS NON GÉOLOCALISÉS",canvasLabel:"Globe géographique interactif. Faites glisser pour tourner ou utilisez le zoom ; les points sont illustratifs, pas des positions.",zoomOut:"Dézoomer",zoomIn:"Zoomer",sampleTitle:"Point illustratif",peerFallback:"Pair LAN",instructions:"Faites glisser pour tourner<br>Zoom · Touchez un nœud",reset:"Réinitialiser",sampleDetail:"Point illustratif · Aucun appareil connecté",count:n=>n+" appareil(s) détecté(s) sur le réseau local",peer:"Découvert via NSD/mDNS"},
+de:{globeLabel:"GEOGRAFISCHER GLOBUS · PEERS NICHT GEOLOKALISIERT",canvasLabel:"Interaktiver geografischer Globus. Ziehen zum Drehen oder Zoom-Steuerung verwenden; Punkte sind illustrativ, keine Standorte.",zoomOut:"Verkleinern",zoomIn:"Vergrößern",sampleTitle:"Illustrativer Punkt",peerFallback:"LAN-Peer",instructions:"Ziehen zum Drehen<br>Zoom · Knoten antippen",reset:"Ansicht zurücksetzen",sampleDetail:"Illustrativer Punkt · Kein verbundenes Gerät",count:n=>n+" Gerät(e) im lokalen Netzwerk gefunden",peer:"Über NSD/mDNS entdeckt"},
+it:{globeLabel:"GLOBO GEOGRAFICO · PEER NON GEOLOCALIZZATI",canvasLabel:"Globo geografico interattivo. Trascina per ruotare o usa i controlli zoom; i punti sono illustrativi, non posizioni.",zoomOut:"Riduci zoom",zoomIn:"Aumenta zoom",sampleTitle:"Punto illustrativo",peerFallback:"Peer LAN",instructions:"Trascina per ruotare<br>Zoom · Tocca un nodo",reset:"Reimposta vista",sampleDetail:"Punto illustrativo · Nessun dispositivo connesso",count:n=>n+" dispositivo/i trovato/i nella rete locale",peer:"Rilevato tramite NSD/mDNS"},
+ja:{globeLabel:"地理的な地球儀 · ピアの位置情報なし",canvasLabel:"インタラクティブな地球儀。ドラッグで回転、ズーム操作ができます。ピアの点は位置情報ではなく例示です。",zoomOut:"縮小",zoomIn:"拡大",sampleTitle:"説明用ポイント",peerFallback:"LANピア",instructions:"ドラッグして回転<br>ズーム · ノードをタップ",reset:"表示をリセット",sampleDetail:"説明用ポイント · 接続デバイスではありません",count:n=>"ローカルネットワークで "+n+" 台を検出",peer:"NSD/mDNS で検出"},
+"zh-CN":{globeLabel:"地理地球仪 · 节点未定位",canvasLabel:"可交互的地理地球仪。拖动旋转或使用缩放控件；节点位置仅用于示意，并非真实位置。",zoomOut:"缩小",zoomIn:"放大",sampleTitle:"示意点",peerFallback:"局域网节点",instructions:"拖动旋转<br>缩放 · 点击节点",reset:"重置视图",sampleDetail:"示意点 · 并非已连接设备",count:n=>"在本地网络中发现 "+n+" 台设备",peer:"通过 NSD/mDNS 发现"},
+ru:{globeLabel:"ГЕОГРАФИЧЕСКИЙ ГЛОБУС · УЗЛЫ НЕ ГЕОЛОЦИРОВАНЫ",canvasLabel:"Интерактивный географический глобус. Перетаскивайте для вращения или используйте масштаб; точки условные, не реальные места.",zoomOut:"Уменьшить",zoomIn:"Увеличить",sampleTitle:"Условная точка",peerFallback:"Узел LAN",instructions:"Перетащите для вращения<br>Масштаб · Нажмите узел",reset:"Сбросить вид",sampleDetail:"Условная точка · Не подключённое устройство",count:n=>"Устройств в локальной сети: "+n,peer:"Обнаружено через NSD/mDNS"},
+ar:{globeLabel:"كرة أرضية جغرافية · النظراء غير محددي الموقع",canvasLabel:"كرة تفاعلية جغرافية. اسحب للتدوير أو استخدم عناصر التكبير؛ النقاط توضيحية وليست مواقع فعلية.",zoomOut:"تصغير",zoomIn:"تكبير",sampleTitle:"نقطة توضيحية",peerFallback:"نظير LAN",instructions:"اسحب للتدوير<br>تكبير · اضغط على عقدة",reset:"إعادة ضبط العرض",sampleDetail:"نقطة توضيحية · ليست جهازًا متصلًا",count:n=>"الأجهزة المكتشفة على الشبكة المحلية: "+n,peer:"تم الاكتشاف عبر NSD/mDNS"},
+hi:{globeLabel:"भौगोलिक ग्लोब · पीयर की लोकेशन नहीं",canvasLabel:"इंटरैक्टिव भौगोलिक ग्लोब। घुमाने के लिए खींचें या ज़ूम नियंत्रण उपयोग करें; बिंदु केवल उदाहरण हैं, वास्तविक स्थान नहीं।",zoomOut:"ज़ूम कम करें",zoomIn:"ज़ूम बढ़ाएँ",sampleTitle:"उदाहरण बिंदु",peerFallback:"LAN पीयर",instructions:"घुमाने के लिए खींचें<br>ज़ूम · नोड टैप करें",reset:"दृश्य रीसेट करें",sampleDetail:"उदाहरण बिंदु · कनेक्टेड डिवाइस नहीं",count:n=>"स्थानीय नेटवर्क पर "+n+" डिवाइस मिले",peer:"NSD/mDNS से मिला"},
+ko:{globeLabel:"지리적 지구본 · 피어 위치 정보 없음",canvasLabel:"대화형 지구본입니다. 드래그하거나 확대/축소를 사용하세요. 피어 점은 실제 위치가 아닌 예시입니다.",zoomOut:"축소",zoomIn:"확대",sampleTitle:"예시 지점",peerFallback:"LAN 피어",instructions:"드래그하여 회전<br>확대/축소 · 노드 탭",reset:"보기 초기화",sampleDetail:"예시 지점 · 연결된 장치가 아님",count:n=>"로컬 네트워크에서 장치 "+n+"개 발견",peer:"NSD/mDNS로 검색됨"},
+nl:{globeLabel:"GEOGRAFISCHE GLOBE · PEERS NIET GEOLOKALISEERD",canvasLabel:"Interactieve geografische globe. Sleep om te draaien of gebruik zoom; punten zijn illustratief en geen locaties.",zoomOut:"Uitzoomen",zoomIn:"Inzoomen",sampleTitle:"Illustratief punt",peerFallback:"LAN-peer",instructions:"Sleep om te draaien<br>Zoom · Tik op een knooppunt",reset:"Weergave herstellen",sampleDetail:"Illustratief punt · Geen verbonden apparaat",count:n=>n+" apparaat/apparaten gevonden op het lokale netwerk",peer:"Gevonden via NSD/mDNS"},
+pl:{globeLabel:"GLOBUS GEOGRAFICZNY · PEERY BEZ GEOLOKALIZACJI",canvasLabel:"Interaktywny globus geograficzny. Przeciągaj lub użyj zoomu; punkty są ilustracyjne, nie oznaczają lokalizacji.",zoomOut:"Pomniejsz",zoomIn:"Powiększ",sampleTitle:"Punkt ilustracyjny",peerFallback:"Peer LAN",instructions:"Przeciągnij, aby obrócić<br>Zoom · Dotknij węzła",reset:"Resetuj widok",sampleDetail:"Punkt ilustracyjny · Brak połączonego urządzenia",count:n=>"Urządzenia w sieci lokalnej: "+n,peer:"Wykryto przez NSD/mDNS"},
+tr:{globeLabel:"COĞRAFİ KÜRE · EŞLERİN KONUMU BELİRLENMEDİ",canvasLabel:"Etkileşimli coğrafi küre. Döndürmek için sürükleyin veya yakınlaştırmayı kullanın; noktalar konum değil, temsildir.",zoomOut:"Uzaklaştır",zoomIn:"Yakınlaştır",sampleTitle:"Temsili nokta",peerFallback:"LAN eşi",instructions:"Döndürmek için sürükleyin<br>Yakınlaştır · Düğüme dokunun",reset:"Görünümü sıfırla",sampleDetail:"Temsili nokta · Bağlı cihaz değil",count:n=>"Yerel ağda bulunan cihaz: "+n,peer:"NSD/mDNS ile bulundu"},
+id:{globeLabel:"GLOBE GEOGRAFIS · PEER TIDAK DILOKASI",canvasLabel:"Globe geografis interaktif. Seret untuk memutar atau gunakan kontrol zoom; titik hanya ilustrasi, bukan lokasi nyata.",zoomOut:"Perkecil",zoomIn:"Perbesar",sampleTitle:"Titik ilustrasi",peerFallback:"Peer LAN",instructions:"Seret untuk memutar<br>Zoom · Ketuk node",reset:"Atur ulang tampilan",sampleDetail:"Titik ilustrasi · Bukan perangkat terhubung",count:n=>n+" perangkat ditemukan di jaringan lokal",peer:"Ditemukan melalui NSD/mDNS"}
 };
-const locale=(navigator.language||"en").toLowerCase(),language=locale.startsWith("pt")?"pt-BR":locale.startsWith("zh")?"zh-CN":locale.split("-")[0],t=translations[locale]||translations[language]||translations.en;
+const requestedLanguage=new URLSearchParams(window.location.search).get("lang");
+const locale=(requestedLanguage||navigator.language||"en").toLowerCase(),language=locale.startsWith("pt")?"pt-BR":locale.startsWith("zh")?"zh-CN":locale.split("-")[0],t=translations[locale]||translations[language]||translations.en;
 document.documentElement.lang=language;document.documentElement.dir=language==='ar'?'rtl':'ltr';
+c.setAttribute("aria-label",t.canvasLabel);
+document.getElementById("minus").setAttribute("aria-label",t.zoomOut);
+document.getElementById("plus").setAttribute("aria-label",t.zoomIn);
 document.querySelectorAll("[data-i18n]").forEach(el=>{const key=el.getAttribute("data-i18n");if(t[key])el.innerHTML=t[key]});
 function peerPosition(peer,index){let hash=0;const s=String(peer.name||peer.address||index);for(let i=0;i<s.length;i++)hash=((hash<<5)-hash+s.charCodeAt(i))|0;const lon=((Math.abs(hash)%360)/180)*Math.PI,lat=(((Math.abs(hash>>>8)%140)-70)/180)*Math.PI;return{x:Math.cos(lat)*Math.cos(lon),y:Math.sin(lat),z:Math.cos(lat)*Math.sin(lon)}}
 window.ErikrafTMeshUpdatePeers=function(peers){livePeers=Array.isArray(peers)?peers:[];const count=document.getElementById('peerCount');if(count)count.textContent=t.count(livePeers.length);if(livePeers.length===0){detail.style.display='none'}draw()};
 function point(e){const r=c.getBoundingClientRect();return{x:e.clientX-r.left,y:e.clientY-r.top}}
 c.addEventListener('pointerdown',e=>{c.setPointerCapture(e.pointerId);drag={...point(e),rot,tilt,moved:0};});
 c.addEventListener('pointermove',e=>{if(!drag)return;const p=point(e),dx=p.x-drag.x,dy=p.y-drag.y;drag.moved=Math.max(drag.moved,Math.abs(dx)+Math.abs(dy));rot=drag.rot+dx*.008;tilt=Math.max(-1.1,Math.min(1.1,drag.tilt+dy*.006));draw()});
-c.addEventListener('pointerup',e=>{if(drag&&drag.moved<8){const p=point(e),R=Math.min(w*.46,h*.31)*zoom;let best=null,dist=20;for(let i=0;i<livePeers.length;i++){const q=project(peerPosition(livePeers[i],i),R),d=Math.hypot(q.x-p.x,q.y-p.y);if(q.visible&&d<dist){best={peer:livePeers[i]};dist=d}}if(!best){for(const n of nodes){const q=project(n,R),d=Math.hypot(q.x-p.x,q.y-p.y);if(q.visible&&d<dist){best={sample:n};dist=d}}}if(best){detail.style.display='block';if(best.peer){detail.querySelector('strong').textContent=best.peer.name||'Peer LAN';detail.querySelector('small').textContent=(best.peer.address||'LAN')+':'+(best.peer.port||'—')+' · '+t.peer}else{detail.querySelector('strong').textContent='Ponto ilustrativo';detail.querySelector('small').textContent=t.sampleDetail}}}drag=null});
+c.addEventListener('pointerup',e=>{if(drag&&drag.moved<8){const p=point(e),R=Math.min(w*.46,h*.31)*zoom;let best=null,dist=20;for(let i=0;i<livePeers.length;i++){const q=project(peerPosition(livePeers[i],i),R),d=Math.hypot(q.x-p.x,q.y-p.y);if(q.visible&&d<dist){best={peer:livePeers[i]};dist=d}}if(!best){for(const n of nodes){const q=project(n,R),d=Math.hypot(q.x-p.x,q.y-p.y);if(q.visible&&d<dist){best={sample:n};dist=d}}}if(best){detail.style.display='block';if(best.peer){detail.querySelector('strong').textContent=best.peer.name||t.peerFallback;detail.querySelector('small').textContent=(best.peer.address||'LAN')+':'+(best.peer.port||'—')+' · '+t.peer}else{detail.querySelector('strong').textContent=t.sampleTitle;detail.querySelector('small').textContent=t.sampleDetail}}}drag=null});
 c.addEventListener('wheel',e=>{e.preventDefault();zoom=Math.max(.65,Math.min(1.8,zoom+(e.deltaY<0?.08:-.08)));draw()},{passive:false});
 document.getElementById('plus').onclick=()=>{zoom=Math.min(1.8,zoom+.12);draw()};document.getElementById('minus').onclick=()=>{zoom=Math.max(.65,zoom-.12);draw()};document.getElementById('reset').onclick=()=>{rot=-.55;tilt=.15;zoom=1;detail.style.display='none';draw()};
 window.addEventListener('resize',resize);resize();

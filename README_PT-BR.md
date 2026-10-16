@@ -18,10 +18,10 @@ O objetivo de longo prazo é permitir que dispositivos compatíveis formem ou us
 ## Componentes
 
 - **App Android:** aplicativo nativo Java com interface azul e descoberta LAN experimental por NSD/mDNS.
-- **Identidade visual:** logotipos SVG colorido e branco em `assets/`. O app Android usa o ícone branco sobre azul `#4285F4`, alinhado ao ErikrafT Drop™ for Android.
+- **Identidade visual:** logotipos SVG colorido e branco em `assets/`. O app Android usa o ícone branco sobre azul `#4285F4`, alinhado ao ErikrafT Drop™ para Android.
 - **Landing page:** site azul responsivo com estado do projeto, documentação bilíngue e QR codes de pagamento Bitcoin.
 - **Cliente desktop:** protótipo inicial Tauri + Rust em `desktop/` com alvo Windows, Linux e macOS. É experimental e exige CI e validação em dispositivos reais; não é uma versão estável.
-- **Integração planejada:** o deep link `erikraftwifi://open` é um ponto de entrada exploratório; isso não significa que a integração com Drop já funcione.
+- **Integração planejada:** o deep link `erikraftwifi://open` é um ponto de entrada exploratório; isso não significa que a integração com ErikrafT Drop™ já funcione.
 - **Builds:** o workflow de validação compila um APK debug. O workflow de release gera artefatos APK/AAB e pode assiná-los usando uma keystore em Base64 fornecida por secrets do GitHub Actions.
 
 ## Interface Android, Quick Settings e PiP
@@ -31,14 +31,15 @@ O objetivo de longo prazo é permitir que dispositivos compatíveis formem ou us
 - O serviço Quick Settings adiciona um atalho para abrir o ErikrafT Wi-Fi. Ele usa um VectorDrawable Android baseado no símbolo branco de `assets/ErikrafT_Wifi_Icon_Logo_White.svg`, dimensionado para 24 dp; o SVG original não é alterado. O atalho não liga/desliga o Wi-Fi nem cria uma conexão sozinho.
 - O app continua sendo um protótipo. As configurações avançadas não configuram mesh nem gateways porque essas funções ainda não existem no núcleo de rede.
 
-## Biblioteca offline e globo de pares LAN
+## Biblioteca offline e globo geográfico
 
 O app Android inclui uma biblioteca experimental para leitura offline:
-- Abrir um endereço, salvar uma captura MHTML pelo WebView, reabrir páginas salvas, importar HTML/MHTML e exportar arquivos.
-- Receber URLs ou arquivos compartilhados por apps Android compatíveis.
+- Abrir um endereço, salvar uma captura MHTML pelo WebView, reabrir páginas salvas, importar HTML/MHTML, exportar arquivos e compartilhar uma página salva pela folha de compartilhamento do Android.
+- Compartilhar diretamente um arquivo HTML/MHTML salvo com apps Android compatíveis, usando um URI de conteúdo somente leitura com permissão temporária por arquivo.
+- Receber URLs ou arquivos compartilhados por apps Android compatíveis, preservando a extensão `.html` / `.mhtml` dos arquivos de páginas compartilhadas.
 - Abrir o globo interativo com rotação, zoom e seleção de nós.
-- O globo agora recebe pares reais descobertos por NSD/mDNS na mesma rede local, atualiza quando aparecem/desaparecem e exibe endereço/porta ao selecionar um par. As posições são apenas uma disposição visual determinística — não são coordenadas GPS nem um mapa geográfico. Pontos decorativos continuam sendo ilustrativos.
-- Os rótulos e controles do globo têm traduções para 16 variantes de idioma/localidade, de acordo com o idioma do WebView. Isso não significa que toda a interface nativa esteja traduzida.
+- O globo interativo usa contornos geográficos simplificados de latitude/longitude, que acompanham a rotação da esfera. Ele recebe pares reais descobertos por NSD/mDNS na mesma rede local, atualiza quando aparecem/desaparecem e exibe endereço/porta ao selecionar um par. Os marcadores de pares são posições visuais ilustrativas — não são coordenadas GPS nem localizações reais. O globo não implementa roteamento mesh.
+- A tela principal Android, biblioteca offline, diagnósticos e status de descoberta contam com seletor de idioma dentro do app e 16 variantes offline; os controles do globo também têm traduções correspondentes.
 
 **Limitações de leitura offline:** o MHTML inclui somente os recursos que o WebView consegue capturar. Páginas com login, DRM, conteúdo dinâmico ou dependência de servidores podem não funcionar offline. O armazenamento privado de páginas baixadas pelo Chrome não pode ser acessado diretamente por outro app; exporte/compartilhe um arquivo que o Android disponibilize.
 
@@ -60,14 +61,14 @@ O app Android continua experimental. Um protótipo desktop inicial em `desktop/`
 - [Integração com ErikrafT Drop™](docs/drop-integration_PT-BR.md) · [English](docs/drop-integration.md)
 - [Clientes desktop](docs/desktop-clients_PT-BR.md) · [English](docs/desktop-clients.md)
 - [Visão internacional de regulamentação](docs/international-regulatory-overview_PT-BR.md) · [English](docs/international-regulatory-overview.md)
-- [Roadmap de integração com Drop](docs/drop-integration-roadmap_PT-BR.md) · [English](docs/drop-integration-roadmap.md)
+- [Plano de integração com ErikrafT Drop™](docs/drop-integration-roadmap_PT-BR.md) · [English](docs/drop-integration-roadmap.md)
 - [Experiência Web responsiva](docs/web-experience_PT-BR.md) · [English](docs/web-experience.md)
 - [Guia do projeto para sistemas de IA](llms.txt) · [Português](llms_PT-BR.txt)
 
 ## Repositórios relacionados
 
 - [ErikrafT Drop™ Web/Desktop](https://github.com/erikraft/Drop)
-- [ErikrafT Drop™ for Android](https://github.com/erikraft/Drop-Android)
+- [ErikrafT Drop™ para Android](https://github.com/erikraft/Drop-Android)
 
 ## Segurança e compatibilidade
 

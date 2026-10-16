@@ -21,6 +21,9 @@
                 <data android:mimeType="text/plain" />
                 <data android:mimeType="text/html" />
                 <data android:mimeType="application/octet-stream" />
+                <data android:mimeType="application/x-mimearchive" />
+                <data android:mimeType="message/rfc822" />
+                <data android:mimeType="multipart/related" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -57,5 +60,10 @@
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
             </intent-filter>
         </service>
+        <provider
+            android:name=".OfflineArchiveProvider"
+            android:authorities="${applicationId}.offlinearchives"
+            android:exported="false"
+            android:grantUriPermissions="true" />
     </application>
 </manifest>
