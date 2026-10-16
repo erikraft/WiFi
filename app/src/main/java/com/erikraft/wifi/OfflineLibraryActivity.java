@@ -329,6 +329,19 @@ public final class OfflineLibraryActivity extends Activity {
         }
     }
 
+    private boolean isOfflineWebArchive(String name, String mimeType) {
+        if (name != null) {
+            String lower = name.toLowerCase(Locale.ROOT);
+            if (lower.endsWith(".html") || lower.endsWith(".htm")
+                    || lower.endsWith(".mhtml") || lower.endsWith(".mht")) return true;
+        }
+        if (mimeType == null) return false;
+        return "text/html".equalsIgnoreCase(mimeType)
+                || "application/x-mimearchive".equalsIgnoreCase(mimeType)
+                || "message/rfc822".equalsIgnoreCase(mimeType)
+                || "multipart/related".equalsIgnoreCase(mimeType);
+    }
+
     private String offlineArchiveExtension(String name, String mimeType) {
         if (name != null) {
             String lower = name.toLowerCase(Locale.ROOT);
@@ -366,6 +379,10 @@ public final class OfflineLibraryActivity extends Activity {
         if (shared != null) {
             try {
                 String sharedName = queryDisplayName(shared);
+                if (!isOfflineWebArchive(sharedName, intent.getType())) {
+                    status.setText(AppStrings.t(this, "Este arquivo não é uma página HTML/MHTML offline. O envio de áudio e vídeo ainda não está implementado."));
+                    return;
+                }
                 String extension = offlineArchiveExtension(sharedName, intent.getType());
                 File out = new File(archiveDir, "shared-" + System.currentTimeMillis() + extension);
                 try (InputStream in = getContentResolver().openInputStream(shared);
