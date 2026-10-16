@@ -5,6 +5,7 @@
 - App Android nativo com interface inicial e deep link `erikraftwifi://open`.
 - Descoberta experimental de nós na mesma rede local usando Android NSD/DNS-SD (mDNS).
 - Endpoint TCP efêmero que responde apenas metadados públicos de protocolo/capacidades; não recebe nem envia arquivos.
+- Integração opcional com as configurações do hotspot/Ancoragem nativos do Android, validação de Internet upstream e anúncio TXT NSD de disponibilidade (não autenticado).
 - Workflow de CI que tenta compilar o APK debug e workflow manual/tag para APK/AAB Android.
 
 ## Interface Android e atalhos
