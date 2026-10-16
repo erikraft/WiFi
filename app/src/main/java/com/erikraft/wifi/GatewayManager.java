@@ -94,7 +94,8 @@ final class GatewayManager {
 
     private static void openHotspotSettings(Activity activity) {
         try {
-            activity.startActivity(new Intent(Settings.ACTION_TETHER_SETTINGS));
+            // Some OEM Settings apps expose this action even though it is not a public SDK constant.
+            activity.startActivity(new Intent("android.settings.TETHER_SETTINGS"));
         } catch (Exception first) {
             try {
                 activity.startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));
