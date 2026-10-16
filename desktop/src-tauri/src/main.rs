@@ -2,7 +2,7 @@ use mdns_sd::{ServiceDaemon, ServiceEvent, ServiceInfo};
 use serde::{Deserialize, Serialize};
 use std::{
     io::{BufRead, BufReader, Write},
-    net::{IpAddr, SocketAddr, TcpListener, TcpStream, UdpSocket},
+    net::{SocketAddr, TcpListener, TcpStream},
     sync::{
         atomic::{AtomicBool, Ordering},
         Mutex,
@@ -52,22 +52,6 @@ struct PeerFound {
     file_transfer: bool,
 }
 
-fn preferred_local_ip() -> Result<IpAddr, String> {
-    // UDP connect selects the OS route without sending application payloads.
-    for target in ["8.8.8.8:80", "[2001:4860:4860::8888]:80"] {
-        if let Ok(socket) = UdpSocket::bind(if target.starts_with('[') { "[::]:0" } else { "0.0.0.0:0" }) {
-            if socket.connect(target).is_ok() {
-                if let Ok(address) = socket.local_addr() {
-                    if !address.ip().is_loopback() && !address.ip().is_unspecified() {
-                        return Ok(address.ip());
-                    }
-                }
-            }
-        }
-    }
-    Err("No active non-loopback network route was found.".to_string())
-}
-
 fn read_peer_metadata(address: SocketAddr) -> Option<PeerMetadata> {
     let mut stream = TcpStream::connect_timeout(&address, Duration::from_millis(900)).ok()?;
     let _ = stream.set_read_timeout(Some(Duration::from_millis(900)));
@@ -87,7 +71,6 @@ fn start_discovery(app: tauri::AppHandle, state: State<'_, DiscoveryState>) -> R
         return Ok("running".into());
     }
 
-    let local_ip = preferred_local_ip()?;
     let listener = TcpListener::bind(("0.0.0.0", 0)).map_err(|error| error.to_string())?;
     listener.set_nonblocking(true).map_err(|error| error.to_string())?;
     let port = listener.local_addr().map_err(|error| error.to_string())?.port();
@@ -97,7 +80,7 @@ fn start_discovery(app: tauri::AppHandle, state: State<'_, DiscoveryState>) -> R
         .map_err(|error| error.to_string())?
         .as_millis() as u64;
     let node_name = format!("ErikWiFi-{:06x}", timestamp & 0x00ff_ffff);
-    let host_name = format!("erikraft-wifi-{}.local.", std::process::id());
+    let host_name = format!("{}.local.", node_name.to_ascii_lowercase());
 
     let daemon = ServiceDaemon::new().map_err(|error| error.to_string())?;
     let properties = [
@@ -109,11 +92,12 @@ fn start_discovery(app: tauri::AppHandle, state: State<'_, DiscoveryState>) -> R
         SERVICE_TYPE,
         &node_name,
         &host_name,
-        local_ip.to_string(),
+        "",
         port,
         &properties[..],
     )
-    .map_err(|error| error.to_string())?;
+    .map_err(|error| error.to_string())?
+    .enable_addr_auto();
     daemon.register(service).map_err(|error| error.to_string())?;
     let receiver = daemon.browse(SERVICE_TYPE).map_err(|error| error.to_string())?;
 
@@ -142,7 +126,6 @@ fn start_discovery(app: tauri::AppHandle, state: State<'_, DiscoveryState>) -> R
     let browse_stop = Arc::clone(&stop);
     let browse_app = app.clone();
     let self_name = node_name.clone();
-    let own_ip = local_ip;
     thread::spawn(move || {
         while !browse_stop.load(Ordering::Relaxed) {
             if let Ok(event) = receiver.recv_timeout(Duration::from_millis(250)) {
@@ -151,7 +134,7 @@ fn start_discovery(app: tauri::AppHandle, state: State<'_, DiscoveryState>) -> R
                         continue;
                     }
                     for address in info.get_addresses() {
-                        if address.is_loopback() || address.is_unspecified() || *address == own_ip || !address.is_ipv4() {
+                        if address.is_loopback() || address.is_unspecified() || !address.is_ipv4() {
                             continue;
                         }
                         let socket_address = SocketAddr::new(*address, info.get_port());
