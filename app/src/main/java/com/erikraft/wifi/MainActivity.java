@@ -103,8 +103,7 @@ public final class MainActivity extends Activity {
         settingsButton.setContentDescription("Configurações");
         settingsButton.setImageResource(com.erikraft.wifi.R.drawable.ic_settings_24);
         settingsButton.setColorFilter(primaryTextColor);
-        settingsButton.setBackgroundTintList(android.content.res.ColorStateList.valueOf(softAccentColor));
-        settingsButton.setBackgroundResource(com.erikraft.wifi.R.drawable.bg_settings_button);
+        settingsButton.setBackground(surface(0, softAccentColor, borderColor));
         header.addView(settingsButton, lp(dp(46), dp(46)));
         settingsButton.setOnClickListener(v -> {
             advancedVisible = !advancedVisible;
