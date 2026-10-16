@@ -236,14 +236,14 @@ public final class MainActivity extends Activity {
                 : caps.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ? AppStrings.t(this, "Wi-Fi conectado")
                 : caps.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) ? AppStrings.t(this, "Ethernet conectada")
                 : AppStrings.t(this, "Outra rede ativa");
-        String report = AppStrings.t(this, "ErikrafT Wi-Fi — Diagnóstico") + "\\n\\n"
-                + AppStrings.t(this, "Android: ") + Build.VERSION.RELEASE + AppStrings.t(this, " (API ") + Build.VERSION.SDK_INT + ")\\n"
-                + AppStrings.t(this, "Dispositivo: ") + Build.MANUFACTURER + " " + Build.MODEL + "\\n"
-                + AppStrings.t(this, "Rede: ") + network + "\\n"
-                + AppStrings.t(this, "Descoberta LAN: experimental (NSD/mDNS)") + "\\n"
-                + AppStrings.t(this, "Autenticação de pares: não implementada") + "\\n"
-                + AppStrings.t(this, "Transporte criptografado: não implementado") + "\\n"
-                + AppStrings.t(this, "Wi-Fi Direct / mesh / gateway: não implementados") + "\\n"
+        String report = AppStrings.t(this, "ErikrafT Wi-Fi — Diagnóstico") + "\n\n"
+                + AppStrings.t(this, "Android: ") + Build.VERSION.RELEASE + AppStrings.t(this, " (API ") + Build.VERSION.SDK_INT + ")\n"
+                + AppStrings.t(this, "Dispositivo: ") + Build.MANUFACTURER + " " + Build.MODEL + "\n"
+                + AppStrings.t(this, "Rede: ") + network + "\n"
+                + AppStrings.t(this, "Descoberta LAN: experimental (NSD/mDNS)") + "\n"
+                + AppStrings.t(this, "Autenticação de pares: não implementada") + "\n"
+                + AppStrings.t(this, "Transporte criptografado: não implementado") + "\n"
+                + AppStrings.t(this, "Wi-Fi Direct / mesh / gateway: não implementados") + "\n"
                 + AppStrings.t(this, "Transferência de arquivos: não implementada");
         new AlertDialog.Builder(this).setTitle(AppStrings.t(this, "Diagnóstico")).setMessage(report)
                 .setPositiveButton(AppStrings.t(this, "OK"), null)
