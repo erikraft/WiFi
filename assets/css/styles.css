@@ -139,3 +139,10 @@
   .hero{min-height:570px;padding-top:60px;padding-bottom:70px}
   .device-scene{display:none!important}
 }
+
+@media(min-width:981px) and (max-width:1240px){
+  .topbar{padding-left:3%;padding-right:3%;gap:12px}
+  .topbar nav{gap:10px;font-size:10px}
+  .top-actions{gap:8px}
+  .nav-cta{padding:9px 10px}
+}
