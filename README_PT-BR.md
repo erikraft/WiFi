@@ -18,7 +18,7 @@ O objetivo de longo prazo é permitir que dispositivos compatíveis formem ou us
 ## Componentes
 
 - **App Android:** aplicativo nativo Java com interface azul e descoberta LAN experimental por NSD/mDNS.
-- **Identidade visual:** logotipos SVG colorido e branco em `assets/`. O app Android usa o ícone branco sobre azul `#4285F4`, alinhado ao ErikrafT Drop™ for Android.
+- **Identidade visual:** logotipos SVG colorido e branco em `assets/`. O app Android usa o ícone branco sobre azul `#4285F4`, alinhado ao ErikrafT Drop™ para Android.
 - **Landing page:** site azul responsivo com estado do projeto, documentação bilíngue e QR codes de pagamento Bitcoin.
 - **Cliente desktop:** protótipo inicial Tauri + Rust em `desktop/` com alvo Windows, Linux e macOS. É experimental e exige CI e validação em dispositivos reais; não é uma versão estável.
 - **Integração planejada:** o deep link `erikraftwifi://open` é um ponto de entrada exploratório; isso não significa que a integração com ErikrafT Drop™ já funcione.
@@ -34,7 +34,7 @@ O objetivo de longo prazo é permitir que dispositivos compatíveis formem ou us
 ## Biblioteca offline e globo de pares LAN
 
 O app Android inclui uma biblioteca experimental para leitura offline:
-- Abrir um endereço, salvar uma captura MHTML pelo WebView, reabrir páginas salvas, importar HTML/MHTML e exportar arquivos.
+- Abrir um endereço, salvar uma captura MHTML pelo WebView, reabrir páginas salvas, importar HTML/MHTML, exportar arquivos e compartilhar uma página salva pela folha de compartilhamento do Android.
 - Compartilhar diretamente um arquivo HTML/MHTML salvo com apps Android compatíveis, usando um URI de conteúdo somente leitura com permissão temporária por arquivo.
 - Receber URLs ou arquivos compartilhados por apps Android compatíveis, preservando a extensão `.html` / `.mhtml` dos arquivos de páginas compartilhadas.
 - Abrir o globo interativo com rotação, zoom e seleção de nós.
@@ -68,7 +68,7 @@ O app Android continua experimental. Um protótipo desktop inicial em `desktop/`
 ## Repositórios relacionados
 
 - [ErikrafT Drop™ Web/Desktop](https://github.com/erikraft/Drop)
-- [ErikrafT Drop™ for Android](https://github.com/erikraft/Drop-Android)
+- [ErikrafT Drop™ para Android](https://github.com/erikraft/Drop-Android)
 
 ## Segurança e compatibilidade
 
