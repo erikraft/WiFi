@@ -1,4 +1,4 @@
-# Roadmap de integração ErikrafT Wi-Fi™ ↔ ErikrafT Drop™
+# Plano de integração com ErikrafT Drop™
 
 ## Limites dos produtos
 
