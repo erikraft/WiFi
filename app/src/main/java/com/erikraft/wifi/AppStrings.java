@@ -104,6 +104,15 @@ final class AppStrings {
         add("Descoberta parada.", "Discovery stopped.", "Búsqueda detenida.", "Recherche arrêtée.", "Suche gestoppt.", "Ricerca interrotta.", "検出を停止しました。", "已停止发现。", "Поиск остановлен.", "تم إيقاف الاكتشاف.", "खोज बंद हुई।", "검색이 중지되었습니다.", "Ontdekking gestopt.", "Wykrywanie zatrzymane.", "Keşif durduruldu.", "Penemuan dihentikan.");
     }
 
+
+        add("Android: ", "Android: ", "Android: ", "Android : ", "Android: ", "Android: ", "Android：", "Android：", "Android: ", "Android: ", "Android: ", "Android: ", "Android: ", "Android: ", "Android: ", "Android: ");
+        add(" (API ", " (API ", " (API ", " (API ", " (API ", " (API ", " (API ", "（API ", " (API ", " (API ", " (API ", " (API ", " (API ", " (API ", " (API ", " (API ");
+        add("Dispositivo: ", "Device: ", "Dispositivo: ", "Appareil : ", "Gerät: ", "Dispositivo: ", "デバイス：", "设备：", "Устройство: ", "الجهاز: ", "डिवाइस: ", "기기: ", "Apparaat: ", "Urządzenie: ", "Cihaz: ", "Perangkat: ");
+        add("Rede: ", "Network: ", "Red: ", "Réseau : ", "Netzwerk: ", "Rete: ", "ネットワーク：", "网络：", "Сеть: ", "الشبكة: ", "नेटवर्क: ", "네트워크: ", "Netwerk: ", "Sieć: ", "Ağ: ", "Jaringan: ");
+        add("Descoberta LAN: experimental (NSD/mDNS)\\n", "LAN discovery: experimental (NSD/mDNS)\\n", "Búsqueda LAN: experimental (NSD/mDNS)\\n", "Découverte LAN : expérimentale (NSD/mDNS)\\n", "LAN-Erkennung: experimentell (NSD/mDNS)\\n", "Ricerca LAN: sperimentale (NSD/mDNS)\\n", "LAN検出：実験的（NSD/mDNS）\\n", "局域网发现：实验性（NSD/mDNS）\\n", "Обнаружение LAN: экспериментально (NSD/mDNS)\\n", "اكتشاف LAN: تجريبي (NSD/mDNS)\\n", "LAN खोज: प्रयोगात्मक (NSD/mDNS)\\n", "LAN 검색: 실험적(NSD/mDNS)\\n", "LAN-ontdekking: experimenteel (NSD/mDNS)\\n", "Wykrywanie LAN: eksperymentalne (NSD/mDNS)\\n", "LAN keşfi: deneysel (NSD/mDNS)\\n", "Penemuan LAN: eksperimental (NSD/mDNS)\\n");
+        add("Falha ao iniciar a descoberta (código ", "Could not start discovery (code ", "No se pudo iniciar la búsqueda (código ", "Échec du démarrage de la découverte (code ", "Erkennung konnte nicht gestartet werden (Code ", "Impossibile avviare la ricerca (codice ", "検出を開始できませんでした（コード ", "无法启动发现（代码 ", "Не удалось начать поиск (код ", "تعذر بدء الاكتشاف (الرمز ", "खोज शुरू नहीं हो सकी (कोड ", "검색을 시작할 수 없습니다(코드 ", "Ontdekking starten mislukt (code ", "Nie można rozpocząć wykrywania (kod ", "Keşif başlatılamadı (kod ", "Gagal memulai penemuan (kode ");
+        add("Não foi possível anunciar este dispositivo (código ", "Could not advertise this device (code ", "No se pudo anunciar este dispositivo (código ", "Impossible d’annoncer cet appareil (code ", "Dieses Gerät konnte nicht angekündigt werden (Code ", "Impossibile annunciare questo dispositivo (codice ", "この端末をアドバタイズできませんでした（コード ", "无法广播此设备（代码 ", "Не удалось объявить это устройство (код ", "تعذر الإعلان عن هذا الجهاز (الرمز ", "यह डिवाइस घोषित नहीं हो सका (कोड ", "이 기기를 알릴 수 없습니다(코드 ", "Dit apparaat kon niet worden aangekondigd (code ", "Nie można ogłosić tego urządzenia (kod ", "Bu cihaz duyurulamadı (kod ", "Gagal mengiklankan perangkat ini (kode ");
+        add("ErikrafT Wi-Fi — Diagnóstico", "ErikrafT Wi-Fi — Diagnostics", "ErikrafT Wi-Fi — Diagnóstico", "ErikrafT Wi-Fi — Diagnostic", "ErikrafT Wi-Fi — Diagnose", "ErikrafT Wi-Fi — Diagnostica", "ErikrafT Wi-Fi — 診断", "ErikrafT Wi-Fi — 诊断", "ErikrafT Wi-Fi — Диагностика", "ErikrafT Wi-Fi — التشخيص", "ErikrafT Wi-Fi — निदान", "ErikrafT Wi-Fi — 진단", "ErikrafT Wi-Fi — Diagnose", "ErikrafT Wi-Fi — Diagnostyka", "ErikrafT Wi-Fi — Tanılama", "ErikrafT Wi-Fi — Diagnostik");
     private static void add(String pt, String en, String es, String fr, String de, String it,
                             String ja, String zh, String ru, String ar, String hi, String ko,
                             String nl, String pl, String tr, String id) {
@@ -117,7 +126,7 @@ final class AppStrings {
         if (values != null) return values[index];
         for (Map.Entry<String, String[]> entry : TEXT.entrySet()) {
             String key = entry.getKey();
-            if (key.endsWith(": ") && source.startsWith(key)) {
+            if (key.endsWith(" ") && source.startsWith(key)) {
                 return entry.getValue()[index] + source.substring(key.length());
             }
         }
