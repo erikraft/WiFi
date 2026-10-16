@@ -21,7 +21,7 @@ The long-term goal is to let compatible devices form or use a Wi-Fi network and 
 - **Visual identity:** color and white SVG logos in `assets/`. The Android app uses the white icon on blue `#4285F4`, consistent with ErikrafT Drop™ for Android.
 - **Landing page:** responsive blue website with project status, bilingual documentation, and Bitcoin payment QR codes.
 - **Desktop clients:** an initial Tauri + Rust prototype in `desktop/` targets Windows, Linux, and macOS. It is experimental and requires CI plus real-device validation; it is not a stable release.
-- **Planned integration:** the `erikraftwifi://open` deep link is an exploratory entry point; it does not mean Drop integration already works.
+- **Planned integration:** the `erikraftwifi://open` deep link is an exploratory entry point; it does not mean ErikrafT Drop™ integration already works.
 - **Builds:** the validation workflow compiles a debug APK. The release workflow creates APK/AAB artifacts and can sign them using a Base64 keystore supplied through GitHub Actions secrets.
 
 ## Android interface, Quick Settings, and PiP
@@ -61,7 +61,7 @@ The Android app remains experimental. An initial desktop prototype in `desktop/`
 - [ErikrafT Drop™ integration](docs/drop-integration.md) · [Português](docs/drop-integration_PT-BR.md)
 - [Desktop clients](docs/desktop-clients.md) · [Português](docs/desktop-clients_PT-BR.md)
 - [International regulatory overview](docs/international-regulatory-overview.md) · [Português](docs/international-regulatory-overview_PT-BR.md)
-- [Drop integration roadmap](docs/drop-integration-roadmap.md) · [Português](docs/drop-integration-roadmap_PT-BR.md)
+- [ErikrafT Drop™ integration roadmap](docs/drop-integration-roadmap.md) · [Português](docs/drop-integration-roadmap_PT-BR.md)
 - [Responsive website experience](docs/web-experience.md) · [Português](docs/web-experience_PT-BR.md)
 - [AI-readable project guide](llms.txt) · [Português](llms_PT-BR.txt)
 
