@@ -6,7 +6,7 @@ The app uses `NsdManager` (Network Service Discovery / DNS-SD over mDNS) to adve
 1. Opens a TCP socket on an ephemeral port.
 2. Advertises the node name and port through NSD.
 3. Searches for ErikrafT Wi-Fi services and displays resolved names, addresses, and ports.
-4. Returns a small JSON object containing public version and capability metadata only; it does not accept files or user data.
+4. Returns a small JSON object containing public version and capability metadata only; it does not accept files or user data. DNS-SD may include TXT fields `internet=yes/no` and `gateway=android-tethering-v1/none`, based on Android's validated connectivity and explicit user opt-in. These values are unauthenticated.
 
 ## What it does not do
 - Automatically discover every device on the network; other devices must advertise the same service type.
