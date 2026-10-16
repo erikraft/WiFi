@@ -37,11 +37,12 @@ The Android app includes an experimental offline web library:
 - Open a website URL and save a WebView MHTML archive for later local reading.
 - Reopen saved archives, import HTML/MHTML files through Android's document picker, and export an archive to a user-selected location.
 - Accept shared text/URL or a shared file from compatible Android apps.
-- Open the interactive, touch-friendly globe preview (drag to rotate, zoom, select illustrative nodes).
+- Open the interactive globe: it now receives real peers discovered by Android NSD/mDNS on the same local network, updates when peers appear/disappear, and shows their LAN address/port when selected. Peer positions are deterministic visual placement only—not GPS coordinates or geographic locations. Decorative background points are explicitly illustrative.
+- Globe controls and status labels include translations for 16 major language/locale variants, based on the WebView locale.
 
 **Offline archive limitations:** the archive contains only resources WebView successfully captures. Login-only content, DRM, dynamic pages, some cross-origin resources, and pages requiring a live backend may not work offline. Chrome's private “downloaded page” store is sandboxed by Android; the app cannot silently read Chrome's private data. Export/share an actual HTML/MHTML file or select a downloaded file that Android exposes in the document picker. A standalone HTML file whose companion asset folder is missing may render incompletely.
 
-**Mesh and calls status:** the globe is currently a design/interaction preview, not a live map of peers. The existing network core remains experimental NSD/mDNS discovery on a shared LAN. It does not yet provide offline multi-hop mesh chat, audio/video calls, WebRTC signaling, Bluetooth mesh routing, or Wi-Fi Aware transport. Calls with no Internet are technically possible on compatible local peer links, but require a real local signaling and media transport implementation, platform permission handling, and multi-device testing; this release does not claim that capability.
+**Mesh and calls status:** the globe is now connected to real NSD/mDNS peer discovery on the same LAN, but it is not a geographic map and does not establish a multi-hop mesh. The existing network core remains experimental LAN discovery. It does not yet provide offline multi-hop chat, audio/video calls, WebRTC signaling, Bluetooth mesh routing, or Wi-Fi Aware transport. Calls with no Internet are technically possible on compatible local peer links, but require a real local signaling and media transport implementation, platform permission handling, and multi-device testing; this release does not claim that capability.
 
 ## Build and distribution
 
