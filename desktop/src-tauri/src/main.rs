@@ -2,7 +2,7 @@ use mdns_sd::{ServiceDaemon, ServiceEvent, ServiceInfo};
 use serde::{Deserialize, Serialize};
 use std::{
     io::{BufRead, BufReader, Write},
-    net::{SocketAddr, TcpListener, TcpStream},
+    net::{IpAddr, SocketAddr, TcpListener, TcpStream},
     sync::{
         atomic::{AtomicBool, Ordering},
         Mutex,
@@ -11,7 +11,7 @@ use std::{
     thread,
     time::{Duration, SystemTime, UNIX_EPOCH},
 };
-use tauri::{Emitter, Manager, State};
+use tauri::{Emitter, State};
 
 const SERVICE_TYPE: &str = "_erikraftwifi._tcp.local.";
 const PROTOCOL_VERSION: u8 = 1;
@@ -53,7 +53,7 @@ struct PeerFound {
 }
 
 fn read_peer_metadata(address: SocketAddr) -> Option<PeerMetadata> {
-    let mut stream = TcpStream::connect_timeout(&address, Duration::from_millis(900)).ok()?;
+    let stream = TcpStream::connect_timeout(&address, Duration::from_millis(900)).ok()?;
     let _ = stream.set_read_timeout(Some(Duration::from_millis(900)));
     let mut line = String::new();
     BufReader::new(stream).read_line(&mut line).ok()?;
@@ -134,10 +134,18 @@ fn start_discovery(app: tauri::AppHandle, state: State<'_, DiscoveryState>) -> R
                         continue;
                     }
                     for address in info.get_addresses() {
-                        if address.is_loopback() || address.is_unspecified() || !address.is_ipv4() {
+                        if !address.is_ipv4() {
                             continue;
                         }
-                        let socket_address = SocketAddr::new(*address, info.get_port());
+                        // mdns-sd returns ScopedIp values; parse their textual IPv4 form
+                        // into std::net::IpAddr before using the standard socket API.
+                        let Ok(ip_address) = address.to_string().parse::<IpAddr>() else {
+                            continue;
+                        };
+                        if ip_address.is_loopback() || ip_address.is_unspecified() {
+                            continue;
+                        }
+                        let socket_address = SocketAddr::new(ip_address, info.get_port());
                         if let Some(metadata) = read_peer_metadata(socket_address) {
                             let display_name = info.get_fullname().split('.').next().unwrap_or("ErikrafT Wi-Fi").to_string();
                             let peer = PeerFound {
