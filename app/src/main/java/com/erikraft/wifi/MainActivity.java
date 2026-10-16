@@ -45,6 +45,7 @@ public final class MainActivity extends Activity {
     private TextView advancedDetails;
     private boolean advancedVisible;
     private boolean pipEnabled;
+    private boolean discoveryRunning;
     private LanDiscovery discovery;
 
     @Override public void onCreate(Bundle state) {
@@ -55,9 +56,13 @@ public final class MainActivity extends Activity {
         discovery = new LanDiscovery(this, new LanDiscovery.Listener() {
             @Override public void onStatus(String value) {
                 mainHandler.post(() -> {
-                    if (status != null) status.setText(value);
-                    if (discoverButton != null) discoverButton.setText(
-                            value.startsWith("Descoberta parada") ? "Procurar dispositivos" : "Parar descoberta");
+                    discoveryRunning = !(value.startsWith("Descoberta parada")
+                            || value.startsWith("Falha ao iniciar")
+                            || value.startsWith("Não foi possível iniciar")
+                            || value.startsWith("Descoberta indisponível"));
+                    if (status != null) status.setText(AppStrings.t(MainActivity.this, value));
+                    if (discoverButton != null) discoverButton.setText(AppStrings.t(MainActivity.this,
+                            discoveryRunning ? "Parar descoberta" : "Procurar dispositivos"));
                 });
             }
             @Override public void onPeer(String name, String address, int port) {
@@ -90,7 +95,7 @@ public final class MainActivity extends Activity {
         TextView brand = label("ErikrafT Wi-Fi™", 18, blue, true);
         topBar.addView(brand, new LinearLayout.LayoutParams(0, -2, 1));
         Button websiteButton = new Button(this);
-        websiteButton.setText("Site oficial ↗");
+        websiteButton.setText(AppStrings.t(this, "Site oficial ↗"));
         websiteButton.setAllCaps(false);
         websiteButton.setTextColor(primaryText);
         websiteButton.setBackgroundTintList(android.content.res.ColorStateList.valueOf(surface));
@@ -114,36 +119,38 @@ public final class MainActivity extends Activity {
         status = label("Pronto para procurar dispositivos na rede Wi-Fi atual.", 14, primaryText, false);
         LinearLayout.LayoutParams stp = lp(-1, -2); stp.topMargin = dp(12); card.addView(status, stp);
         discoverButton = new Button(this);
-        discoverButton.setText("Procurar dispositivos");
+        discoverButton.setText(AppStrings.t(this, "Procurar dispositivos"));
         discoverButton.setAllCaps(false);
         discoverButton.setTextColor(Color.WHITE);
         discoverButton.setBackgroundTintList(android.content.res.ColorStateList.valueOf(blue));
         LinearLayout.LayoutParams bp = lp(-1, -2); bp.topMargin = dp(18); card.addView(discoverButton, bp);
         discoverButton.setOnClickListener(v -> {
-            if (discoverButton.getText().toString().startsWith("Parar")) {
+            if (discoveryRunning) {
                 discovery.stop();
+                discoveryRunning = false;
                 peerKeys.clear();
                 if (peerList != null) peerList.removeAllViews();
             } else {
                 if (!isNetworkAvailable()) {
-                    status.setText("Conecte-se a uma rede Wi-Fi e tente novamente.");
+                    status.setText(AppStrings.t(this, "Conecte-se a uma rede Wi-Fi e tente novamente."));
                     return;
                 }
                 peerKeys.clear();
                 peerList.removeAllViews();
                 discovery.start();
+                discoveryRunning = true;
             }
         });
 
         advancedButton = new Button(this);
-        advancedButton.setText("Configurações avançadas");
+        advancedButton.setText(AppStrings.t(this, "Configurações avançadas"));
         advancedButton.setAllCaps(false);
         advancedButton.setTextColor(blue);
         advancedButton.setBackgroundTintList(android.content.res.ColorStateList.valueOf(Color.rgb(35, 52, 78)));
         LinearLayout.LayoutParams abp = lp(-1, -2); abp.topMargin = dp(10); card.addView(advancedButton, abp);
 
         Button settingsButton = new Button(this);
-        settingsButton.setText("Configurações e diagnóstico");
+        settingsButton.setText(AppStrings.t(this, "Configurações e diagnóstico"));
         settingsButton.setAllCaps(false);
         settingsButton.setTextColor(primaryText);
         settingsButton.setBackgroundTintList(android.content.res.ColorStateList.valueOf(Color.rgb(35, 52, 78)));
@@ -153,7 +160,7 @@ public final class MainActivity extends Activity {
         settingsButton.setOnClickListener(v -> showSettingsDialog());
 
         Button offlineButton = new Button(this);
-        offlineButton.setText("Globo mesh e sites offline");
+        offlineButton.setText(AppStrings.t(this, "Globo mesh e sites offline"));
         offlineButton.setAllCaps(false);
         offlineButton.setTextColor(primaryText);
         offlineButton.setBackgroundTintList(android.content.res.ColorStateList.valueOf(surface));
@@ -171,15 +178,15 @@ public final class MainActivity extends Activity {
         LinearLayout.LayoutParams pip = lp(-1, -2); pip.topMargin = dp(8); card.addView(pipButton, pip);
         pipButton.setOnClickListener(v -> {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-                Toast.makeText(this, "PiP exige Android 8.0 ou superior.", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, AppStrings.t(this, "PiP exige Android 8.0 ou superior."), Toast.LENGTH_LONG).show();
                 return;
             }
             pipEnabled = !pipEnabled;
             getPreferences(MODE_PRIVATE).edit().putBoolean("pip_enabled", pipEnabled).apply();
             pipButton.setText(pipEnabled ? "Desativar PiP ao sair do app" : "Ativar PiP ao sair do app");
-            Toast.makeText(this, pipEnabled
+            Toast.makeText(this, AppStrings.t(this, pipEnabled
                     ? "PiP ativado. Ao sair do app, a janela pode permanecer flutuante."
-                    : "PiP desativado.", Toast.LENGTH_SHORT).show();
+                    : "PiP desativado."), Toast.LENGTH_SHORT).show();
         });
 
         advancedDetails = label("Avançado: a descoberta atual usa NSD/mDNS na rede local. Wi-Fi Direct, roteamento mesh, seleção de gateway, encaminhamento de tráfego e transporte criptografado ainda não estão implementados. Só use gateways confiáveis e autorizados.", 13, secondaryText, false);
@@ -206,19 +213,19 @@ public final class MainActivity extends Activity {
         setContentView(scroll);
 
         if ("erikraftwifi".equals(getIntent().getScheme())) {
-            Toast.makeText(this, "ErikrafT Wi-Fi aberto pelo link de integração.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, AppStrings.t(this, "ErikrafT Wi-Fi aberto pelo link de integração."), Toast.LENGTH_SHORT).show();
         }
     }
 
     private void showSettingsDialog() {
-        String[] options = {"Diagnóstico do dispositivo", "Idioma do aplicativo", "Configurações do Android"};
-        new AlertDialog.Builder(this).setTitle("Configurações")
+        String[] options = AppStrings.translateArray(this, new String[]{"Diagnóstico do dispositivo", "Idioma do aplicativo", "Configurações do Android"});
+        new AlertDialog.Builder(this).setTitle(AppStrings.t(this, "Configurações"))
                 .setItems(options, (dialog, which) -> {
                     if (which == 0) showDiagnostics();
                     else if (which == 1) showLanguageSettings();
                     else startActivity(new Intent(Settings.ACTION_SETTINGS));
                 })
-                .setNegativeButton("Fechar", null)
+                .setNegativeButton(AppStrings.t(this, "Fechar"), null)
                 .show();
     }
 
@@ -229,18 +236,18 @@ public final class MainActivity extends Activity {
                 : caps.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ? "Wi-Fi conectado"
                 : caps.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) ? "Ethernet conectada"
                 : "Outra rede ativa";
-        String report = "ErikrafT Wi-Fi — Diagnóstico\n\n"
-                + "Android: " + Build.VERSION.RELEASE + " (API " + Build.VERSION.SDK_INT + ")\n"
-                + "Dispositivo: " + Build.MANUFACTURER + " " + Build.MODEL + "\n"
-                + "Rede: " + network + "\n"
-                + "Descoberta LAN: experimental (NSD/mDNS)\n"
-                + "Autenticação de pares: não implementada\n"
-                + "Transporte criptografado: não implementado\n"
-                + "Wi-Fi Direct / mesh / gateway: não implementados\n"
-                + "Transferência de arquivos: não implementada";
-        new AlertDialog.Builder(this).setTitle("Diagnóstico").setMessage(report)
-                .setPositiveButton("OK", null)
-                .setNeutralButton("Compartilhar", (d, w) -> {
+        String report = "ErikrafT Wi-Fi — Diagnostics\\n\\n"
+                + AppStrings.t(this, "Android: ") + Build.VERSION.RELEASE + AppStrings.t(this, " (API ") + Build.VERSION.SDK_INT + ")\\n"
+                + AppStrings.t(this, "Dispositivo: ") + Build.MANUFACTURER + " " + Build.MODEL + "\\n"
+                + AppStrings.t(this, "Rede: ") + network + "\\n"
+                + AppStrings.t(this, "Descoberta LAN: experimental (NSD/mDNS)\\n")
+                + AppStrings.t(this, "Autenticação de pares: não implementada\\n")
+                + AppStrings.t(this, "Transporte criptografado: não implementado\\n")
+                + AppStrings.t(this, "Wi-Fi Direct / mesh / gateway: não implementados\\n")
+                + AppStrings.t(this, "Transferência de arquivos: não implementada");
+        new AlertDialog.Builder(this).setTitle(AppStrings.t(this, "Diagnóstico")).setMessage(report)
+                .setPositiveButton(AppStrings.t(this, "OK"), null)
+                .setNeutralButton(AppStrings.t(this, "Compartilhar"), (d, w) -> {
                     Intent share = new Intent(Intent.ACTION_SEND);
                     share.setType("text/plain");
                     share.putExtra(Intent.EXTRA_TEXT, report);
@@ -249,24 +256,17 @@ public final class MainActivity extends Activity {
     }
 
     private void showLanguageSettings() {
-        if (Build.VERSION.SDK_INT >= 33) {
-            try {
-                Intent intent = new Intent("android.settings.APP_LOCALE_SETTINGS");
-                intent.setData(android.net.Uri.parse("package:" + getPackageName()));
-                startActivity(intent);
-                return;
-            } catch (Exception ignored) {
-                // Fall through to system locale settings on OEM builds.
-            }
-        }
-        Toast.makeText(this,
-                "A seleção de idioma do sistema está disponível; as traduções completas do app ainda precisam ser adicionadas.",
-                Toast.LENGTH_LONG).show();
-        try {
-            startActivity(new Intent(Settings.ACTION_LOCALE_SETTINGS));
-        } catch (Exception ignored) {
-            startActivity(new Intent(Settings.ACTION_SETTINGS));
-        }
+        String[] names = AppStrings.languageNames();
+        String[] codes = AppStrings.languageCodes();
+        new AlertDialog.Builder(this)
+                .setTitle(AppStrings.t(this, "Idioma do aplicativo"))
+                .setMessage(AppStrings.t(this, "Selecione o idioma do aplicativo."))
+                .setItems(names, (dialog, which) -> {
+                    AppStrings.select(this, codes[which]);
+                    recreate();
+                })
+                .setNegativeButton(AppStrings.t(this, "Fechar"), null)
+                .show();
     }
 
     private boolean isNetworkAvailable() {
@@ -280,8 +280,7 @@ public final class MainActivity extends Activity {
     private void addPeer(String name, String address, int port) {
         String key = name + "@" + address;
         if (!peerKeys.add(key) || peerList == null) return;
-        if (peerList.getChildCount() == 1
-                && ((TextView) peerList.getChildAt(0)).getText().toString().startsWith("Nenhum dispositivo")) {
+        if (peerList.getChildCount() == 1 && peerKeys.size() == 1) {
             peerList.removeAllViews();
         }
         LinearLayout row = new LinearLayout(this);
@@ -323,7 +322,7 @@ public final class MainActivity extends Activity {
     }
     private TextView label(String s, int size, int color, boolean bold) {
         TextView v = new TextView(this);
-        v.setText(s); v.setTextSize(size); v.setTextColor(color);
+        v.setText(AppStrings.t(this, s)); v.setTextSize(size); v.setTextColor(color);
         if (bold) v.setTypeface(Typeface.DEFAULT, Typeface.BOLD);
         v.setGravity(Gravity.START);
         return v;
