@@ -1,0 +1,65 @@
+name: Desktop client builds
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "desktop/**"
+      - ".github/workflows/desktop-build.yml"
+  pull_request:
+    paths:
+      - "desktop/**"
+      - ".github/workflows/desktop-build.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+      - name: Install Linux system dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential curl wget file libxdo-dev libssl-dev librsvg2-dev patchelf libwebkit2gtk-4.1-dev
+      - name: Install desktop CLI
+        working-directory: desktop
+        run: npm install
+      - name: Build desktop app
+        working-directory: desktop
+        run: npm run tauri -- build
+      - name: Upload Windows bundles
+        if: runner.os == 'Windows'
+        uses: actions/upload-artifact@v4
+        with:
+          name: erikraft-wifi-windows
+          path: desktop/src-tauri/target/release/bundle/**
+          if-no-files-found: warn
+      - name: Upload Linux bundles
+        if: runner.os == 'Linux'
+        uses: actions/upload-artifact@v4
+        with:
+          name: erikraft-wifi-linux
+          path: desktop/src-tauri/target/release/bundle/**
+          if-no-files-found: warn
+      - name: Upload macOS bundles
+        if: runner.os == 'macOS'
+        uses: actions/upload-artifact@v4
+        with:
+          name: erikraft-wifi-macos
+          path: desktop/src-tauri/target/release/bundle/**
+          if-no-files-found: warn
