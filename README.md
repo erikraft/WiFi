@@ -35,7 +35,6 @@ The long-term goal is to let compatible devices form or use a Wi-Fi network and 
 
 The Android app includes an experimental offline web library:
 - Open a website URL and save a WebView MHTML archive for later local reading.
-- Share a saved HTML/MHTML archive using Android's share sheet, or export/import a page file from a compatible app.
 - Reopen saved archives, import HTML/MHTML files through Android's document picker, and export an archive to a user-selected location.
 - Share a saved HTML/MHTML archive directly with compatible Android apps through a read-only, per-file content URI grant.
 - Accept shared text/URL or a shared file from compatible Android apps, retaining `.html` / `.mhtml` extensions for shared archive files.
