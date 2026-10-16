@@ -19,6 +19,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -71,6 +72,11 @@ public final class MainActivity extends Activity {
         page.setPadding(dp(24), dp(28), dp(24), dp(32));
         page.setBackgroundColor(background);
         scroll.addView(page);
+
+        LinearLayout header = new LinearLayout(this);
+        header.setGravity(Gravity.CENTER_VERTICAL);
+        header.setOrientation(LinearLayout.HORIZONTAL);
+        page.addView(header, lp(-1, dp(54)));
 
         ImageView logo = new ImageView(this);
         logo.setImageResource(com.erikraft.wifi.R.drawable.launcher_icon_foreground);
@@ -297,6 +303,13 @@ public final class MainActivity extends Activity {
         super.onDestroy();
     }
 
+    private android.graphics.drawable.GradientDrawable surface(int ignored, int fill, int stroke) {
+        android.graphics.drawable.GradientDrawable shape = new android.graphics.drawable.GradientDrawable();
+        shape.setColor(fill);
+        shape.setCornerRadius(dp(18));
+        shape.setStroke(dp(1), stroke);
+        return shape;
+    }
     private TextView label(String s, int size, int color, boolean bold) {
         TextView v = new TextView(this);
         v.setText(s); v.setTextSize(size); v.setTextColor(color);
