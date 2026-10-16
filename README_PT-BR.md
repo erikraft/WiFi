@@ -31,14 +31,14 @@ O objetivo de longo prazo é permitir que dispositivos compatíveis formem ou us
 - O serviço Quick Settings adiciona um atalho para abrir o ErikrafT Wi-Fi. Ele usa um VectorDrawable Android baseado no símbolo branco de `assets/ErikrafT_Wifi_Icon_Logo_White.svg`, dimensionado para 24 dp; o SVG original não é alterado. O atalho não liga/desliga o Wi-Fi nem cria uma conexão sozinho.
 - O app continua sendo um protótipo. As configurações avançadas não configuram mesh nem gateways porque essas funções ainda não existem no núcleo de rede.
 
-## Biblioteca offline e globo de pares LAN
+## Biblioteca offline e globo geográfico
 
 O app Android inclui uma biblioteca experimental para leitura offline:
 - Abrir um endereço, salvar uma captura MHTML pelo WebView, reabrir páginas salvas, importar HTML/MHTML, exportar arquivos e compartilhar uma página salva pela folha de compartilhamento do Android.
 - Compartilhar diretamente um arquivo HTML/MHTML salvo com apps Android compatíveis, usando um URI de conteúdo somente leitura com permissão temporária por arquivo.
 - Receber URLs ou arquivos compartilhados por apps Android compatíveis, preservando a extensão `.html` / `.mhtml` dos arquivos de páginas compartilhadas.
 - Abrir o globo interativo com rotação, zoom e seleção de nós.
-- O globo agora recebe pares reais descobertos por NSD/mDNS na mesma rede local, atualiza quando aparecem/desaparecem e exibe endereço/porta ao selecionar um par. As posições são apenas uma disposição visual determinística — não são coordenadas GPS nem um mapa geográfico. Pontos decorativos continuam sendo ilustrativos.
+- O globo interativo usa contornos geográficos simplificados de latitude/longitude, que acompanham a rotação da esfera. Ele recebe pares reais descobertos por NSD/mDNS na mesma rede local, atualiza quando aparecem/desaparecem e exibe endereço/porta ao selecionar um par. Os marcadores de pares são posições visuais ilustrativas — não são coordenadas GPS nem localizações reais. O globo não implementa roteamento mesh.
 - A tela principal Android, biblioteca offline, diagnósticos e status de descoberta contam com seletor de idioma dentro do app e 16 variantes offline; os controles do globo também têm traduções correspondentes.
 
 **Limitações de leitura offline:** o MHTML inclui somente os recursos que o WebView consegue capturar. Páginas com login, DRM, conteúdo dinâmico ou dependência de servidores podem não funcionar offline. O armazenamento privado de páginas baixadas pelo Chrome não pode ser acessado diretamente por outro app; exporte/compartilhe um arquivo que o Android disponibilize.
