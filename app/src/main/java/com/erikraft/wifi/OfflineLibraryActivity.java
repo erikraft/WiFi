@@ -329,6 +329,18 @@ public final class OfflineLibraryActivity extends Activity {
         }
     }
 
+    private String offlineArchiveExtension(String name, String mimeType) {
+        if (name != null) {
+            String lower = name.toLowerCase(Locale.ROOT);
+            if (lower.endsWith(".html")) return ".html";
+            if (lower.endsWith(".htm")) return ".htm";
+            if (lower.endsWith(".mhtml")) return ".mhtml";
+            if (lower.endsWith(".mht")) return ".mht";
+        }
+        if ("text/html".equalsIgnoreCase(mimeType)) return ".html";
+        return ".mht";
+    }
+
     private String queryDisplayName(Uri uri) {
         try (android.database.Cursor c = getContentResolver().query(uri, null, null, null, null)) {
             if (c != null && c.moveToFirst()) {
@@ -354,9 +366,7 @@ public final class OfflineLibraryActivity extends Activity {
         if (shared != null) {
             try {
                 String sharedName = queryDisplayName(shared);
-                String extension = ".mht";
-                if (sharedName != null && sharedName.matches("(?i).+\\.html?$")) extension = ".html";
-                else if (sharedName != null && sharedName.matches("(?i).+\\.mhtml$")) extension = ".mhtml";
+                String extension = offlineArchiveExtension(sharedName, intent.getType());
                 File out = new File(archiveDir, "shared-" + System.currentTimeMillis() + extension);
                 try (InputStream in = getContentResolver().openInputStream(shared);
                      OutputStream os = new FileOutputStream(out)) {
@@ -373,12 +383,17 @@ public final class OfflineLibraryActivity extends Activity {
         String text = intent.getStringExtra(Intent.EXTRA_TEXT);
         if (text != null) {
             java.util.regex.Matcher m = java.util.regex.Pattern.compile("https?://\\S+").matcher(text);
-            if (m.find()) { address.setText(m.group()); openAddress(); }
+            if (m.find()) {
+                address.setText(m.group());
+                status.setText(AppStrings.t(this, "O compartilhamento contém somente um endereço, não o arquivo offline do Chrome. Importe ou compartilhe o próprio arquivo HTML/MHTML para ler sem conexão."));
+            }
         } else if (intent.getData() != null) {
             Uri uri = intent.getData();
             if ("content".equals(uri.getScheme())) {
+                String display = queryDisplayName(uri);
+                String extension = offlineArchiveExtension(display, getContentResolver().getType(uri));
                 try (InputStream in = getContentResolver().openInputStream(uri)) {
-                    File out = new File(archiveDir, "opened-" + System.currentTimeMillis() + ".mht");
+                    File out = new File(archiveDir, "opened-" + System.currentTimeMillis() + extension);
                     try (OutputStream os = new FileOutputStream(out)) {
                         if (in == null) throw new IllegalStateException();
                         byte[] b = new byte[8192]; int n; while ((n=in.read(b))!=-1) os.write(b,0,n);
