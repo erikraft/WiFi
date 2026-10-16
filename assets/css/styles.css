@@ -69,3 +69,73 @@
 @media (min-width:701px) and (max-width:1100px),(min-width:701px) and (max-height:650px){
   .device-scene{display:none!important}
 }
+
+
+/* Bilingual platform roadmap and documentation directory. */
+.platform-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:36px}
+.platform-card,.docs-card{min-width:0;border:1px solid var(--border);border-radius:18px;padding:24px;background:linear-gradient(160deg,rgba(25,30,42,.96),rgba(17,16,19,.96));box-shadow:var(--shadow)}
+.platform-card h3,.docs-card h3{font-size:18px;line-height:1.35;margin:18px 0 10px;overflow-wrap:anywhere}
+.platform-card p,.docs-card p{font-size:13px;line-height:1.8;color:var(--muted);margin:0 0 18px}
+.platform-card>a{font-size:12px;font-weight:700;color:#9dc2ff}
+.platform-status{display:inline-block;border-radius:999px;padding:6px 9px;font:700 9px/1.4 var(--mono);letter-spacing:.5px;max-width:100%;overflow-wrap:anywhere}
+.status-experimental{background:rgba(66,133,244,.16);color:#a6c9ff;border:1px solid rgba(66,133,244,.3)}
+.status-building{background:rgba(244,177,66,.12);color:#f2c781;border:1px solid rgba(244,177,66,.27)}
+.status-roadmap{background:rgba(153,166,189,.1);color:#c0cada;border:1px solid rgba(153,166,189,.22)}
+.platform-footnote{margin:22px 0 0;color:#8f9cb1;font-size:11px;line-height:1.8;max-width:900px}
+.documentation{background:linear-gradient(180deg,rgba(10,9,11,.55),rgba(17,22,33,.62));border-top:1px solid var(--border)}
+.docs-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;margin-top:34px}
+.docs-card{padding:20px;box-shadow:none}
+.docs-card h3{font-size:15px;margin:0 0 9px}
+.docs-card p{font-size:12px;margin-bottom:18px}
+.doc-links{display:flex;align-items:center;gap:8px}
+.doc-links a{display:inline-flex;align-items:center;justify-content:center;min-width:47px;padding:7px 10px;border:1px solid rgba(66,133,244,.32);border-radius:8px;background:rgba(66,133,244,.1);color:#a9caff;font:700 10px var(--mono)}
+.doc-links a:hover{background:rgba(66,133,244,.22);text-decoration:none}
+.wallet-card-qr{display:flex;align-items:center;justify-content:space-between;gap:20px}
+.wallet-info{min-width:0;flex:1}
+.bitcoin-uri-link{display:inline-block;margin:12px 0 0;font-size:11px;font-weight:700;color:#9dc2ff}
+.qr-block{display:flex;flex:0 0 180px;flex-direction:column;align-items:center;gap:9px;max-width:100%;color:#9eabc0;text-align:center;font-size:10px;line-height:1.6}
+.qr-wrap{position:relative;display:grid;place-items:center;width:180px;max-width:100%;aspect-ratio:1;background:white;padding:6px;border-radius:14px;box-shadow:0 8px 26px rgba(0,0,0,.23)}
+.bitcoin-qr{display:block;width:100%!important;height:auto!important;aspect-ratio:1;border-radius:7px}
+.qr-center-logo{position:absolute;width:37px;height:37px;padding:4px;border-radius:10px;background:#fff;object-fit:contain;box-shadow:0 1px 5px rgba(0,0,0,.18);pointer-events:none}
+@media(max-width:1050px){
+  .platform-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .docs-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .wallet-card-qr{align-items:flex-start}
+  .qr-block{flex-basis:160px}
+  .qr-wrap{width:160px}
+}
+@media(min-width:701px) and (max-width:820px){
+  .topbar nav{gap:8px;font-size:10px}
+  .top-actions .nav-cta{display:none}
+  .topbar{gap:10px}
+}
+@media(max-width:700px){
+  .platform-grid,.docs-grid{grid-template-columns:1fr}
+  .wallet-card-qr{flex-direction:column;align-items:stretch}
+  .qr-block{flex-basis:auto;width:100%;margin-top:10px}
+  .qr-wrap{width:220px}
+  .qr-center-logo{width:40px;height:40px}
+  .platform-card,.docs-card{padding:20px}
+  .documentation .muted,.platforms .muted{font-size:13px}
+  .topbar nav{justify-content:flex-start;overflow-x:auto;white-space:nowrap;scrollbar-width:none;padding-bottom:4px}
+  .topbar nav::-webkit-scrollbar{display:none}
+}
+@media(max-width:380px){
+  .topbar{padding-left:14px;padding-right:14px}
+  .topbar nav{gap:10px}
+  .topbar nav a{font-size:9px}
+  .language-picker{gap:5px;padding:5px 7px}
+  .language-picker select{max-width:74px;font-size:10px}
+  .hero{padding-left:18px;padding-right:18px}
+  .hero h1{font-size:clamp(43px,12.3vw,49px);letter-spacing:-2.7px}
+  .hero-bottom{left:18px;right:18px;font-size:7px}
+  .section,.integration,.donations{padding-left:18px;padding-right:18px}
+  .wallet-card{padding:17px}
+  .qr-wrap{width:205px}
+  .qr-center-logo{width:37px;height:37px}
+  .docs-card,.platform-card{padding:17px}
+}
+@media(max-height:650px) and (min-width:701px){
+  .hero{min-height:570px;padding-top:60px;padding-bottom:70px}
+  .device-scene{display:none!important}
+}
