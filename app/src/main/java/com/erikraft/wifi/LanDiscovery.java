@@ -113,8 +113,8 @@ final class LanDiscovery {
         service.setPort(port);
         boolean internetAvailable = GatewayManager.hasValidatedInternet(context);
         boolean gatewayAvailable = internetAvailable && GatewayManager.isGatewayAdvertisementEnabled(context);
-        service.setAttribute("internet", (internetAvailable ? "yes" : "no").getBytes(StandardCharsets.UTF_8));
-        service.setAttribute("gateway", (gatewayAvailable ? "android-tethering-v1" : "none").getBytes(StandardCharsets.UTF_8));
+        service.setAttribute("internet", internetAvailable ? "yes" : "no");
+        service.setAttribute("gateway", gatewayAvailable ? "android-tethering-v1" : "none");
         registrationListener = new NsdManager.RegistrationListener() {
             @Override public void onRegistrationFailed(NsdServiceInfo s, int error) {
                 listener.onStatus("Não foi possível anunciar este dispositivo (código " + error + ").");
