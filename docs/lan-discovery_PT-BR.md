@@ -13,7 +13,7 @@ O app usa `NsdManager` (Network Service Discovery / DNS-SD sobre mDNS) para anun
 - Não cria um hotspot nem muda de rede.
 - Não estabelece conexão Wi-Fi Direct.
 - Não autentica pares nem cifra o endpoint de metadados.
-- Não transfere arquivos, não roteia tráfego Mesh e não fornece gateway para Internet.
+- Não transfere arquivos nem roteia tráfego Mesh. O anúncio de gateway é somente um sinal local; o compartilhamento direto de Internet é feito pelo hotspot/tethering nativo do Android, não por roteamento do app.
 
 ## Teste manual
 1. Instale a mesma versão do app em dois dispositivos Android.
