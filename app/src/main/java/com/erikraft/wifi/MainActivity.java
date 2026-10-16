@@ -160,7 +160,7 @@ public final class MainActivity extends Activity {
         settingsButton.setOnClickListener(v -> showSettingsDialog());
 
         Button offlineButton = new Button(this);
-        offlineButton.setText(AppStrings.t(this, "Globo mesh e sites offline"));
+        offlineButton.setText(AppStrings.t(this, "Globo interativo e sites offline"));
         offlineButton.setAllCaps(false);
         offlineButton.setTextColor(primaryText);
         offlineButton.setBackgroundTintList(android.content.res.ColorStateList.valueOf(surface));
