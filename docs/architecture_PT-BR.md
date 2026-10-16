@@ -9,19 +9,25 @@
 
 ## Interface Android e atalhos
 
-## Interface Android e atalhos
-
 - **Acesso simples:** a tela principal mantém a descoberta LAN como ação principal e usa linguagem direta.
 - **Configurações avançadas:** uma seção expansível explica as capacidades atuais e os recursos de rede ainda pendentes. Ela não finge oferecer controles de mesh/gateway que ainda não foram implementados.
 - **Quick Settings:** o serviço `WifiQuickSettingsTileService` oferece um atalho para abrir o app. O símbolo branco é reproduzido como VectorDrawable Android no tamanho de 24 dp, sem modificar o SVG original. O atalho não alterna o rádio Wi-Fi.
 - **PiP:** opcional e desativado por padrão; a preferência é persistida. Em Android 8.0+, ao sair do app, ele solicita Picture-in-Picture. Fabricantes e políticas do sistema podem limitar esse comportamento.
 
 
+## Páginas offline e localização do app
+
+- Salvar uma página renderizada pelo WebView Android como arquivo MHTML para leitura local.
+- Importar arquivos HTML/MHTML que o seletor de documentos do Android disponibilize e exportar arquivos arquivados.
+- Compartilhar um arquivo salvo por meio de URI de um `ContentProvider` somente leitura, concedendo acesso apenas àquele arquivo.
+- O seletor de idioma do app disponibiliza 16 traduções offline para tela principal, diagnósticos, controles da biblioteca e status de descoberta. O globo interativo usa o mesmo idioma selecionado.
+- Compartilhar um URL não é o mesmo que compartilhar a página baixada privadamente pelo Chrome. O app não pode acessar o armazenamento privado do Chrome; para ler offline, é necessário um arquivo HTML/MHTML exposto pelo Android.
+
 ## Ainda não implementado
 - Wi-Fi Direct / Wi-Fi P2P.
 - Mesh routing, encaminhamento entre nós e gateways para Internet.
-- Autenticação de pares, canal criptografado e transferência segura.
-- Integração funcional com Drop Web/Desktop e Drop Android. O deep link é apenas um ponto de entrada.
+- Autenticação de pares, canal criptografado, mensagens mesh seguras, transferência de mídia e chamadas de áudio/vídeo em tempo real.
+- Integração funcional com ErikrafT Drop™ para Web/Desktop e ErikrafT Drop™ para Android. O deep link é apenas um ponto de entrada.
 - Cliente desktop executável para Windows, Linux e macOS.
 - Suporte a iOS ou qualquer capacidade de operar como estação-base de rede celular.
 
