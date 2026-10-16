@@ -36,9 +36,10 @@ The long-term goal is to let compatible devices form or use a Wi-Fi network and 
 The Android app includes an experimental offline web library:
 - Open a website URL and save a WebView MHTML archive for later local reading.
 - Reopen saved archives, import HTML/MHTML files through Android's document picker, and export an archive to a user-selected location.
-- Accept shared text/URL or a shared file from compatible Android apps.
+- Share a saved HTML/MHTML archive directly with compatible Android apps through a read-only, per-file content URI grant.
+- Accept shared text/URL or a shared file from compatible Android apps, retaining `.html` / `.mhtml` extensions for shared archive files.
 - Open the interactive globe: it now receives real peers discovered by Android NSD/mDNS on the same local network, updates when peers appear/disappear, and shows their LAN address/port when selected. Peer positions are deterministic visual placement only—not GPS coordinates or geographic locations. Decorative background points are explicitly illustrative.
-- Globe controls and status labels include translations for 16 major language/locale variants, based on the WebView locale.
+- The Android home screen, offline-library controls, diagnostics and discovery statuses support an in-app language picker with 16 offline language variants; the globe controls also include matching translations.
 
 **Offline archive limitations:** the archive contains only resources WebView successfully captures. Login-only content, DRM, dynamic pages, some cross-origin resources, and pages requiring a live backend may not work offline. Chrome's private “downloaded page” store is sandboxed by Android; the app cannot silently read Chrome's private data. Export/share an actual HTML/MHTML file or select a downloaded file that Android exposes in the document picker. A standalone HTML file whose companion asset folder is missing may render incompletely.
 
