@@ -169,3 +169,16 @@ footer .brand-mark{width:35px;height:35px;flex:0 0 35px}
 .qr-center-logo{display:none!important}
 @media(max-width:700px){.qr-wrap{width:220px}}
 @media(max-width:380px){.qr-wrap{width:205px}}
+
+
+/* Bring the existing devices a little closer to the orbit while preserving a clear gap. */
+@media (min-width:1101px) and (min-height:651px){
+  .device-scene .phone{left:15%;}
+  .device-scene .laptop{right:15%;}
+}
+/* Describe the implemented capability accurately: this scene represents LAN discovery, not a finished P2P transfer feature. */
+.device-scene .tag{right:4%;top:15%;padding:9px 11px;font-size:10px;white-space:nowrap;}
+@media (min-width:1101px) and (max-width:1280px){
+  .device-scene .phone{left:11%;}
+  .device-scene .laptop{right:11%;}
+}
