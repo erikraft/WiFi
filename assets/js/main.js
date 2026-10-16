@@ -11,24 +11,46 @@ try{const saved=localStorage.getItem('erikraft-wifi-language');setLanguage(saved
 document.querySelectorAll('.copy-wallet').forEach(button=>button.addEventListener('click',async()=>{const original=button.textContent;try{await navigator.clipboard.writeText(button.dataset.copy);button.textContent=translations[document.documentElement.lang]?.copied||'Copied!';}catch{const field=document.createElement('textarea');field.value=button.dataset.copy;field.setAttribute('readonly','');field.style.position='fixed';field.style.opacity='0';document.body.appendChild(field);field.select();const copied=document.execCommand('copy');field.remove();button.textContent=copied?(translations[document.documentElement.lang]?.copied||'Copied!'):original;}setTimeout(()=>{button.textContent=translations[document.documentElement.lang]?.copy_address||'Copy address';},1800);}));
 
 function renderBitcoinQrs(){
-  const canvases=document.querySelectorAll('canvas.bitcoin-qr');
-  if(!window.QRCode||typeof window.QRCode.toCanvas!=='function'){
-    canvases.forEach(canvas=>canvas.setAttribute('aria-label','QR code could not be generated. Use the visible wallet address.'));
+  const images=document.querySelectorAll('img.bitcoin-qr');
+  const draw=()=>{
+    if(!window.QRCode||typeof window.QRCode.toDataURL!=='function'){
+      images.forEach(img=>{
+        img.alt='QR code unavailable. Use the visible Bitcoin address or open it in your wallet.';
+        img.classList.add('qr-unavailable');
+      });
+      return;
+    }
+    images.forEach(img=>{
+      const address=img.dataset.address;
+      if(!address)return;
+      // BIP 321-compatible Bitcoin payment URI. No amount is prefilled.
+      const paymentUri='bitcoin:'+address;
+      window.QRCode.toDataURL(paymentUri,{
+        errorCorrectionLevel:'H',margin:2,width:440,
+        color:{dark:'#0a090b',light:'#ffffff'}
+      },(error,dataUrl)=>{
+        if(error||!dataUrl){
+          img.alt='QR code unavailable. Use the visible Bitcoin address or open it in your wallet.';
+          img.classList.add('qr-unavailable');
+          return;
+        }
+        img.src=dataUrl;
+        img.alt='Bitcoin payment QR code. Amount is not preset.';
+        img.classList.remove('qr-unavailable');
+      });
+    });
+  };
+  if(window.QRCode&&typeof window.QRCode.toDataURL==='function'){
+    draw();
     return;
   }
-  canvases.forEach(canvas=>{
-    const address=canvas.dataset.address;
-    if(!address)return;
-    // BIP 321-compatible Bitcoin payment URI. No amount is prefilled.
-    const paymentUri=`bitcoin:${address}`;
-    window.QRCode.toCanvas(canvas,paymentUri,{
-      errorCorrectionLevel:'H',margin:2,width:220,
-      color:{dark:'#0a090b',light:'#ffffff'}
-    },error=>{
-      if(error)canvas.setAttribute('aria-label','QR code could not be generated. Use the visible wallet address.');
-      else canvas.setAttribute('aria-label',`Bitcoin QR code for ${address}; payment amount is not preset.`);
-    });
-  });
+  // Retry through an alternate CDN if the primary QR library was blocked or unavailable.
+  const fallback=document.createElement('script');
+  fallback.src='https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.5.3/qrcode.min.js';
+  fallback.async=true;
+  fallback.onload=draw;
+  fallback.onerror=draw;
+  document.head.appendChild(fallback);
 }
 renderBitcoinQrs();
 document.querySelectorAll('a[href^="#"]').forEach(link=>link.addEventListener('click',event=>{const target=document.querySelector(link.getAttribute('href'));if(target){event.preventDefault();target.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});}}));
