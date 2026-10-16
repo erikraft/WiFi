@@ -1,4 +1,4 @@
-# ErikrafT Wi-Fi™ ↔ ErikrafT Drop™ integration roadmap
+# ErikrafT Drop™ integration plan
 
 ## Product boundaries
 
