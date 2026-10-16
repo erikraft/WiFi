@@ -19,13 +19,13 @@
 </head>
 <body>
 <canvas id="scene" aria-label="Interactive illustrative globe. Drag to rotate, pinch or use zoom buttons."></canvas>
-<div class="overlay top"><div class="pill"><div class="brand">● ErikrafT / Wi-Fi</div><div style="font-size:10px;color:var(--muted);margin-top:5px">MESH GLOBE · PREVIEW</div></div><div class="pill status">Drag to rotate<br>Pinch to zoom · Tap a node</div></div>
+<div class="overlay top"><div class="pill"><div class="brand">● ErikrafT / Wi-Fi</div><div style="font-size:10px;color:var(--muted);margin-top:5px">LAN PEER VIEW · NOT GEOLOCATED</div><div id="peerCount" style="font-size:11px;color:#37d56a;margin-top:6px">0 dispositivos encontrados</div></div><div class="pill status">Drag to rotate<br>Pinch to zoom · Tap a node</div></div>
 <div id="detail"><strong>Node selected</strong><small>Illustrative point · Not a live peer</small></div>
 <div class="overlay bottom"><div class="pill controls"><button id="minus" aria-label="Zoom out">−</button><button id="plus" aria-label="Zoom in">＋</button><button id="reset">Reset view</button></div></div>
 <script>
 (()=>{'use strict';
 const c=document.getElementById('scene'),ctx=c.getContext('2d'),detail=document.getElementById('detail');
-let w=0,h=0,dpr=1,rot=-.55,tilt=.15,zoom=1,drag=null,lastPinch=0;
+let w=0,h=0,dpr=1,rot=-.55,tilt=.15,zoom=1,drag=null,lastPinch=0,livePeers=[];
 const nodes=Array.from({length:48},(_,i)=>{const y=1-2*(i+.5)/48, a=Math.PI*(3-Math.sqrt(5))*i;return{x:Math.cos(a)*Math.sqrt(1-y*y),y,z:Math.sin(a)*Math.sqrt(1-y*y),live:i%4!==0,id:i+1}});
 function resize(){dpr=Math.min(devicePixelRatio||1,2);w=c.clientWidth;h=c.clientHeight;c.width=Math.round(w*dpr);c.height=Math.round(h*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);draw()}
 function project(p,R){let x=p.x*Math.cos(rot)+p.z*Math.sin(rot),z=-p.x*Math.sin(rot)+p.z*Math.cos(rot),y=p.y*Math.cos(tilt)-z*Math.sin(tilt);z=p.y*Math.sin(tilt)+z*Math.cos(tilt);return{x:w/2+x*R,y:h/2+y*R,z,visible:z>-.02}}
@@ -43,14 +43,17 @@ ctx.strokeStyle='rgba(66,133,244,.28)';ctx.beginPath();ctx.ellipse(cx,cy,R*.55,R
 ctx.strokeStyle='rgba(66,133,244,.34)';ctx.lineWidth=1.1;
 const land=[[-.78,-.1],[-.66,-.34],[-.48,-.4],[-.37,-.23],[-.42,-.02],[-.55,.18],[-.62,.43],[-.73,.28],[-.84,.04],[-.78,-.1],[.02,-.52],[.22,-.62],[.42,-.5],[.54,-.32],[.43,-.18],[.22,-.12],[.13,.04],[.02,-.08],[-.06,-.31],[.02,-.52],[.26,.08],[.46,.03],[.62,.18],[.55,.43],[.42,.61],[.31,.42],[.24,.22],[.26,.08]];
 ctx.beginPath();land.forEach((p,i)=>{const x=cx+p[0]*R,y=cy+p[1]*R;i?ctx.lineTo(x,y):ctx.moveTo(x,y)});ctx.stroke();
-for(const n of nodes){const p=project(n,R);if(!p.visible)continue;ctx.beginPath();ctx.arc(p.x,p.y,n.live?2.2:1.4,0,Math.PI*2);ctx.fillStyle=n.live?'#37d56a':'#7c8b97';ctx.globalAlpha=n.live?.92:.5;ctx.fill();ctx.globalAlpha=1}
+for(const n of nodes){const p=project(n,R);if(!p.visible)continue;ctx.beginPath();ctx.arc(p.x,p.y,n.live?2.2:1.4,0,Math.PI*2);ctx.fillStyle=n.live?'#7c8b97':'#65717c';ctx.globalAlpha=n.live?.52:.36;ctx.fill();ctx.globalAlpha=1}
+for(let i=0;i<livePeers.length;i++){const n=peerPosition(livePeers[i],i),p=project(n,R);if(!p.visible)continue;ctx.beginPath();ctx.arc(p.x,p.y,7,0,Math.PI*2);ctx.strokeStyle='rgba(66,133,244,.35)';ctx.lineWidth=1.2;ctx.stroke();ctx.beginPath();ctx.arc(p.x,p.y,3.1,0,Math.PI*2);ctx.fillStyle='#4285f4';ctx.fill();}
 ctx.restore();
 ctx.strokeStyle='rgba(113,154,170,.28)';ctx.lineWidth=1;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.stroke();
 }
+function peerPosition(peer,index){let hash=0;const s=String(peer.name||peer.address||index);for(let i=0;i<s.length;i++)hash=((hash<<5)-hash+s.charCodeAt(i))|0;const lon=((Math.abs(hash)%360)/180)*Math.PI,lat=(((Math.abs(hash>>>8)%140)-70)/180)*Math.PI;return{x:Math.cos(lat)*Math.cos(lon),y:Math.sin(lat),z:Math.cos(lat)*Math.sin(lon)}}
+window.ErikrafTMeshUpdatePeers=function(peers){livePeers=Array.isArray(peers)?peers:[];const count=document.getElementById('peerCount');if(count)count.textContent=livePeers.length+' dispositivo(s) descoberto(s) na rede local';if(livePeers.length===0){detail.style.display='none'}draw()};
 function point(e){const r=c.getBoundingClientRect();return{x:e.clientX-r.left,y:e.clientY-r.top}}
 c.addEventListener('pointerdown',e=>{c.setPointerCapture(e.pointerId);drag={...point(e),rot,tilt,moved:0};});
 c.addEventListener('pointermove',e=>{if(!drag)return;const p=point(e),dx=p.x-drag.x,dy=p.y-drag.y;drag.moved=Math.max(drag.moved,Math.abs(dx)+Math.abs(dy));rot=drag.rot+dx*.008;tilt=Math.max(-1.1,Math.min(1.1,drag.tilt+dy*.006));draw()});
-c.addEventListener('pointerup',e=>{if(drag&&drag.moved<8){const p=point(e),R=Math.min(w*.46,h*.31)*zoom;let best=null,dist=20;for(const n of nodes){const q=project(n,R),d=Math.hypot(q.x-p.x,q.y-p.y);if(q.visible&&d<dist){best=n;dist=d}}if(best){detail.style.display='block';detail.querySelector('strong').textContent='Node #'+String(best.id).padStart(2,'0');detail.querySelector('small').textContent='Illustrative node · Live discovery not connected'}}drag=null});
+c.addEventListener('pointerup',e=>{if(drag&&drag.moved<8){const p=point(e),R=Math.min(w*.46,h*.31)*zoom;let best=null,dist=20;for(let i=0;i<livePeers.length;i++){const q=project(peerPosition(livePeers[i],i),R),d=Math.hypot(q.x-p.x,q.y-p.y);if(q.visible&&d<dist){best={peer:livePeers[i]};dist=d}}if(!best){for(const n of nodes){const q=project(n,R),d=Math.hypot(q.x-p.x,q.y-p.y);if(q.visible&&d<dist){best={sample:n};dist=d}}}if(best){detail.style.display='block';if(best.peer){detail.querySelector('strong').textContent=best.peer.name||'Peer LAN';detail.querySelector('small').textContent=(best.peer.address||'Endereço local')+':'+(best.peer.port||'—')+' · Descoberto via NSD/mDNS'}else{detail.querySelector('strong').textContent='Ponto ilustrativo';detail.querySelector('small').textContent='Não representa um dispositivo conectado'}}}drag=null});
 c.addEventListener('wheel',e=>{e.preventDefault();zoom=Math.max(.65,Math.min(1.8,zoom+(e.deltaY<0?.08:-.08)));draw()},{passive:false});
 document.getElementById('plus').onclick=()=>{zoom=Math.min(1.8,zoom+.12);draw()};document.getElementById('minus').onclick=()=>{zoom=Math.max(.65,zoom-.12);draw()};document.getElementById('reset').onclick=()=>{rot=-.55;tilt=.15;zoom=1;detail.style.display='none';draw()};
 window.addEventListener('resize',resize);resize();
