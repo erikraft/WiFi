@@ -26,6 +26,16 @@ jobs:
           test -s docs/platform-compatibility.md
       - name: JavaScript syntax
         run: node --check assets/js/main.js
+      - name: Interactive globe JavaScript syntax
+        run: |
+          node - <<'NODE'
+          const fs = require('node:fs');
+          const html = fs.readFileSync('app/src/main/assets/mesh_globe.html', 'utf8');
+          const match = html.match(/<script>([\\s\\S]*?)<\\/script>/i);
+          if (!match) throw new Error('No JavaScript block found in mesh_globe.html');
+          fs.writeFileSync('/tmp/mesh-globe.js', match[1]);
+          NODE
+          node --check /tmp/mesh-globe.js
       - name: Android manifest XML
         run: python -c "import xml.etree.ElementTree as E; E.parse('app/src/main/AndroidManifest.xml')"
       - name: Validate site HTML
