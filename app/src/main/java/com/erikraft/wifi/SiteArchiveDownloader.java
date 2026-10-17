@@ -44,8 +44,8 @@ final class SiteArchiveDownloader {
 
     static Result download(String start, File destination, Progress listener) throws Exception {
         URI startUri = new URI(start).normalize();
-        if (!("http".equalsIgnoreCase(startUri.getScheme()) || "https".equalsIgnoreCase(startUri.getScheme()))
-                || startUri.getHost() == null) throw new IllegalArgumentException("URL HTTP/HTTPS inválida.");
+        if (!"https".equalsIgnoreCase(startUri.getScheme()) || startUri.getHost() == null)
+            throw new IllegalArgumentException("Informe um endereço HTTPS válido.");
         origin = startUri.getScheme().toLowerCase(Locale.ROOT) + "://" + startUri.getAuthority().toLowerCase(Locale.ROOT);
         root = destination;
         progress = listener;
