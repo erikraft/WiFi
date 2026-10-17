@@ -17,7 +17,7 @@ O objetivo de longo prazo é permitir que dispositivos compatíveis formem ou us
 
 ## Componentes
 
-- **App Android:** aplicativo nativo Java com interface azul e descoberta LAN experimental por NSD/mDNS.
+- **App Android:** aplicativo nativo Java com interface azul, descoberta LAN experimental por NSD/mDNS e downloader de site estático limitado para navegação offline.
 - **Identidade visual:** logotipos SVG colorido e branco em `assets/`. O app Android usa o ícone branco sobre azul `#4285F4`, alinhado ao ErikrafT Drop™ para Android.
 - **Landing page:** site azul responsivo com estado do projeto, documentação bilíngue e QR codes de pagamento Bitcoin.
 - **Cliente desktop:** protótipo inicial Tauri + Rust em `desktop/` com alvo Windows, Linux e macOS. É experimental e exige CI e validação em dispositivos reais; não é uma versão estável.
@@ -55,6 +55,7 @@ O app Android continua experimental. Um protótipo desktop inicial em `desktop/`
 
 - [Arquitetura](docs/architecture_PT-BR.md) · [English](docs/architecture.md)
 - [Descoberta LAN](docs/lan-discovery_PT-BR.md) · [English](docs/lan-discovery.md)
+- [Baixar sites offline](docs/offline-site-download_PT-BR.md) · [English](docs/offline-site-download.md)
 - [Compatibilidade de plataformas e limites regulatórios](docs/platform-compatibility_PT-BR.md) · [English](docs/platform-compatibility.md)
 - [Builds e assinatura](docs/builds_PT-BR.md) · [English](docs/builds.md)
 - [Segurança](docs/security_PT-BR.md) · [English](docs/security.md)
