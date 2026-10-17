@@ -5,6 +5,7 @@
 - Native Android app with an initial interface and the `erikraftwifi://open` deep link.
 - Experimental discovery of nodes on the same local network using Android NSD/DNS-SD (mDNS).
 - Ephemeral TCP endpoint that returns public protocol and capability metadata only; it does not receive or send files.
+- Optional handoff to Android's native hotspot/tethering settings, upstream Internet validation, and an unauthenticated NSD TXT advertisement of gateway availability.
 - CI workflow that attempts to compile a debug APK, plus a manual/tag-triggered workflow for Android APK/AAB artifacts.
 
 ## Android interface and shortcuts
@@ -23,7 +24,8 @@
 
 ## Not implemented yet
 - Wi-Fi Direct / Wi-Fi P2P.
-- Mesh routing, forwarding between nodes, and Internet gateways.
+- Multi-hop mesh IP routing and forwarding client traffic through intermediate nodes.
+- Tunnelling all client system traffic inside the app protocol. This step's Internet sharing is direct through Android's native hotspot/NAT.
 - Peer authentication, encrypted channels, secure LAN/mesh messaging, media transfer, and real-time audio/video calls.
 - Functional integration with ErikrafT Drop™ for Web/Desktop and ErikrafT Drop™ for Android. The deep link is only an entry point.
 - Executable desktop clients for Windows, Linux, and macOS.

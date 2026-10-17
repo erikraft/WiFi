@@ -47,6 +47,8 @@ public final class MainActivity extends Activity {
     private boolean pipEnabled;
     private boolean discoveryRunning;
     private LanDiscovery discovery;
+    private Button gatewayButton;
+    private TextView gatewayStatus;
 
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
@@ -65,8 +67,8 @@ public final class MainActivity extends Activity {
                             discoveryRunning ? "Parar descoberta" : "Procurar dispositivos"));
                 });
             }
-            @Override public void onPeer(String name, String address, int port) {
-                mainHandler.post(() -> addPeer(name, address, port));
+            @Override public void onPeer(String name, String address, int port, boolean gatewayAvailable) {
+                mainHandler.post(() -> addPeer(name, address, port, gatewayAvailable));
             }
         });
 
@@ -141,6 +143,23 @@ public final class MainActivity extends Activity {
                 discoveryRunning = true;
             }
         });
+
+        gatewayButton = new Button(this);
+        gatewayButton.setAllCaps(false);
+        gatewayButton.setTextColor(primaryText);
+        gatewayButton.setBackgroundTintList(android.content.res.ColorStateList.valueOf(surface));
+        LinearLayout.LayoutParams gatewayParams = lp(-1, -2);
+        gatewayParams.topMargin = dp(10);
+        card.addView(gatewayButton, gatewayParams);
+        gatewayStatus = label(GatewayManager.getStatusText(this), 12, secondaryText, false);
+        LinearLayout.LayoutParams gatewayStatusParams = lp(-1, -2);
+        gatewayStatusParams.topMargin = dp(8);
+        card.addView(gatewayStatus, gatewayStatusParams);
+        gatewayButton.setOnClickListener(v -> GatewayManager.showSetupDialog(this, enabled -> {
+            refreshGatewayUi();
+            if (discovery != null && discoveryRunning) discovery.refreshServiceAdvertisement();
+        }));
+        refreshGatewayUi();
 
         advancedButton = new Button(this);
         advancedButton.setText(AppStrings.t(this, "Configurações avançadas"));
@@ -243,7 +262,8 @@ public final class MainActivity extends Activity {
                 + AppStrings.t(this, "Descoberta LAN: experimental (NSD/mDNS)") + "\n"
                 + AppStrings.t(this, "Autenticação de pares: não implementada") + "\n"
                 + AppStrings.t(this, "Transporte criptografado: não implementado") + "\n"
-                + AppStrings.t(this, "Wi-Fi Direct / mesh / gateway: não implementados") + "\n"
+                + AppStrings.t(this, "Wi-Fi Direct / mesh: não implementados") + "\n"
+                + AppStrings.t(this, "Gateway: hotspot nativo do Android; anúncio local opcional; mesh multi-hop não implementada") + "\n"
                 + AppStrings.t(this, "Transferência de arquivos: não implementada");
         new AlertDialog.Builder(this).setTitle(AppStrings.t(this, "Diagnóstico")).setMessage(report)
                 .setPositiveButton(AppStrings.t(this, "OK"), null)
@@ -277,7 +297,7 @@ public final class MainActivity extends Activity {
                 || caps.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET));
     }
 
-    private void addPeer(String name, String address, int port) {
+    private void addPeer(String name, String address, int port, boolean gatewayAvailable) {
         String key = name + "@" + address;
         if (!peerKeys.add(key) || peerList == null) return;
         if (peerList.getChildCount() == 1 && peerKeys.size() == 1) {
@@ -291,7 +311,10 @@ public final class MainActivity extends Activity {
         row.addView(label(name, 14, primaryText, true));
         TextView endpoint = label(address + ":" + port, 12, secondaryText, false);
         LinearLayout.LayoutParams ep = lp(-1, -2); ep.topMargin = dp(4); row.addView(endpoint, ep);
-        row.addView(label("Encontrado na rede local · transferência indisponível", 11, secondaryText, false));
+        row.addView(label(gatewayAvailable
+                ? "Gateway anunciado (hotspot Android) · conexão direta, não mesh"
+                : "Encontrado na rede local · encaminhamento pelo app indisponível", 11,
+                gatewayAvailable ? blue : secondaryText, false));
     }
 
     @Override protected void onUserLeaveHint() {
@@ -306,6 +329,19 @@ public final class MainActivity extends Activity {
                 // PiP can be unavailable on some devices, window modes, or system configurations.
             }
         }
+    }
+
+    private void refreshGatewayUi() {
+        if (gatewayButton != null) {
+            gatewayButton.setText(AppStrings.t(this, GatewayManager.isGatewayAdvertisementEnabled(this)
+                    ? "Parar anúncio de gateway" : "Configurar gateway de Internet"));
+        }
+        if (gatewayStatus != null) gatewayStatus.setText(GatewayManager.getStatusText(this));
+    }
+
+    @Override protected void onResume() {
+        super.onResume();
+        refreshGatewayUi();
     }
 
     @Override protected void onDestroy() {

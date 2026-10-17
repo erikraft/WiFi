@@ -16,9 +16,14 @@ jobs:
           test -s app/src/main/AndroidManifest.xml
           test -s app/src/main/java/com/erikraft/wifi/MainActivity.java
           test -s app/src/main/java/com/erikraft/wifi/LanDiscovery.java
+          test -s app/src/main/java/com/erikraft/wifi/GatewayManager.java
+          test -s docs/internet-gateway.md
+          test -s docs/internet-gateway_PT-BR.md
           test -s app/src/main/java/com/erikraft/wifi/AppStrings.java
           test -s app/src/main/java/com/erikraft/wifi/OfflineLibraryActivity.java
           test -s app/src/main/java/com/erikraft/wifi/OfflineArchiveProvider.java
+          grep -q 'NET_CAPABILITY_VALIDATED' app/src/main/java/com/erikraft/wifi/GatewayManager.java
+          grep -q 'refreshServiceAdvertisement' app/src/main/java/com/erikraft/wifi/LanDiscovery.java
           test -s app/src/main/assets/mesh_globe.html
           test -s docs/lan-discovery.md
           test -s docs/builds.md

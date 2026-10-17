@@ -7,13 +7,13 @@
 
 An open-source project exploring local connectivity using existing Wi-Fi technologies. The experimental Android prototype advertises its own node and discovers other ErikrafT Wi-Fi nodes on the same local network using Android Network Service Discovery (DNS-SD/mDNS).
 
-> **Prototype status:** LAN discovery is experimental. The TCP endpoint returns public metadata only; it does not transfer files or authenticate peers. Do not use it for sensitive data. Wi-Fi Direct, mesh networking, gateways, secure transport, and functional ErikrafT Drop™ integration are not implemented yet.
+> **Prototype status:** LAN discovery is experimental and the TCP endpoint returns public metadata only, without file transfer or peer authentication. The app now helps the user configure Android's native hotspot/tethering for direct Internet sharing, with optional local gateway advertisement. App-level multi-hop IP routing, secure transport, and functional ErikrafT Drop™ integration are still not implemented.
 
 ## Connectivity goal
 
 The long-term goal is to let compatible devices form or use a Wi-Fi network and reach Internet services through an available route, including an authorized gateway or intermediate nodes once mesh routing is implemented. The project prioritizes compatibility with existing APIs and hardware rather than relying on proprietary radio technology.
 
-**Important limitation:** Wi-Fi creates a network link, not automatic Internet access. Public websites require a working external route, such as a router, shared connection, or Internet-connected gateway. Without that route, offline mode may support local communication and services, but it cannot access the public Web arbitrarily. Wi-Fi Direct, mesh routing, and gateways are not implemented; see [platform compatibility and limitations](docs/platform-compatibility.md).
+**Important limitation:** Wi-Fi creates a network link, not automatic Internet access. Public websites require a working external route, such as a router, shared connection, or Internet-connected gateway. Without that route, offline mode may support local communication and services, but it cannot access the public Web arbitrarily. Direct sharing uses Android's native hotspot and requires a real upstream connection on the gateway device. The app does not yet route IP traffic through a multi-hop mesh. See [Android Internet gateway](docs/internet-gateway.md) and [platform compatibility and limitations](docs/platform-compatibility.md).
 
 ## Components
 
@@ -55,6 +55,7 @@ The Android app remains experimental. An initial desktop prototype in `desktop/`
 
 - [Architecture](docs/architecture.md) · [Português](docs/architecture_PT-BR.md)
 - [LAN discovery](docs/lan-discovery.md) · [Português](docs/lan-discovery_PT-BR.md)
+- [Android Internet gateway](docs/internet-gateway.md) · [Português (Brasil)](docs/internet-gateway_PT-BR.md)
 - [Platform compatibility and regulatory limitations](docs/platform-compatibility.md) · [Português](docs/platform-compatibility_PT-BR.md)
 - [Builds and signing](docs/builds.md) · [Português](docs/builds_PT-BR.md)
 - [Security](docs/security.md) · [Português](docs/security_PT-BR.md)

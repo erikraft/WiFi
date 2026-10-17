@@ -163,7 +163,7 @@ public final class OfflineLibraryActivity extends Activity {
                     }
                 });
             }
-            @Override public void onPeer(String name, String host, int port) {
+            @Override public void onPeer(String name, String host, int port, boolean gatewayAvailable) {
                 runOnUiThread(() -> {
                     synchronized (livePeers) {
                         livePeers.put(name + "@" + host, new String[]{name, host, String.valueOf(port)});
