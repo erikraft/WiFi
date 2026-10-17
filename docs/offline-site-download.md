@@ -1,6 +1,6 @@
 # Offline website download
 
-The Android Offline browser can download a bounded static copy of an HTTPS or HTTP website into the app's private storage. Use **Download website offline** while a page is open. The downloader follows same-origin HTML links, stores linked static assets (including referenced external assets), rewrites supported HTML/CSS references to local files, and adds the saved site to the Offline Library. The back control navigates to the previous page; the language picker uses the app's 16 offline UI languages.
+The Android Offline browser can download a bounded static copy of an HTTPS website into the app's private storage. Use **Download website offline** while a page is open. The downloader follows same-origin HTML links, stores linked static assets (including referenced external assets), rewrites supported HTML/CSS references to local files, and adds the saved site to the Offline Library. The back control navigates to the previous page; the language picker uses the app's 16 offline UI languages.
 
 ## Scope and limits
 
