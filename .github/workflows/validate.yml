@@ -22,8 +22,11 @@ jobs:
           test -s app/src/main/java/com/erikraft/wifi/AppStrings.java
           test -s app/src/main/java/com/erikraft/wifi/OfflineLibraryActivity.java
           test -s app/src/main/java/com/erikraft/wifi/OfflineArchiveProvider.java
-          grep -q 'NET_CAPABILITY_VALIDATED' app/src/main/java/com/erikraft/wifi/GatewayManager.java
-          grep -q 'refreshServiceAdvertisement' app/src/main/java/com/erikraft/wifi/LanDiscovery.java
+          test -s app/src/main/java/com/erikraft/wifi/SiteArchiveDownloader.java
+          test -s docs/offline-site-download.md
+          test -s docs/offline-site-download_PT-BR.md
+          grep -q 'Download website offline' app/src/main/java/com/erikraft/wifi/AppStrings.java
+          grep -q 'downloadWebsite' app/src/main/java/com/erikraft/wifi/OfflineLibraryActivity.java
           test -s app/src/main/assets/mesh_globe.html
           test -s docs/lan-discovery.md
           test -s docs/builds.md

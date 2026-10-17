@@ -17,7 +17,7 @@ The long-term goal is to let compatible devices form or use a Wi-Fi network and 
 
 ## Components
 
-- **Android app:** native Java app with a blue interface and experimental LAN discovery using NSD/mDNS.
+- **Android app:** native Java app with a blue interface, experimental LAN discovery using NSD/mDNS, and a bounded static-site downloader for offline browsing.
 - **Visual identity:** color and white SVG logos in `assets/`. The Android app uses the white icon on blue `#4285F4`, consistent with ErikrafT Drop™ for Android.
 - **Landing page:** responsive blue website with project status, bilingual documentation, and Bitcoin payment QR codes.
 - **Desktop clients:** an initial Tauri + Rust prototype in `desktop/` targets Windows, Linux, and macOS. It is experimental and requires CI plus real-device validation; it is not a stable release.
@@ -55,7 +55,7 @@ The Android app remains experimental. An initial desktop prototype in `desktop/`
 
 - [Architecture](docs/architecture.md) · [Português](docs/architecture_PT-BR.md)
 - [LAN discovery](docs/lan-discovery.md) · [Português](docs/lan-discovery_PT-BR.md)
-- [Android Internet gateway](docs/internet-gateway.md) · [Português (Brasil)](docs/internet-gateway_PT-BR.md)
+- [Offline website download](docs/offline-site-download.md) · [Português](docs/offline-site-download_PT-BR.md)
 - [Platform compatibility and regulatory limitations](docs/platform-compatibility.md) · [Português](docs/platform-compatibility_PT-BR.md)
 - [Builds and signing](docs/builds.md) · [Português](docs/builds_PT-BR.md)
 - [Security](docs/security.md) · [Português](docs/security_PT-BR.md)

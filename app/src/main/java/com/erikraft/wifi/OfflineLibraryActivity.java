@@ -66,14 +66,20 @@ public final class OfflineLibraryActivity extends Activity {
 
         LinearLayout heading = new LinearLayout(this);
         heading.setGravity(Gravity.CENTER_VERTICAL);
-        TextView title = text("ErikrafT Wi-Fi™", 17, Color.WHITE, true);
-        heading.addView(title, new LinearLayout.LayoutParams(0, -2, 1));
         Button back = button("← Voltar", surface);
-        Button language = button("Aa Idioma", surface);
+        back.setContentDescription(AppStrings.t(this, "Navegar para cima"));
+        addIcon(back, android.R.drawable.ic_media_previous);
         heading.addView(back);
-        LinearLayout.LayoutParams languageParams = new LinearLayout.LayoutParams(-2, dp(42));
-        languageParams.leftMargin = dp(6);
-        heading.addView(language, languageParams);
+        TextView title = text("ErikrafT Wi-Fi  /  Offline", 18, Color.WHITE, true);
+        LinearLayout.LayoutParams titleParams = new LinearLayout.LayoutParams(0, -2, 1);
+        titleParams.leftMargin = dp(8);
+        heading.addView(title, titleParams);
+        Button language = button("Idioma", surface);
+        addIcon(language, android.R.drawable.ic_menu_manage);
+        heading.addView(language);
+        Button home = button("Globo", surface);
+        addIcon(home, android.R.drawable.ic_menu_mapmode);
+        heading.addView(home);
         root.addView(heading);
 
         address = new EditText(this);
@@ -91,16 +97,36 @@ public final class OfflineLibraryActivity extends Activity {
         root.addView(address, ap);
 
         LinearLayout actions = new LinearLayout(this);
-        actions.setOrientation(LinearLayout.HORIZONTAL);
+        actions.setOrientation(LinearLayout.VERTICAL);
         actions.setGravity(Gravity.CENTER_VERTICAL);
         Button openUrl = button("Abrir site", blue);
-        Button save = button("Salvar offline", surface);
+        addIcon(openUrl, android.R.drawable.ic_menu_view);
+        Button save = button("Baixar site offline", blue);
+        addIcon(save, android.R.drawable.ic_menu_save);
         Button library = button("Biblioteca", surface);
+        addIcon(library, android.R.drawable.ic_menu_agenda);
         Button importPage = button("Importar", surface);
-        addAction(actions, openUrl);
-        addAction(actions, save);
-        addAction(actions, library);
-        addAction(actions, importPage);
+        addIcon(importPage, android.R.drawable.ic_menu_upload);
+        LinearLayout actionRow1 = new LinearLayout(this);
+        actionRow1.setOrientation(LinearLayout.HORIZONTAL);
+        LinearLayout actionRow2 = new LinearLayout(this);
+        actionRow2.setOrientation(LinearLayout.HORIZONTAL);
+        LinearLayout.LayoutParams actionButton = new LinearLayout.LayoutParams(0, dp(46), 1);
+        actionButton.rightMargin = dp(5);
+        actionRow1.addView(openUrl, actionButton);
+        LinearLayout.LayoutParams downloadParams = new LinearLayout.LayoutParams(0, dp(46), 1);
+        downloadParams.leftMargin = dp(5);
+        actionRow1.addView(save, downloadParams);
+        LinearLayout.LayoutParams libraryParams = new LinearLayout.LayoutParams(0, dp(46), 1);
+        libraryParams.rightMargin = dp(5);
+        actionRow2.addView(library, libraryParams);
+        LinearLayout.LayoutParams importParams = new LinearLayout.LayoutParams(0, dp(46), 1);
+        importParams.leftMargin = dp(5);
+        actionRow2.addView(importPage, importParams);
+        LinearLayout.LayoutParams row2Params = new LinearLayout.LayoutParams(-1, -2);
+        row2Params.topMargin = dp(6);
+        actions.addView(actionRow1);
+        actions.addView(actionRow2, row2Params);
         root.addView(actions);
 
         status = text("Páginas são salvas neste dispositivo. Importe um HTML/MHTML exportado ou compartilhado pelo Chrome.", 12, Color.rgb(164,178,197), false);
@@ -135,15 +161,73 @@ public final class OfflineLibraryActivity extends Activity {
         root.addView(web, new LinearLayout.LayoutParams(-1, 0, 1));
         setContentView(root);
 
-        back.setContentDescription(AppStrings.t(this, "Voltar (navegar para cima)"));
-        back.setOnClickListener(v -> navigateUp());
+        back.setOnClickListener(v -> { if (web != null && web.canGoBack()) web.goBack(); else showGlobe(); });
         language.setOnClickListener(v -> showLanguagePicker());
+        home.setOnClickListener(v -> showGlobe());
         openUrl.setOnClickListener(v -> openAddress());
-        save.setOnClickListener(v -> saveArchive());
+        save.setOnClickListener(v -> downloadWebsite());
         library.setOnClickListener(v -> showLibrary());
         importPage.setOnClickListener(v -> chooseImport());
         showGlobe();
         if (state == null) handleIncoming(getIntent());
+    }
+
+    private void showLanguagePicker() {
+        String[] names = AppStrings.languageNames();
+        int selected = 0;
+        String code = AppStrings.selectedCode(this);
+        String[] codes = AppStrings.languageCodes();
+        for (int i = 0; i < codes.length; i++) if (codes[i].equalsIgnoreCase(code)) selected = i;
+        new AlertDialog.Builder(this)
+                .setTitle(AppStrings.t(this, "Escolher idioma"))
+                .setSingleChoiceItems(names, selected, (dialog, which) -> {
+                    AppStrings.select(this, codes[which]);
+                    dialog.dismiss();
+                    recreate();
+                })
+                .setNegativeButton(AppStrings.t(this, "Fechar"), null)
+                .show();
+    }
+
+    private void downloadWebsite() {
+        String current = web == null ? null : web.getUrl();
+        if (current == null || !(current.startsWith("http://") || current.startsWith("https://"))) {
+            String value = address.getText().toString().trim();
+            if (!value.matches("(?i)^https?://.*")) value = "https://" + value;
+            current = value;
+        }
+        final String startUrl = current;
+        try {
+            Uri parsed = Uri.parse(startUrl);
+            if (parsed.getHost() == null || !"https".equalsIgnoreCase(parsed.getScheme())) {
+                toast("Informe um endereço HTTPS válido.");
+                return;
+            }
+            String host = parsed.getHost().replaceAll("[^A-Za-z0-9.-]", "_");
+            File siteDir = new File(archiveDir, "site-" + host + "-" + System.currentTimeMillis());
+            status.setText(AppStrings.t(this, "Baixando site para uso offline…"));
+            new Thread(() -> {
+                try {
+                    SiteArchiveDownloader.Result result = SiteArchiveDownloader.download(startUrl, siteDir,
+                            message -> runOnUiThread(() -> { if (status != null) status.setText(message); }));
+                    runOnUiThread(() -> {
+                        lastArchive = result.entry.getAbsolutePath();
+                        address.setText(startUrl);
+                        web.loadUrl(Uri.fromFile(result.entry).toString());
+                        status.setText(AppStrings.t(this, "Site salvo para uso offline.") + " " + result.pages
+                                + " páginas, " + result.resources + " recursos.");
+                        toast("Site salvo para uso offline.");
+                    });
+                } catch (Exception e) {
+                    runOnUiThread(() -> {
+                        status.setText(AppStrings.t(this, "Não foi possível baixar o site. Verifique a conexão e tente novamente."));
+                        toast("Falha ao baixar o site: " + (e.getMessage() == null ? "erro de rede" : e.getMessage()));
+                    });
+                }
+            }, "wifi-site-downloader").start();
+        } catch (Exception e) {
+            toast("Informe um endereço HTTPS válido.");
+        }
     }
 
     private void showGlobe() {
@@ -290,7 +374,7 @@ public final class OfflineLibraryActivity extends Activity {
     }
 
     private void showLibrary() {
-        File[] files = archiveDir.listFiles((dir, name) -> name.endsWith(".mht") || name.endsWith(".mhtml") || name.endsWith(".html") || name.endsWith(".htm"));
+        File[] files = archiveDir.listFiles((dir, name) -> name.endsWith(".mht") || name.endsWith(".mhtml") || name.endsWith(".html") || name.endsWith(".htm") || (new File(dir, name).isDirectory() && new File(new File(dir, name), "index.html").exists()));
         if (files == null || files.length == 0) {
             new AlertDialog.Builder(this).setTitle(AppStrings.t(this, "Biblioteca offline"))
                     .setMessage(AppStrings.t(this, "Ainda não há páginas salvas. Abra um site e toque em “Salvar offline”, ou importe um arquivo HTML/MHTML baixado."))
@@ -303,13 +387,12 @@ public final class OfflineLibraryActivity extends Activity {
         new AlertDialog.Builder(this).setTitle(AppStrings.t(this, "Páginas neste dispositivo"))
                 .setItems(names, (d, which) -> {
                     File chosen = files[which];
-                    lastArchive = chosen.getAbsolutePath();
-                    if (chosen.getName().endsWith(".html") || chosen.getName().endsWith(".htm")) {
-                        web.loadUrl(Uri.fromFile(chosen).toString());
-                    } else {
-                        web.loadUrl(Uri.fromFile(chosen).toString());
-                    }
-                    status.setText(AppStrings.t(this, "Arquivo local: " + chosen.getName()));
+                    File readable = chosen.isDirectory() ? new File(chosen, "index.html") : chosen;
+                    lastArchive = readable.getAbsolutePath();
+                    web.loadUrl(Uri.fromFile(readable).toString());
+                    status.setText(AppStrings.t(this, chosen.isDirectory()
+                            ? "Site salvo para uso offline." : "Arquivo local: " + chosen.getName()));
+                    if (chosen.isDirectory()) return;
                     new AlertDialog.Builder(this).setTitle(chosen.getName())
                             .setItems(AppStrings.translateArray(this, new String[]{"Ler offline", "Exportar arquivo", "Compartilhar offline"}), (dialog, action) -> {
                                 if (action == 0) web.loadUrl(Uri.fromFile(chosen).toString());
@@ -467,27 +550,22 @@ public final class OfflineLibraryActivity extends Activity {
         }
     }
 
-    private void addAction(LinearLayout parent, Button button) {
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, dp(48), 1);
-        params.leftMargin = dp(2);
-        params.rightMargin = dp(2);
-        parent.addView(button, params);
+    private void addIcon(Button button, int resource) {
+        button.setCompoundDrawablesWithIntrinsicBounds(resource, 0, 0, 0);
+        button.setCompoundDrawablePadding(dp(5));
+        button.setCompoundDrawableTintList(android.content.res.ColorStateList.valueOf(Color.WHITE));
     }
 
     private Button button(String caption, int color) {
         Button b = new Button(this);
-        String symbol = "";
-        if ("Abrir site".equals(caption)) symbol = "↗  ";
-        else if ("Salvar offline".equals(caption)) symbol = "↓  ";
-        else if ("Biblioteca".equals(caption)) symbol = "▤  ";
-        else if ("Importar".equals(caption)) symbol = "＋  ";
-        b.setText(symbol + AppStrings.t(this, caption));
-        b.setTextSize(10);
-        b.setAllCaps(false);
-        b.setTextColor(Color.WHITE);
+        b.setText(AppStrings.t(this, caption)); b.setTextSize(11); b.setAllCaps(false); b.setTextColor(Color.WHITE);
+        android.graphics.drawable.GradientDrawable shape = new android.graphics.drawable.GradientDrawable();
+        shape.setColor(color);
+        shape.setCornerRadius(dp(14));
+        shape.setStroke(dp(1), color == blue ? Color.rgb(82, 151, 255) : Color.rgb(43, 55, 73));
+        b.setBackground(shape);
+        b.setPadding(dp(12), 0, dp(12), 0);
         b.setMinHeight(dp(42));
-        b.setPadding(dp(5), 0, dp(5), 0);
-        b.setBackground(rounded(color, color == blue ? blue : Color.rgb(48, 63, 84), 14));
         return b;
     }
 
