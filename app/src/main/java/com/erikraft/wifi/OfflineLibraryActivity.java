@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.ClipData;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -49,6 +50,7 @@ public final class OfflineLibraryActivity extends Activity {
     private String lastArchive;
     private LanDiscovery globeDiscovery;
     private final Map<String, String[]> livePeers = new HashMap<>();
+    private boolean savingArchive;
 
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
@@ -89,7 +91,7 @@ public final class OfflineLibraryActivity extends Activity {
         address.setInputType(android.text.InputType.TYPE_TEXT_VARIATION_URI);
         address.setSelectAllOnFocus(true);
         address.setPadding(dp(12), 0, dp(12), 0);
-        address.setBackgroundColor(surface);
+        address.setBackground(rounded(surface, Color.rgb(48, 63, 84), 14));
         LinearLayout.LayoutParams ap = new LinearLayout.LayoutParams(-1, dp(48));
         ap.topMargin = dp(10);
         root.addView(address, ap);
@@ -167,7 +169,7 @@ public final class OfflineLibraryActivity extends Activity {
         library.setOnClickListener(v -> showLibrary());
         importPage.setOnClickListener(v -> chooseImport());
         showGlobe();
-        handleIncoming(getIntent());
+        if (state == null) handleIncoming(getIntent());
     }
 
     private void showLanguagePicker() {
@@ -245,7 +247,7 @@ public final class OfflineLibraryActivity extends Activity {
                     }
                 });
             }
-            @Override public void onPeer(String name, String host, int port) {
+            @Override public void onPeer(String name, String host, int port, boolean gatewayAvailable) {
                 runOnUiThread(() -> {
                     synchronized (livePeers) {
                         livePeers.put(name + "@" + host, new String[]{name, host, String.valueOf(port)});
@@ -295,6 +297,31 @@ public final class OfflineLibraryActivity extends Activity {
         super.onDestroy();
     }
 
+    private void navigateUp() {
+        if (web != null && web.canGoBack()) {
+            web.goBack();
+        } else {
+            finish();
+        }
+    }
+
+    @Override public void onBackPressed() {
+        navigateUp();
+    }
+
+    private void showLanguagePicker() {
+        String[] names = AppStrings.languageNames();
+        String[] codes = AppStrings.languageCodes();
+        new AlertDialog.Builder(this)
+                .setTitle(AppStrings.t(this, "Idioma do aplicativo"))
+                .setItems(names, (dialog, which) -> {
+                    AppStrings.select(this, codes[which]);
+                    recreate();
+                })
+                .setNegativeButton(AppStrings.t(this, "Fechar"), null)
+                .show();
+    }
+
     private void openAddress() {
         String value = address.getText().toString().trim();
         if (value.isEmpty()) return;
@@ -310,6 +337,10 @@ public final class OfflineLibraryActivity extends Activity {
     }
 
     private void saveArchive() {
+        if (savingArchive) {
+            toast("Aguarde o término do salvamento atual.");
+            return;
+        }
         String current = web.getUrl();
         if (current == null || !(current.startsWith("http://") || current.startsWith("https://"))) {
             toast("Abra primeiro um site online para salvar sua versão offline.");
@@ -319,16 +350,25 @@ public final class OfflineLibraryActivity extends Activity {
         String host = Uri.parse(current).getHost();
         if (host == null) host = "site";
         host = host.replaceAll("[^A-Za-z0-9.-]", "_");
-        File target = new File(archiveDir, host + "-" + stamp + ".mht");
-        status.setText(AppStrings.t(this, "Salvando página e recursos disponíveis…"));
+        File target = new File(archiveDir, host + "-" + stamp + ".mhtml");
+        if (!archiveDir.isDirectory() && !archiveDir.mkdirs()) {
+            toast("Não foi possível criar a biblioteca offline.");
+            return;
+        }
+        savingArchive = true;
+        status.setText(AppStrings.t(this, "Salvando site offline… mantenha o app aberto."));
         web.saveWebArchive(target.getAbsolutePath(), true, path -> runOnUiThread(() -> {
-            if (path != null && new File(path).exists() && new File(path).length() > 0) {
-                lastArchive = path;
-                status.setText(AppStrings.t(this, "Salvo offline: " + new File(path).getName()));
-                toast("Página salva para leitura offline.");
+            savingArchive = false;
+            File saved = path == null ? null : new File(path);
+            if (saved != null && saved.isFile() && saved.length() > 256) {
+                lastArchive = saved.getAbsolutePath();
+                status.setText(AppStrings.t(this, "Site salvo offline: ") + saved.getName()
+                        + " · " + android.text.format.Formatter.formatShortFileSize(this, saved.length()));
+                toast("Site salvo. Abra a Biblioteca para testá-lo sem conexão.");
             } else {
-                status.setText(AppStrings.t(this, "O WebView não conseguiu criar o arquivo offline desta página."));
-                toast("Falha ao salvar. Algumas páginas bloqueiam ou não suportam arquivamento.");
+                if (saved != null && saved.exists()) saved.delete();
+                status.setText(AppStrings.t(this, "Não foi possível salvar este site offline."));
+                toast("Falha ao salvar. Verifique se a página terminou de carregar e tente novamente.");
             }
         }));
     }
@@ -527,6 +567,14 @@ public final class OfflineLibraryActivity extends Activity {
         b.setPadding(dp(12), 0, dp(12), 0);
         b.setMinHeight(dp(42));
         return b;
+    }
+
+    private GradientDrawable rounded(int fill, int stroke, int radiusDp) {
+        GradientDrawable shape = new GradientDrawable();
+        shape.setColor(fill);
+        shape.setCornerRadius(dp(radiusDp));
+        shape.setStroke(dp(1), stroke);
+        return shape;
     }
     private TextView text(String value, int size, int color, boolean bold) {
         TextView t = new TextView(this); t.setText(AppStrings.t(this, value)); t.setTextSize(size); t.setTextColor(color);

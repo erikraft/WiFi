@@ -29,7 +29,7 @@ import java.util.concurrent.Executors;
 final class LanDiscovery {
     interface Listener {
         void onStatus(String status);
-        void onPeer(String name, String address, int port);
+        void onPeer(String name, String address, int port, boolean gatewayAvailable);
         default void onPeerLost(String name) { }
     }
 
@@ -43,6 +43,7 @@ final class LanDiscovery {
     private WifiManager.MulticastLock multicastLock;
     private NsdManager.DiscoveryListener discoveryListener;
     private NsdManager.RegistrationListener registrationListener;
+    private boolean refreshAfterUnregister;
     private ServerSocket serverSocket;
     private volatile boolean running;
 
@@ -87,7 +88,11 @@ final class LanDiscovery {
                     JSONObject response = new JSONObject();
                     response.put("service", "ErikrafT Wi-Fi");
                     response.put("protocol", 1);
-                    response.put("capabilities", new String[]{"discovery"});
+                    response.put("capabilities", new String[]{"discovery", "android-native-tethering"});
+                    response.put("internetAvailable", GatewayManager.hasValidatedInternet(context));
+                    response.put("gatewayAvailable", GatewayManager.isGatewayAdvertisementEnabled(context)
+                            && GatewayManager.hasValidatedInternet(context));
+                    response.put("meshRouting", false);
                     response.put("fileTransfer", false);
                     writer.write(response.toString());
                     writer.write("\n");
@@ -106,6 +111,10 @@ final class LanDiscovery {
         service.setServiceName(nodeName);
         service.setServiceType(SERVICE_TYPE);
         service.setPort(port);
+        boolean internetAvailable = GatewayManager.hasValidatedInternet(context);
+        boolean gatewayAvailable = internetAvailable && GatewayManager.isGatewayAdvertisementEnabled(context);
+        service.setAttribute("internet", internetAvailable ? "yes" : "no");
+        service.setAttribute("gateway", gatewayAvailable ? "android-tethering-v1" : "none");
         registrationListener = new NsdManager.RegistrationListener() {
             @Override public void onRegistrationFailed(NsdServiceInfo s, int error) {
                 listener.onStatus("Não foi possível anunciar este dispositivo (código " + error + ").");
@@ -114,7 +123,13 @@ final class LanDiscovery {
             @Override public void onServiceRegistered(NsdServiceInfo s) {
                 listener.onStatus("Este dispositivo está visível na rede local. Procurando pares…");
             }
-            @Override public void onServiceUnregistered(NsdServiceInfo s) { }
+            @Override public void onServiceUnregistered(NsdServiceInfo s) {
+                if (refreshAfterUnregister && running && serverSocket != null) {
+                    refreshAfterUnregister = false;
+                    registrationListener = null;
+                    registerLocalService(serverSocket.getLocalPort());
+                }
+            }
         };
         nsd.registerService(service, NsdManager.PROTOCOL_DNS_SD, registrationListener);
     }
@@ -143,8 +158,15 @@ final class LanDiscovery {
                     @Override public void onServiceResolved(NsdServiceInfo resolved) {
                         InetAddress host = resolved.getHost();
                         if (host != null) {
+                            java.util.Map<String, byte[]> attributes = resolved.getAttributes();
+                            String gateway = attributes.get("gateway") == null ? ""
+                                    : new String(attributes.get("gateway"), StandardCharsets.UTF_8);
+                            String internet = attributes.get("internet") == null ? ""
+                                    : new String(attributes.get("internet"), StandardCharsets.UTF_8);
+                            boolean gatewayAvailable = "android-tethering-v1".equals(gateway)
+                                    && "yes".equals(internet);
                             listener.onPeer(resolved.getServiceName(), host.getHostAddress(),
-                                    resolved.getPort());
+                                    resolved.getPort(), gatewayAvailable);
                         }
                     }
                 });
@@ -153,8 +175,25 @@ final class LanDiscovery {
         nsd.discoverServices(SERVICE_TYPE, NsdManager.PROTOCOL_DNS_SD, discoveryListener);
     }
 
+    synchronized void refreshServiceAdvertisement() {
+        if (!running || serverSocket == null || nsd == null) return;
+        if (registrationListener == null) {
+            registerLocalService(serverSocket.getLocalPort());
+            return;
+        }
+        refreshAfterUnregister = true;
+        try {
+            nsd.unregisterService(registrationListener);
+        } catch (Exception e) {
+            refreshAfterUnregister = false;
+            registrationListener = null;
+            registerLocalService(serverSocket.getLocalPort());
+        }
+    }
+
     synchronized void stop() {
         running = false;
+        refreshAfterUnregister = false;
         if (nsd != null && discoveryListener != null) {
             try { nsd.stopServiceDiscovery(discoveryListener); } catch (Exception ignored) { }
             discoveryListener = null;
