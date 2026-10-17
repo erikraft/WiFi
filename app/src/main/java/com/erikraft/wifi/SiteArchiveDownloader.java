@@ -202,8 +202,8 @@ final class SiteArchiveDownloader {
         try {
             String base = from.getParentFile().getCanonicalPath();
             String target = to.getCanonicalPath();
-            String[] baseParts = base.replace('\\\\', '/').split("/");
-            String[] targetParts = target.replace('\\\\', '/').split("/");
+            String[] baseParts = base.replace('\\', '/').split("/");
+            String[] targetParts = target.replace('\\', '/').split("/");
             int common = 0;
             while (common < baseParts.length && common < targetParts.length
                     && baseParts[common].equals(targetParts[common])) common++;
