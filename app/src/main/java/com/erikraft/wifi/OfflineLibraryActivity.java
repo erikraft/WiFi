@@ -97,10 +97,10 @@ public final class OfflineLibraryActivity extends Activity {
         Button save = button("Salvar offline", surface);
         Button library = button("Biblioteca", surface);
         Button importPage = button("Importar", surface);
-        actions.addView(openUrl, new LinearLayout.LayoutParams(0, dp(44), 1));
-        actions.addView(save, new LinearLayout.LayoutParams(0, dp(44), 1));
-        actions.addView(library, new LinearLayout.LayoutParams(0, dp(44), 1));
-        actions.addView(importPage, new LinearLayout.LayoutParams(0, dp(44), 1));
+        addAction(actions, openUrl);
+        addAction(actions, save);
+        addAction(actions, library);
+        addAction(actions, importPage);
         root.addView(actions);
 
         status = text("Páginas são salvas neste dispositivo. Importe um HTML/MHTML exportado ou compartilhado pelo Chrome.", 12, Color.rgb(164,178,197), false);
@@ -467,14 +467,26 @@ public final class OfflineLibraryActivity extends Activity {
         }
     }
 
+    private void addAction(LinearLayout parent, Button button) {
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, dp(48), 1);
+        params.leftMargin = dp(2);
+        params.rightMargin = dp(2);
+        parent.addView(button, params);
+    }
+
     private Button button(String caption, int color) {
         Button b = new Button(this);
-        b.setText(AppStrings.t(this, caption));
-        b.setTextSize(11);
+        String symbol = "";
+        if ("Abrir site".equals(caption)) symbol = "↗  ";
+        else if ("Salvar offline".equals(caption)) symbol = "↓  ";
+        else if ("Biblioteca".equals(caption)) symbol = "▤  ";
+        else if ("Importar".equals(caption)) symbol = "＋  ";
+        b.setText(symbol + AppStrings.t(this, caption));
+        b.setTextSize(10);
         b.setAllCaps(false);
         b.setTextColor(Color.WHITE);
         b.setMinHeight(dp(42));
-        b.setPadding(dp(10), 0, dp(10), 0);
+        b.setPadding(dp(5), 0, dp(5), 0);
         b.setBackground(rounded(color, color == blue ? blue : Color.rgb(48, 63, 84), 14));
         return b;
     }
