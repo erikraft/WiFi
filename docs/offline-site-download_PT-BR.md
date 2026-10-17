@@ -1,6 +1,6 @@
 # Baixar sites para uso offline
 
-O navegador Offline do Android pode baixar uma cópia estática limitada de um site HTTP/HTTPS para o armazenamento privado do app. Com uma página aberta, toque em **Baixar site offline**. O downloader segue links HTML da mesma origem, salva recursos estáticos vinculados (incluindo recursos externos referenciados), reescreve referências HTML/CSS compatíveis para arquivos locais e adiciona o site à Biblioteca offline. O controle de voltar navega para a página anterior; o seletor de idioma usa os 16 idiomas offline da interface do app.
+O navegador Offline do Android pode baixar uma cópia estática limitada de um site HTTPS para o armazenamento privado do app. Com uma página aberta, toque em **Baixar site offline**. O downloader segue links HTML da mesma origem, salva recursos estáticos vinculados (incluindo recursos externos referenciados), reescreve referências HTML/CSS compatíveis para arquivos locais e adiciona o site à Biblioteca offline. O controle de voltar navega para a página anterior; o seletor de idioma usa os 16 idiomas offline da interface do app.
 
 ## Escopo e limites
 
