@@ -18,10 +18,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Downloads a bounded, same-site static copy for offline browsing. It follows
- * same-origin HTML links and rewrites same-origin HTML/CSS resources to local
- * files. It cannot reproduce server-side actions, authenticated pages, DRM,
- * dynamically generated API content, or resources served from external origins.
+ * Downloads a bounded static copy for offline browsing. It follows same-origin
+ * HTML links and downloads referenced web assets, including external static
+ * assets, into a local folder. It cannot reproduce server-side actions,
+ * authenticated pages, DRM, or dynamically generated API content.
  */
 final class SiteArchiveDownloader {
     interface Progress { void update(String message); }
@@ -90,7 +90,7 @@ final class SiteArchiveDownloader {
                         if (visited.size() + queued.size() < MAX_PAGES && queued.add(targetUrl)) pagesToVisit.addLast(targetUrl);
                         String local = relative(pageFile, fileFor(targetUrl, true));
                         matcher.appendReplacement(rewritten, Matcher.quoteReplacement(attribute + "=" + matcher.group(2) + local + fragment(original) + matcher.group(2)));
-                    } else if (sameSite && isWebResource(target.getPath())) {
+                    } else if (isWebResource(target.getPath())) {
                         File resourceFile = fileFor(targetUrl, false);
                         if (!resourceFile.exists()) {
                             try {
@@ -127,7 +127,7 @@ final class SiteArchiveDownloader {
             if (value.isEmpty() || value.startsWith("data:") || value.startsWith("#")) continue;
             try {
                 URI target = new URI(baseUrl).resolve(value).normalize();
-                if (!sameOrigin(target) || !isWebResource(target.getPath())) continue;
+                if (!isWebResource(target.getPath())) continue;
                 File targetFile = fileFor(stripFragment(target.toString()), false);
                 if (!targetFile.exists()) {
                     try {
@@ -202,8 +202,22 @@ final class SiteArchiveDownloader {
         try {
             String base = from.getParentFile().getCanonicalPath();
             String target = to.getCanonicalPath();
-            java.nio.file.Path b = new File(base).toPath();
-            return b.relativize(new File(target).toPath()).toString().replace(File.separatorChar, '/');
+            String[] baseParts = base.replace('\\\\', '/').split("/");
+            String[] targetParts = target.replace('\\\\', '/').split("/");
+            int common = 0;
+            while (common < baseParts.length && common < targetParts.length
+                    && baseParts[common].equals(targetParts[common])) common++;
+            StringBuilder relative = new StringBuilder();
+            for (int i = common; i < baseParts.length; i++) {
+                if (!baseParts[i].isEmpty()) relative.append("../");
+            }
+            for (int i = common; i < targetParts.length; i++) {
+                if (!targetParts[i].isEmpty()) {
+                    if (relative.length() > 0 && relative.charAt(relative.length() - 1) != '/') relative.append('/');
+                    relative.append(targetParts[i]);
+                }
+            }
+            return relative.length() == 0 ? new File(target).getName() : relative.toString();
         } catch (Exception e) { return Uri.encode(to.getName()); }
     }
     private static String fragment(String value) {
