@@ -66,14 +66,17 @@ public final class OfflineLibraryActivity extends Activity {
         heading.setGravity(Gravity.CENTER_VERTICAL);
         Button back = button("← Voltar", surface);
         back.setContentDescription(AppStrings.t(this, "Navegar para cima"));
+        addIcon(back, android.R.drawable.ic_media_previous);
         heading.addView(back);
         TextView title = text("ErikrafT Wi-Fi  /  Offline", 18, Color.WHITE, true);
         LinearLayout.LayoutParams titleParams = new LinearLayout.LayoutParams(0, -2, 1);
         titleParams.leftMargin = dp(8);
         heading.addView(title, titleParams);
         Button language = button("Idioma", surface);
+        addIcon(language, android.R.drawable.ic_menu_manage);
         heading.addView(language);
         Button home = button("Globo", surface);
+        addIcon(home, android.R.drawable.ic_menu_mapmode);
         heading.addView(home);
         root.addView(heading);
 
@@ -95,9 +98,13 @@ public final class OfflineLibraryActivity extends Activity {
         actions.setOrientation(LinearLayout.HORIZONTAL);
         actions.setGravity(Gravity.CENTER_VERTICAL);
         Button openUrl = button("Abrir site", blue);
+        addIcon(openUrl, android.R.drawable.ic_menu_view);
         Button save = button("Baixar site offline", blue);
+        addIcon(save, android.R.drawable.ic_menu_save);
         Button library = button("Biblioteca", surface);
+        addIcon(library, android.R.drawable.ic_menu_agenda);
         Button importPage = button("Importar", surface);
+        addIcon(importPage, android.R.drawable.ic_menu_upload);
         actions.addView(openUrl, new LinearLayout.LayoutParams(0, dp(44), 1));
         actions.addView(save, new LinearLayout.LayoutParams(0, dp(44), 1));
         actions.addView(library, new LinearLayout.LayoutParams(0, dp(44), 1));
@@ -485,6 +492,12 @@ public final class OfflineLibraryActivity extends Activity {
                 } catch (Exception ignored) { }
             }
         }
+    }
+
+    private void addIcon(Button button, int resource) {
+        button.setCompoundDrawablesWithIntrinsicBounds(resource, 0, 0, 0);
+        button.setCompoundDrawablePadding(dp(5));
+        button.setCompoundDrawableTintList(android.content.res.ColorStateList.valueOf(Color.WHITE));
     }
 
     private Button button(String caption, int color) {
