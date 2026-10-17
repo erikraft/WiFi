@@ -95,7 +95,7 @@ public final class OfflineLibraryActivity extends Activity {
         root.addView(address, ap);
 
         LinearLayout actions = new LinearLayout(this);
-        actions.setOrientation(LinearLayout.HORIZONTAL);
+        actions.setOrientation(LinearLayout.VERTICAL);
         actions.setGravity(Gravity.CENTER_VERTICAL);
         Button openUrl = button("Abrir site", blue);
         addIcon(openUrl, android.R.drawable.ic_menu_view);
@@ -105,10 +105,26 @@ public final class OfflineLibraryActivity extends Activity {
         addIcon(library, android.R.drawable.ic_menu_agenda);
         Button importPage = button("Importar", surface);
         addIcon(importPage, android.R.drawable.ic_menu_upload);
-        actions.addView(openUrl, new LinearLayout.LayoutParams(0, dp(44), 1));
-        actions.addView(save, new LinearLayout.LayoutParams(0, dp(44), 1));
-        actions.addView(library, new LinearLayout.LayoutParams(0, dp(44), 1));
-        actions.addView(importPage, new LinearLayout.LayoutParams(0, dp(44), 1));
+        LinearLayout actionRow1 = new LinearLayout(this);
+        actionRow1.setOrientation(LinearLayout.HORIZONTAL);
+        LinearLayout actionRow2 = new LinearLayout(this);
+        actionRow2.setOrientation(LinearLayout.HORIZONTAL);
+        LinearLayout.LayoutParams actionButton = new LinearLayout.LayoutParams(0, dp(46), 1);
+        actionButton.rightMargin = dp(5);
+        actionRow1.addView(openUrl, actionButton);
+        LinearLayout.LayoutParams downloadParams = new LinearLayout.LayoutParams(0, dp(46), 1);
+        downloadParams.leftMargin = dp(5);
+        actionRow1.addView(save, downloadParams);
+        LinearLayout.LayoutParams libraryParams = new LinearLayout.LayoutParams(0, dp(46), 1);
+        libraryParams.rightMargin = dp(5);
+        actionRow2.addView(library, libraryParams);
+        LinearLayout.LayoutParams importParams = new LinearLayout.LayoutParams(0, dp(46), 1);
+        importParams.leftMargin = dp(5);
+        actionRow2.addView(importPage, importParams);
+        LinearLayout.LayoutParams row2Params = new LinearLayout.LayoutParams(-1, -2);
+        row2Params.topMargin = dp(6);
+        actions.addView(actionRow1);
+        actions.addView(actionRow2, row2Params);
         root.addView(actions);
 
         status = text("Páginas são salvas neste dispositivo. Importe um HTML/MHTML exportado ou compartilhado pelo Chrome.", 12, Color.rgb(164,178,197), false);
@@ -181,8 +197,8 @@ public final class OfflineLibraryActivity extends Activity {
         final String startUrl = current;
         try {
             Uri parsed = Uri.parse(startUrl);
-            if (parsed.getHost() == null || !("http".equals(parsed.getScheme()) || "https".equals(parsed.getScheme()))) {
-                toast("Informe um endereço HTTP ou HTTPS válido.");
+            if (parsed.getHost() == null || !"https".equalsIgnoreCase(parsed.getScheme())) {
+                toast("Informe um endereço HTTPS válido.");
                 return;
             }
             String host = parsed.getHost().replaceAll("[^A-Za-z0-9.-]", "_");
@@ -208,7 +224,7 @@ public final class OfflineLibraryActivity extends Activity {
                 }
             }, "wifi-site-downloader").start();
         } catch (Exception e) {
-            toast("Informe um endereço HTTP ou HTTPS válido.");
+            toast("Informe um endereço HTTPS válido.");
         }
     }
 
